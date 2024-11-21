@@ -1,5 +1,5 @@
 # app/routes.py
-
+from flask import Blueprint, render_template
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from .models import db, User, Listing
 
@@ -61,3 +61,12 @@ def add_listing():
 def listings():
     all_listings = Listing.query.all()
     return render_template('listings.html', listings=all_listings)
+
+
+# creates a route for the homepage
+# We import Blueprint system for route management
+bp = Blueprint("routes", __name__)
+
+@bp.route("/")
+def home():
+    return render_template("home_page.html")

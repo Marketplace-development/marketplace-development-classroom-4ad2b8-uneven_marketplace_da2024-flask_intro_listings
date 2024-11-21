@@ -3,17 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Digital Marketplace{% endblock %}</title>
+    <title>Digital Marketplace</title>
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <!-- Header with Navbar -->
     <header>
-        <h1>Digital Marketplace</h1>
+        <nav class="navbar">
+            <div class="container">
+                <!-- Logo -->
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Culinary Heritage Logo" />
+                </div>
+
+                <!-- Navigation Links -->
+                <ul class="nav-links">
+                    <li><a href="/recipes">Recipes</a></li>
+                    <li><a href="/account">My Account</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+
+                <!-- Sign-In Button -->
+                <div class="auth-buttons">
+                    <a href="/signin" class="btn-black">Sign In</a>
+                </div>
+            </div>
+        </nav>
     </header>
 
+    <!-- Main Content -->
     <main>
         {% block content %}{% endblock %}
     </main>
 
+    <!-- Footer -->
     <footer>
         <p>&copy; 2024 Digital Marketplace</p>
     </footer>

@@ -69,3 +69,86 @@
     color: black;
     border: 1px solid black;
 }
+
+/* Hero Section */
+.hero {
+    position: relative;
+    width: 100%; /* Ensure it spans the full width of the screen */
+    height: 600px; /* Increase height to make the header taller */
+    background: url('../images/hero-image.jpg') no-repeat center center/cover; /* Cover ensures the image fills the space */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    margin: 0; /* Remove any default margin around the section */
+    padding: 0; /* Remove padding */
+    overflow: hidden; /* Prevent extra white space */
+}
+
+.hero-content {
+    z-index: 2;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.btn-light, .btn-dark {
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-light {
+    background-color: white;
+    color: black;
+    border: 2px solid white;
+}
+
+.btn-light:hover {
+    background-color: black;
+    color: white;
+}
+
+.btn-dark {
+    background-color: black;
+    color: white;
+    border: 2px solid black;
+}
+
+.btn-dark:hover {
+    background-color: white;
+    color: black;
+}
+
+/* Optional: Video Background */
+.hero.video {
+    background: none;
+}
+
+.hero.video video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}

@@ -152,3 +152,225 @@
     object-fit: cover;
     z-index: 1;
 }
+
+/* Feature Highlights Section */
+.features {
+    text-align: center;
+    padding: 20px 20px; /* Reduced top padding */
+    background-color: #e9f5f2; /* New background color */
+}
+
+.features h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+.feature-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.feature-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 300px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.feature-card img {
+    height: 160px;
+    margin-bottom: 20px;
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.feature-btn {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.feature-btn:hover {
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #333;
+}
+
+/* Testimonials Section */
+.testimonials {
+    text-align: center;
+    padding: 20px 20px;
+    background-color: #f9f9f9; /* Light gray background */
+}
+
+.testimonials h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+/* Carousel Container */
+.testimonials-carousel {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 20px 0;
+    scroll-snap-type: x mandatory; /* Enable snapping for scrolling */
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+.testimonials-carousel::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in Chrome/Safari */
+}
+
+.testimonial-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    flex: 0 0 300px; /* Fixed width for each card */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    scroll-snap-align: center; /* Snap alignment for scrolling */
+}
+
+.testimonial-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    object-fit: cover;
+}
+
+.testimonial-card h3 {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.testimonial-card p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.stars {
+    font-size: 1.2rem;
+    color: #f5c518; /* Gold stars */
+}
+
+/* Authentication Pages */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background-color: #f9f9f9; /* Light background for contrast */
+}
+
+.auth-container {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px; /* Reduced padding to minimize whitespace */
+    width: 350px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left; /* Align the container content to the left */
+}
+
+.auth-container h2 {
+    margin-top: 0; /* Reduce whitespace above the title */
+    margin-bottom: 20px; /* Keep a small space below the title */
+    font-size: 1.8rem; /* Adjusted font size */
+    color: #333;
+    text-align: center; /* Center the title */
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left; /* Align labels to the left */
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem; /* Smaller, clean font size for labels */
+    color: #666;
+    margin-bottom: 5px; /* Add space between label and input field */
+}
+
+.form-group input {
+    width: 95%; /* Increase width of input boxes */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-align: left; /* Align text inside input fields */
+}
+
+.btn-primary {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin-top: 15px; /* Add spacing between the last input field and button */
+    display: block; /* Ensure the button is treated as a block element */
+    margin-left: auto; /* Automatically center horizontally */
+    margin-right: auto; /* Automatically center horizontally */
+}
+
+.btn-primary:hover {
+    background-color: white;
+    color: #333;
+    border: 1px solid #333;
+}
+
+.switch-link {
+    margin-top: 20px; /* Increased space above the link text */
+    font-size: 0.9rem; /* Slightly smaller text size */
+    color: #666;
+    text-align: center;
+}
+
+.switch-link a {
+    color: #333;
+    text-decoration: underline; /* Highlight links with an underline */
+}
+
+.error {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 15px; /* Space between error message and form */
+    text-align: center;
+}

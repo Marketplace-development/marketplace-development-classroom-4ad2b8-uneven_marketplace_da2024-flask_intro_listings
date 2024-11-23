@@ -17,7 +17,77 @@ Homepage
     </div>
 </section>
 
-<!-- Additional Content -->
-<h2>Welcome!</h2>
-<p>Discover amazing recipes here!</p>
+<!-- Feature Highlights Section -->
+<section class="features">
+    <h2>What Makes Us Special</h2>
+    <div class="feature-container">
+        <div class="feature-card">
+            <img src="{{ url_for('static', filename='images/recipes-icon.png') }}" alt="Exclusive Recipes Icon">
+            <h3>Exclusive Recipes</h3>
+            <p>Discover an array of recipes, handpicked and crafted by world-renowned chefs. Explore cuisines from around the globe and find inspiration for your next meal.</p>
+            <a href="/recipes" class="feature-btn">Learn More</a>
+        </div>
+        <div class="feature-card">
+            <img src="{{ url_for('static', filename='images/ingredients-icon.png') }}" alt="Fresh Ingredients Icon">
+            <h3>Fresh Ingredients</h3>
+            <p>Enjoy the convenience of pre-measured, high-quality ingredients delivered to your doorstep. Our carefully sourced produce guarantees freshness and quality in every bite.</p>
+            <a href="/ingredients" class="feature-btn">Learn More</a>
+        </div>
+        <div class="feature-card">
+            <img src="{{ url_for('static', filename='images/time-icon.png') }}" alt="Save Time Icon">
+            <h3>Save Time</h3>
+            <p>Streamline your cooking experience with easy-to-follow, step-by-step recipes. Spend less time planning and more time enjoying delicious meals with your loved ones.</p>
+            <a href="/time-saving" class="feature-btn">Learn More</a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials">
+    <h2>What Our Users Say</h2>
+    <div class="testimonials-carousel">
+        <!-- Testimonial 1 -->
+        <div class="testimonial-card">
+            <img src="{{ url_for('static', filename='images/user1.jpg') }}" alt="User 1">
+            <h3>Sonia Sadiq Gandhi</h3>
+            <p>"Incredible service and recipes! I've saved so much time and money with their guidance."</p>
+            <div class="stars">★★★★★</div>
+        </div>
+        <!-- Testimonial 2 -->
+        <div class="testimonial-card">
+            <img src="{{ url_for('static', filename='images/user2.jpg') }}" alt="User 2">
+            <h3>Mira Le Mare</h3>
+            <p>"The recipes are amazing, and the step-by-step guidance makes cooking effortless."</p>
+            <div class="stars">★★★★★</div>
+        </div>
+        <!-- Testimonial 3 -->
+        <div class="testimonial-card">
+            <img src="{{ url_for('static', filename='images/user3.jpg') }}" alt="User 3">
+            <h3>Adam Yeats</h3>
+            <p>"The ingredient delivery is spot on. Fresh, high-quality produce every single time."</p>
+            <div class="stars">★★★★★</div>
+        </div>
+        <!-- Testimonial 4 -->
+        <div class="testimonial-card">
+            <img src="{{ url_for('static', filename='images/user4.jpg') }}" alt="User 4">
+            <h3>Emma Stone</h3>
+            <p>"Culinary Heritage brought my family closer together during mealtimes. A life-changer!"</p>
+            <div class="stars">★★★★★</div>
+        </div>
+        <!-- Testimonial 5 -->
+        <div class="testimonial-card">
+            <img src="{{ url_for('static', filename='images/user5.jpg') }}" alt="User 5">
+            <h3>Chris Hemsworth</h3>
+            <p>"I love the variety of recipes available. The convenience is unmatched!"</p>
+            <div class="stars">★★★★★</div>
+        </div>
+        <!-- Testimonial 6 -->
+        <div class="testimonial-card">
+            <img src="{{ url_for('static', filename='images/user6.jpg') }}" alt="User 6">
+            <h3>Olivia Wilde</h3>
+            <p>"The quality of ingredients and simplicity of the recipes is just perfect for my busy life."</p>
+            <div class="stars">★★★★★</div>
+        </div>
+    </div>
+</section>
 {% endblock %}

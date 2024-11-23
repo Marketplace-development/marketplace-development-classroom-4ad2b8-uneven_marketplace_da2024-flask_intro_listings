@@ -2,6 +2,7 @@
 from flask import Blueprint, render_template
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from .models import db, User, Listing
+from flask import Blueprint, render_template, request, redirect, url_for
 
 main = Blueprint('main', __name__)
 
@@ -70,3 +71,40 @@ bp = Blueprint("routes", __name__)
 @bp.route("/")
 def home():
     return render_template("home_page.html")
+
+# Simulated database
+users = []
+
+# Login Page
+@bp.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        # Check if username exists in the database
+        if username in [user["username"] for user in users]:
+            return redirect(url_for("routes.home"))
+        else:
+            # Redirect to signup with an error message
+            return redirect(url_for("routes.signup", error="Username not found. Please sign up."))
+    return render_template("login.html")
+
+# Signup Page
+@bp.route("/signup", methods=["GET", "POST"])
+def signup():
+    error = request.args.get("error", None)
+    if request.method == "POST":
+        username = request.form.get("username")
+        date_of_birth = request.form.get("date_of_birth")
+        address = request.form.get("address")
+        city = request.form.get("city")
+        postcode = request.form.get("postcode")
+        # Add user to the database
+        users.append({
+            "username": username,
+            "date_of_birth": date_of_birth,
+            "address": address,
+            "city": city,
+            "postcode": postcode,
+        })
+        return redirect(url_for("routes.login"))
+    return render_template("signup.html", error=error)

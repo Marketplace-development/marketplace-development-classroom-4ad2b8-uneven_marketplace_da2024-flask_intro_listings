@@ -108,3 +108,11 @@ def signup():
         })
         return redirect(url_for("routes.login"))
     return render_template("signup.html", error=error)
+
+@bp.route("/privacy-policy")
+def privacy_policy():
+    return render_template("privacy-policy.html")
+
+@bp.route("/terms-of-service")
+def terms_of_service():
+    return render_template("terms-of-service.html")

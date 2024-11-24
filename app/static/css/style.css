@@ -138,9 +138,12 @@
     color: black;
 }
 
-/* Optional: Video Background */
+/* Hero Section for Video */
 .hero.video {
-    background: none;
+    position: relative;
+    width: 100%;
+    height: 600px; /* Zorg ervoor dat de hoogte van de video past */
+    overflow: hidden;
 }
 
 .hero.video video {
@@ -149,8 +152,15 @@
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    z-index: 1;
+    object-fit: cover; /* Zorg dat de video de hele sectie vult */
+    z-index: 1; /* Plaats de video op de achtergrond */
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2; /* Zorg dat de content bovenop de video ligt */
+    text-align: center;
+    color: white;
 }
 
 /* Feature Highlights Section */
@@ -373,4 +383,140 @@
     font-size: 0.9rem;
     margin-bottom: 15px; /* Space between error message and form */
     text-align: center;
+}
+
+/* Featured Recipes Section */
+.featured-recipes {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #f9f9f9; /* Light gray background */
+}
+
+.featured-recipes h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+.recipes-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap; /* Ensures responsiveness */
+}
+
+.recipe-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 300px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.recipe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.recipe-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* Ensures the image fits nicely in the card */
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.recipe-card h3 {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.recipe-card p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: white;
+    color: #333;
+    border: 1px solid #333;
+}
+
+/* Footer Section */
+.footer {
+    background-color: #333; /* Dark background */
+    color: white;
+    text-align: center;
+    padding: 20px 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.social-links a {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+}
+
+.social-links img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.social-links img:hover {
+    transform: scale(1.1); /* Slight zoom effect on hover */
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap; /* Ensures the links wrap on smaller screens */
+    gap: 15px;
+    justify-content: center;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #f0a500; /* Highlight color on hover */
 }

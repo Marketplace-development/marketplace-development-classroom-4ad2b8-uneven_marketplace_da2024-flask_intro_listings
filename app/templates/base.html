@@ -14,17 +14,18 @@
             <div class="container">
                 <!-- Logo -->
                 <div class="logo">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Culinary Heritage Logo" />
+                    <a href="/"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Culinary Heritage Logo" /></a>
                 </div>
-
+        
                 <!-- Navigation Links -->
                 <ul class="nav-links">
+                    <li><a href="/">Home</a></li> <!-- Added Home link -->
                     <li><a href="/recipes">Recipes</a></li>
                     <li><a href="/account">My Account</a></li>
                     <li><a href="/about">About Us</a></li>
                     <li><a href="/contact">Contact</a></li>
                 </ul>
-
+        
                 <!-- Sign-In Button -->
                 <div class="auth-buttons">
                     <a href="/login" class="btn-black">Sign In</a>
@@ -39,8 +40,38 @@
     </main>
 
     <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Digital Marketplace</p>
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- Copyright -->
+            <p>&copy; 2024 Culinary Heritage. All rights reserved.</p>
+    
+            <!-- Social Media Links -->
+            <div class="social-links">
+                <a href="https://twitter.com" target="_blank" aria-label="Twitter">
+                    <img src="{{ url_for('static', filename='icons/twitter-icon.png') }}" alt="Twitter">
+                </a>
+                <a href="https://youtube.com" target="_blank" aria-label="YouTube">
+                    <img src="{{ url_for('static', filename='icons/youtube-icon.png') }}" alt="YouTube">
+                </a>
+                <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+                    <img src="{{ url_for('static', filename='icons/instagram-icon.png') }}" alt="Instagram">
+                </a>
+                <a href="https://facebook.com" target="_blank" aria-label="Facebook">
+                    <img src="{{ url_for('static', filename='icons/facebook-icon.png') }}" alt="Facebook">
+                </a>
+            </div>
+    
+            <!-- Navigation Links -->
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/recipes">Recipes</a>
+                <a href="/account">My Account</a>
+                <a href="/about">About Us</a>
+                <a href="/contact">Contact</a>
+                <a href="/privacy-policy">Privacy Policy</a> <!-- Linked to the Privacy Policy route -->
+                <a href="/terms-of-service">Terms of Service</a> <!-- Linked to the Terms of Service route -->
+            </div>
+        </div>
     </footer>
 </body>
 </html>

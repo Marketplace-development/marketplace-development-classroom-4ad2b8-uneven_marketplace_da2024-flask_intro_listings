@@ -6,7 +6,11 @@ Homepage
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero">
+<section class="hero video">
+    <video autoplay muted loop>
+        <source src="{{ url_for('static', filename='videos/hero-video.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
     <div class="hero-content">
         <h1>Culinary Heritage</h1>
         <p>"Get a Taste of Tradition"</p>
@@ -87,6 +91,33 @@ Homepage
             <h3>Olivia Wilde</h3>
             <p>"The quality of ingredients and simplicity of the recipes is just perfect for my busy life."</p>
             <div class="stars">★★★★★</div>
+        </div>
+    </div>
+</section>
+<!-- Featured Recipes Section -->
+<section class="featured-recipes">
+    <h2>Most Popular Recipes</h2>
+    <div class="recipes-container">
+        <!-- Recipe 1 -->
+        <div class="recipe-card">
+            <img src="{{ url_for('static', filename='images/recipe1.jpg') }}" alt="Recipe 1">
+            <h3>Spaghetti Carbonara</h3>
+            <p>A classic Italian pasta dish made with eggs, cheese, pancetta, and pepper.</p>
+            <a href="/recipe/1" class="btn-primary">View Recipe</a>
+        </div>
+        <!-- Recipe 2 -->
+        <div class="recipe-card">
+            <img src="{{ url_for('static', filename='images/recipe2.jpg') }}" alt="Recipe 2">
+            <h3>Chicken Tikka Masala</h3>
+            <p>Tender chicken in a creamy, spiced curry sauce. Perfect with naan or rice.</p>
+            <a href="/recipe/2" class="btn-primary">View Recipe</a>
+        </div>
+        <!-- Recipe 3 -->
+        <div class="recipe-card">
+            <img src="{{ url_for('static', filename='images/recipe3.jpg') }}" alt="Recipe 3">
+            <h3>Chocolate Lava Cake</h3>
+            <p>A warm, gooey dessert with molten chocolate inside. Perfect for chocolate lovers!</p>
+            <a href="/recipe/3" class="btn-primary">View Recipe</a>
         </div>
     </div>
 </section>

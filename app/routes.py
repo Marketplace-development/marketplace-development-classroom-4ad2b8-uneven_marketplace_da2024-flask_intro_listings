@@ -98,3 +98,4 @@ def add_listing():
 def listings():
     all_listings = Listing.query.all()
     return render_template('listings.html', listings=all_listings)
+

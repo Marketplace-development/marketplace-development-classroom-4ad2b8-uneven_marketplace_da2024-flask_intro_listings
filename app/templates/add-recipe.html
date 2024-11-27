@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add a Recipe
+{% endblock %}
+
+{% block content %}
+<div class="recipe-form-container">
+    <h2>Add Your Recipe</h2>
+    <form action="/add-recipe" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">Recipe Title:</label>
+            <input type="text" id="title" name="title" placeholder="e.g., Delicious Pie" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" placeholder="Brief description of your recipe" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="ingredients">Ingredients:</label>
+            <textarea id="ingredients" name="ingredients" placeholder="List ingredients here..." required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="steps">Steps:</label>
+            <textarea id="steps" name="steps" placeholder="Detailed steps to prepare the recipe" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="image">Upload an Image (optional):</label>
+            <input type="file" id="image" name="image" accept="image/*">
+        </div>
+        <button type="submit" class="btn-primary">Submit Recipe</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}
+User Dashboard
+{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="dashboard-sidebar">
+            <div class="profile-section">
+                <img src="{{ url_for('static', filename='images/profile-placeholder.png') }}" alt="Profile Picture" class="profile-picture">
+                <h3>John Doe</h3>
+                <p>johndoe@example.com</p>
+            </div>
+            <ul>
+                <li class="active"><a href="#">Personal Information</a></li>
+                <li><a href="#">Submitted Recipes</a></li>
+                <li><a href="#">Favorites</a></li>
+                <li><a href="#">Billing & Payments</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="dashboard-content">
+            <h2>Personal Information</h2>
+            <p>Manage your personal information, including phone numbers and email addresses where you can be contacted.</p>
+            <div class="info-cards">
+                <div class="info-card">
+                    <h3>Name</h3>
+                    <p>John Doe</p>
+                </div>
+                <div class="info-card">
+                    <h3>Date of Birth</h3>
+                    <p>07 July 1993</p>
+                </div>
+                <div class="info-card">
+                    <h3>Country/Region</h3>
+                    <p>Georgia, Tbilisi</p>
+                </div>
+                <div class="info-card">
+                    <h3>Language</h3>
+                    <p>English (UK)</p>
+                </div>
+                <div class="info-card">
+                    <h3>Email Address</h3>
+                    <p>johndoe@example.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

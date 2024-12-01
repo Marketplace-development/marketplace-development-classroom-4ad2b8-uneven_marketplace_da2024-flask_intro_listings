@@ -87,55 +87,53 @@
 }
 
 .hero-content {
-    z-index: 2;
+    text-align: center;
+    color: white;
+    padding: 50px 20px;
 }
 
 .hero-content h1 {
-    font-size: 3rem;
+    font-size: 2.8rem;
     margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .hero-content p {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     margin-bottom: 20px;
-    font-style: italic;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-.hero-buttons {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-}
-
-.btn-light, .btn-dark {
-    text-decoration: none;
+.header-buttons a {
+    display: inline-block;
+    margin: 0 10px;
     padding: 10px 20px;
     font-size: 1rem;
-    font-weight: bold;
+    text-decoration: none;
     border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.btn-light {
-    background-color: white;
-    color: black;
-    border: 2px solid white;
+.btn-primary {
+    background-color: #333;
+    color: white;
+    border: none;
 }
 
-.btn-light:hover {
-    background-color: black;
+.btn-primary:hover {
+    background-color: #555;
     color: white;
 }
 
-.btn-dark {
-    background-color: black;
-    color: white;
-    border: 2px solid black;
+.btn-secondary {
+    background-color: white;
+    color: #333;
+    border: 1px solid #333;
 }
 
-.btn-dark:hover {
-    background-color: white;
-    color: black;
+.btn-secondary:hover {
+    background-color: #f9f9f9;
+    color: #333;
 }
 
 /* Hero Section for Video */
@@ -302,8 +300,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80vh;
-    background-color: #f9f9f9; /* Light background for contrast */
+    min-height: calc(100vh - 100px); /* Subtract space for the header/footer if present */
+    background-color: #f9f9f9;
+    padding: 30px 0; /* Add padding at the top and bottom */
 }
 
 .auth-container {
@@ -311,7 +310,9 @@
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 20px; /* Reduced padding to minimize whitespace */
-    width: 350px;
+    padding-top: 30px; /* Added padding to the top */
+    padding-bottom: 30px; /* Added padding to the bottom */
+    width: 400px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: left; /* Align the container content to the left */
 }
@@ -337,12 +338,15 @@
 }
 
 .form-group input {
-    width: 95%; /* Increase width of input boxes */
+    width: 90%; /* Reduce the width to add padding to the right */
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
-    text-align: left; /* Align text inside input fields */
+    text-align: left;
+    box-sizing: border-box; /* Ensure padding doesn't exceed the container */
+    margin-left: auto; /* Centers the input field horizontally */
+    margin-right: auto; /* Centers the input field horizontally */
 }
 
 .btn-primary {
@@ -519,4 +523,258 @@
 
 .footer-links a:hover {
     color: #f0a500; /* Highlight color on hover */
+}
+
+/* Dashboard Styling */
+.dashboard {
+    background-color: #f4f4f4; /* Page background */
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    align-items: flex-start; /* Align content to the top */
+    justify-content: center; /* Center content horizontally */
+    padding: 30px 0;
+    box-sizing: border-box;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    display: flex;
+    gap: 20px;
+    max-width: 1200px;
+    width: 100%;
+    padding: 0;
+    align-items: flex-start; /* Align sidebar and main content to the top */
+    box-sizing: border-box;
+}
+
+/* Sidebar Navigation Styling */
+.dashboard-sidebar {
+    flex: 1;
+    background-color: transparent;
+    padding: 20px;
+    text-align: center;
+    margin-top: 35px; /* Optional fine-tuning to align with the content */
+}
+
+.profile-section {
+    margin-bottom: 30px;
+}
+
+.profile-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+
+.dashboard-sidebar h3 {
+    font-size: 1.5rem; /* Font size for the name */
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.dashboard-sidebar p {
+    font-size: 1rem; /* Font size for the email */
+    color: #666;
+    margin: 5px 0 20px;
+}
+
+.dashboard-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-sidebar li {
+    margin-bottom: 15px; /* Adjust spacing between sidebar links */
+}
+
+.dashboard-sidebar a {
+    text-decoration: none;
+    font-size: 1.4rem; /* Increased font size for sidebar links */
+    color: #666;
+    display: block;
+    padding: 5px 0; /* Minimal padding for alignment */
+    transition: color 0.3s ease;
+}
+
+.dashboard-sidebar a:hover {
+    color: #f0a500; /* Change text color on hover */
+    background-color: transparent; /* Remove background hover effect */
+}
+
+.dashboard-sidebar li.active a {
+    font-weight: bold;
+    color: #f0a500;
+}
+
+/* Main Content Styling */
+.dashboard-content {
+    flex: 3;
+    background-color: transparent; /* Match the page background */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.dashboard-content h2 {
+    font-size: 2rem; /* Larger heading */
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.dashboard-content p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Info Cards Styling */
+.info-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two cards per row */
+    gap: 20px;
+}
+
+.info-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.info-card h3 {
+    font-size: 1.2rem; /* Increased size for titles */
+    font-weight: bold; /* Bold titles */
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.info-card p {
+    font-size: 1rem; /* Smaller size for content */
+    color: #666;
+}
+
+/* Newsletter Section */
+.newsletter-section {
+    background-color: #f1f1f1; /* Light grey background */
+    padding: 40px 20px; /* Spacing around the content */
+    text-align: center;
+}
+
+.newsletter-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px 20px; /* Adjusted padding inside the box */
+    padding-top: 5px; /* Reduced padding to move content upwards */
+    border-radius: 10px; /* Smooth corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.newsletter-container h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.newsletter-container p {
+    font-size: 1.3rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.newsletter-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Space between input and button */
+}
+
+.newsletter-form input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.newsletter-form button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.newsletter-form button:hover {
+    background-color: #555; /* Darker shade on hover */
+}
+
+.recipe-form-container {
+    background-color: #f9f9f9;
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* This is the code for the add-recipe page */
+.recipe-form-container h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-group input[type="file"] {
+    padding: 5px;
+}
+
+.btn-primary {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    display: block;
+    margin: 0 auto;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #555;
 }

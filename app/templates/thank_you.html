@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}
+Thank You
+{% endblock %}
+
+{% block content %}
+<div class="thank-you-container">
+    <h2>Thank You for Submitting Your Recipe!</h2>
+    <p>Your recipe <strong>{{ title }}</strong> has been received.</p>
+    <a href="/" class="btn-primary">Back to Homepage</a>
+</div>
+{% endblock %}

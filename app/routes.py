@@ -93,19 +93,20 @@ def login():
 def signup():
     error = request.args.get("error", None)
     if request.method == "POST":
+        # Retrieve form data
         username = request.form.get("username")
-        date_of_birth = request.form.get("date_of_birth")
+        full_name = request.form.get("full_name")
+        email = request.form.get("email")
+        dob = request.form.get("dob")
         address = request.form.get("address")
         city = request.form.get("city")
         postcode = request.form.get("postcode")
-        # Add user to the database
-        users.append({
-            "username": username,
-            "date_of_birth": date_of_birth,
-            "address": address,
-            "city": city,
-            "postcode": postcode,
-        })
+        country = request.form.get("country")
+        language = request.form.get("language")
+        
+        # Example: Save this data to the database (you'll need a database connection)
+        # db.insert_user(username, full_name, email, dob, address, city, postcode, country, language)
+
         return redirect(url_for("routes.login"))
     return render_template("signup.html", error=error)
 
@@ -116,3 +117,68 @@ def privacy_policy():
 @bp.route("/terms-of-service")
 def terms_of_service():
     return render_template("terms-of-service.html")
+
+@bp.route("/dashboard")
+def dashboard():
+    # Dummy data for now (to simulate real user data)
+    user_info = {
+        "username": "JohnDoe",
+        "email": "johndoe@example.com",
+        "address": "123 Foodie Lane",
+        "city": "Gourmet City",
+        "postcode": "12345",
+    }
+
+    recent_activity = [
+        {"title": "Spaghetti Carbonara", "link": "/recipe/1"},
+        {"title": "Chicken Tikka Masala", "link": "/recipe/2"},
+        {"title": "Chocolate Lava Cake", "link": "/recipe/3"},
+    ]
+
+    favorite_recipes = [
+        {"title": "Homemade Pizza", "link": "/recipe/4"},
+        {"title": "Beef Stroganoff", "link": "/recipe/5"},
+    ]
+
+    return render_template(
+        "dashboard.html",
+        user_info=user_info,
+        recent_activity=recent_activity,
+        favorite_recipes=favorite_recipes,
+    )
+
+@bp.route("/account")
+def account():
+    return render_template("dashboard.html")
+
+@bp.route("/subscribe", methods=["POST"])
+def subscribe():
+    email = request.form.get("email")
+    if email:
+        # Example: Save the email to a database or send a confirmation email
+        print(f"New subscriber: {email}")
+    return redirect("/")  # Redirect back to the homepage
+
+@bp.route("/add-recipe", methods=["GET", "POST"])
+def add_recipe():
+    if request.method == "POST":
+        title = request.form.get("title")
+        description = request.form.get("description")
+        ingredients = request.form.get("ingredients")
+        steps = request.form.get("steps")
+        image = request.files.get("image")  # Optional image upload
+
+        # For now, just print the recipe data to the console
+        print(f"Title: {title}")
+        print(f"Description: {description}")
+        print(f"Ingredients: {ingredients}")
+        print(f"Steps: {steps}")
+
+        # Save the image if uploaded
+        if image:
+            image.save(f"static/uploads/{image.filename}")
+            print(f"Image saved as static/uploads/{image.filename}")
+
+        return render_template("thank_you.html", title=title)
+
+    return render_template("add-recipe.html")

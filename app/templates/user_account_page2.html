@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accountinstellingen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+            url('staticimages/forest_background.jpg') no-repeat center center;
+            background-size: cover;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffffff; /* Witte kleur voor de titel */
+        }
+
+        p.subtitle {
+            font-size: 1rem;
+            color: #ffffff; /* Witte kleur voor de ondertitel */
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .card a {
+            font-size: 1rem;
+            color: #4caf50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .card a:hover {
+            text-decoration: underline;
+        }
+
+        .back-button {
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            transition: background-color 0.2s ease;
+        }
+
+        .back-button:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Accountinstellingen</h1>
+        <p class="subtitle">Beheer je ervaring op onze website</p>
+        <div class="grid">
+            <div class="card">
+                <h3>Persoonlijke gegevens</h3>
+                <p>Update je gegevens en weet hoe ze worden gebruikt.</p>
+                <a href="/persoonlijke-gegevens">Beheer persoonlijke gegevens</a>
+            </div>
+            <div class="card">
+                <h3>Persoonlijke voorkeuren</h3>
+                <p>Personaliseer je account om aan je wensen te voldoen.</p>
+                <a href="/persoonlijke-voorkeuren">Beheer voorkeuren</a>
+            </div>
+            <div class="card">
+                <h3>Beveiligingsinstellingen</h3>
+                <p>Wijzig je beveiligingsinstellingen of stel veilige authenticatie in.</p>
+                <a href="/beveiligingsinstellingen">Beheer accountbeveiliging</a>
+            </div>
+            <div class="card">
+                <h3>Betaalwijzen</h3>
+                <p>Voeg betaalmethoden toe of verwijder ze eenvoudig.</p>
+                <a href="/betaalmethoden">Beheer betaalgegevens</a>
+            </div>
+            <div class="card">
+                <h3>Privacy- en gegevensbeheer</h3>
+                <p>Beheer je gegevens of download je informatie.</p>
+                <a href="/privacy-gegevens">Beheer privacy</a>
+            </div>
+            <div class="card">
+                <h3>E-mailvoorkeuren</h3>
+                <p>Bepaal waar je notificaties voor wilt ontvangen.</p>
+                <a href="/e-mailvoorkeuren">Beheer notificaties</a>
+            </div>
+        </div>
+        <a href="/home" class="back-button">Terug naar hoofdpagina</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+### Marketplace Ideation
+
+Platform name: 
+
+Short description: 
+
+# Taxonomy: Business Model
+
+User Type: Person | Organization
+Listing Kind: Good Transfer |Service
+Listing Type: Physical Good | Digital Good | Offline Serviced | Online Serviced
+Frequency: One-Time | Recurring
+Quantity: One | Many
+Price Discovery: Set by Provider | Set by Customer | Set by Market
+Price Calculation: By Quantity | By Feature | Auction | Quote
+Conversation System: Listing Conversation | Transaction Conversation
+Review by: By Customer | By Provider
+Review of: Of Listing | Of Provider
+Trust and Safety: ID Verification | Badges | In-app reporting
+Revenue Stream: Subscription | Commission | Fixed Fee | Listing Fee
+Revenue Source: Customer | Provider
+
+# Ontology model
+
+1. Download Visual Paradigm Community Edition: https://www.visual-paradigm.com/download/community.jsp
+2. Install the OntoUML plugin: https://github.com/OntoUML/ontouml-vp-plugin
+3. Develop a platform-specific ontology: https://model-a-platform.com/applying-the-ontology/
+
+# User stories
+
+As a [], I want to [], so that []. Prio
+As a [Customer], I want to [buy a product], so that [I can use it]. 2
+As a [provider], I want to [sell a product], so that [I earn money]. 1
+
+# UI Prototype
+
+https://www.figma.com/
+
+# Database Design
+
+https://supabase.com/
+
+# Software Development
+
+https://www.geeksforgeeks.org/flask-tutorial/
+
+
+
+

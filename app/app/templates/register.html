@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+    <h1>Register</h1>
+    <form method="post">
+        Username: <input type="text" name="username" required>
+        <input type="submit" value="Register">
+    </form>
+</body>
+</html>

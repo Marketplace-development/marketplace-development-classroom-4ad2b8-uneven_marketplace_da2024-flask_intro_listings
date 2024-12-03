@@ -1,57 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us</title>
-  <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <a href="{{ url_for('main.index') }}" class="navbar-brand">Logo</a>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                    <li><a href="#">Recipes</a></li>
+                    <li><a href="#">My Account</a></li>
+                    <li><a href="{{ url_for('routes.contact') }}">Contact</a></li>
+                </ul>
+                <a href="#" class="btn-black">Sign In</a>
+            </div>
+        </nav>
+    </header>
 
- <!-- Contact Form Section -->
-  <section class="contact-section">
-    <h1>Contact Us</h1>
-    <p>Need help? Our team is ready to assist you.</p>
-    
-    <form class="contact-form">
-      <input type="text" name="name" placeholder="Name" required>
-      <input type="text" name="surname" placeholder="Surname" required>
-      <input type="email" name="email" placeholder="Email" required>
-      <textarea name="message" placeholder="Message" rows="5" required></textarea>
-      <button type="submit">Submit</button>
-    </form>
-  </section>
+    <main>
+        <section class="contact">
+            <h1>Contact Us</h1>
+            <p>Need help? Our team is ready to assist you.</p>
+            <form class="contact-form">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
 
-  <!-- Footer -->
-  <footer>
-    <div class="footer-content">
-      <div class="footer-column">
-        <h4>Use cases</h4>
-        <ul>
-          <li>UI design</li>
-          <li>UX design</li>
-          <li>Wireframing</li>
-          <li>Diagramming</li>
-        </ul>
-      </div>
-      <div class="footer-column">
-        <h4>Explore</h4>
-        <ul>
-          <li>Design</li>
-          <li>Prototyping</li>
-          <li>Development features</li>
-        </ul>
-      </div>
-      <div class="footer-column">
-        <h4>Resources</h4>
-        <ul>
-          <li>Blog</li>
-          <li>Best practices</li>
-          <li>Support</li>
-        </ul>
-      </div>
-    </div>
-  </footer>
+                <label for="surname">Surname</label>
+                <input type="text" id="surname" name="surname" required>
 
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div>
+                <p>&copy; 2024 Your Website. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

@@ -1,0 +1,20 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+    {% if username %}
+        <h1>Welcome, {{ username }}!</h1>
+        <form action="{{ url_for('main.logout') }}" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    {% else %}
+        <h1>You are not logged in</h1>
+        <a href="{{ url_for('main.login') }}">Login</a>
+        <a href="{{ url_for('main.register') }}">Register</a>
+    {% endif %}
+</body>
+</html>

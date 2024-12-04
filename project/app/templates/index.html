@@ -92,7 +92,7 @@
         {% if username %}
             <a href="{{ url_for('main.logout') }}">Logout</a>
         {% else %}
-            <a href="login.html">Login</a>
+            <a href="{{ url_for('main.login') }}" class="buttons">Login</a>
         {% endif %}
     </header>
 
@@ -103,8 +103,9 @@
         </div>
 
         <div class="buttons">
-            <a href="post.html" if username else href = "login.html">Post Reis</a>
-            <a href="search.html" if username else href = "login.html">Zoek Reis</a>
+            <a href="/post" class="btn-primary">Post Reis</a>
+            <a href="/search" class="btn-primary">Zoek Reis</a>
+            
         </div>
     </div>
 

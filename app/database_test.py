@@ -11,3 +11,4 @@ try:
 except Exception as e:
     print(f"Failed to connect to the database: {e}")
 
+

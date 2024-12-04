@@ -60,7 +60,8 @@ def register():
         return redirect(url_for('main.index'))
 
     # Bij een GET-verzoek toon het registratieformulier
-    return render_template('register.html')
+    else:
+        return render_template('register.html')
 
 
 @main.route('/login', methods=['GET', 'POST'])
@@ -86,3 +87,7 @@ def post():
 @main.route('/search', methods=['GET', 'POST'])
 def search():
     return render_template('search.html')
+
+@main.route('/registreer', methods=['GET', 'POST'])
+def registreer():
+    return render_template('register.html')

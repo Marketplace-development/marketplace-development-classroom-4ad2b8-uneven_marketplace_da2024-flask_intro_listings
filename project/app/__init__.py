@@ -1,8 +1,10 @@
 from flask import Flask
 from project.app.config import Config
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
@@ -11,9 +13,11 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = Config.SQLALCHEMY_TRACK_MODIFICATIONS
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
     # Voeg routes toe
     from .routes import main  # Zorg ervoor dat de blueprint 'main' correct is gedefinieerd
     app.register_blueprint(main)
+
 
     return app

@@ -161,3 +161,7 @@ def add_recipe():
         return render_template("thank_you.html", title=title)
 
     return render_template("add-recipe.html")
+
+@bp.route('/contact')
+def contact():
+    return render_template('contactpage.html')

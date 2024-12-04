@@ -63,6 +63,9 @@ def listings():
     all_listings = Listing.query.all()
     return render_template('listings.html', listings=all_listings)
 
+@main.route('/about')
+def about():
+    return render_template('about.html')
 
 # creates a route for the homepage
 # We import Blueprint system for route management

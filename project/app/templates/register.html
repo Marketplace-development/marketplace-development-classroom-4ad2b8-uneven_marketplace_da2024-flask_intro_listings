@@ -3,9 +3,6 @@
 <head>
     <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-     <!-- Include Select2 CSS and JS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,9 +13,6 @@
         body {
             font-family: 'Georgia', serif;
             background-color: #013220; /* Chic dark green background */
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-            url('staticimages/forest_background.jpg') no-repeat center center;
-            background-size: cover;
             color: white;
             margin: 0;
             padding: 50px 0; /* 3 cm whitespace at the top and bottom */
@@ -48,60 +42,21 @@
             gap: 20px; /* Add consistent spacing between form elements */
         }
 
-        input, select {
+        input {
             font-size: 16px;
             padding: 12px;
             border: none;
             border-radius: 20px;
             width: 100%;
             background: #eee;
+            color: #333;
         }
 
-        input:focus, select:focus {
+        input:focus {
             outline: none;
             box-shadow: 0 0 5px #007BFF;
         }
 
-        input, .select2-container--default .select2-selection--single {
-            font-size: 16px;
-            padding: 12px; /* Consistent padding */
-            border: none;
-            border-radius: 20px; /* Same rounded corners */
-            width: 100%;
-            background: #eee; /* Same background color */
-            box-sizing: border-box; /* Ensures padding and borders are included in width */
-            color: #333; /* Consistent text color */
-            height:  48px; /* Adjust height for consistency */
-            display: flex;
-            align-items: center; /* Center text vertically */
-        }
-        
-        /* Remove Default Select2 Arrow Background */
-        .select2-container--default .select2-selection__arrow {
-            display: none; /* Hide arrow to match input fields */
-        }
-        
-        /* Override Select2 Container to Match Input Spacing */
-        .select2-container {
-            width: 100% !important; /* Ensure it always matches the input field width */
-        }
-        
-        /* Consistent Focus Effect */
-        input:focus, .select2-container--default .select2-selection--single:focus {
-            outline: none;
-            box-shadow: 0 0 5px #007BFF;
-        }
-
-        .select2-container--default .select2-selection--single {
-            padding-left: 12px; /* Match padding with input */
-            border-radius: 20px; /* Rounded corners */
-        }
-
-        .select2-container--default .select2-selection__arrow {
-            height: 100%;
-            right: 12px;
-        }
-        
         label {
             font-size: 16px;
             text-align: left;
@@ -154,170 +109,16 @@
     <div class="container">
         <h1>Registreren bij Travel Tales</h1>
         <form id="registration-form" method="POST" action="/register">
-            <input type="text" id="firstName" name="firstName" placeholder="Voornaam" required>
-            <input type="text" id="lastName" name="lastName" placeholder="Achternaam" required>
-            <input type="date" id="birthDate" name="birthDate" placeholder="Geboortedatum">
+            <input type="text" id="firstName" name="firstname" placeholder="Voornaam" required>
+            <input type="text" id="lastName" name="lastname" placeholder="Achternaam" required>
+            <input type="date" id="birthDate" name="birthdate" placeholder="Geboortedatum">
             <input type="text" id="address" name="address" placeholder="Adres">
             <input type="text" id="city" name="city" placeholder="Stad">
-            <input type="text" id="postalCode" name="postalCode" placeholder="Postcode">
-
-            <!-- Dropdown for Countries -->
-            <select id="country" name="country" required>
-                <option value="" disabled selected>Kies een land</option>
-                <option value="Afghanistan">Afghanistan</option>
-                <option value="Albania">Albania</option>
-                <option value="Algeria">Algeria</option>
-                <option value="Andorra">Andorra</option>
-                <option value="Angola">Angola</option>
-                <option value="Antigua and Barbuda">Antigua and Barbuda</option>
-                <option value="Argentina">Argentina</option>
-                <option value="Armenia">Armenia</option>
-                <option value="Australia">Australia</option>
-                <option value="Austria">Austria</option>
-                <option value="Azerbaijan">Azerbaijan</option>
-                <option value="Bahamas">Bahamas</option>
-                <option value="Bahrain">Bahrain</option>
-                <option value="Bangladesh">Bangladesh</option>
-                <option value="Barbados">Barbados</option>
-                <option value="Belarus">Belarus</option>
-                <option value="Belgium">Belgium</option>
-                <option value="Belize">Belize</option>
-                <option value="Benin">Benin</option>
-                <option value="Bhutan">Bhutan</option>
-                <option value="Bolivia">Bolivia</option>
-                <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
-                <option value="Botswana">Botswana</option>
-                <option value="Brazil">Brazil</option>
-                <option value="Brunei">Brunei</option>
-                <option value="Bulgaria">Bulgaria</option>
-                <option value="Burkina Faso">Burkina Faso</option>
-                <option value="Burundi">Burundi</option>
-                <option value="Cabo Verde">Cabo Verde</option>
-                <option value="Cambodia">Cambodia</option>
-                <option value="Cameroon">Cameroon</option>
-                <option value="Canada">Canada</option>
-                <option value="Central African Republic">Central African Republic</option>
-                <option value="Chad">Chad</option>
-                <option value="Chile">Chile</option>
-                <option value="China">China</option>
-                <option value="Colombia">Colombia</option>
-                <option value="Comoros">Comoros</option>
-                <option value="Congo, Democratic Republic of the">Congo, Democratic Republic of the</option>
-                <option value="Congo, Republic of the">Congo, Republic of the</option>
-                <option value="Costa Rica">Costa Rica</option>
-                <option value="Croatia">Croatia</option>
-                <option value="Cuba">Cuba</option>
-                <option value="Cyprus">Cyprus</option>
-                <option value="Czech Republic">Czech Republic</option>
-                <option value="Denmark">Denmark</option>
-                <option value="Djibouti">Djibouti</option>
-                <option value="Dominica">Dominica</option>
-                <option value="Dominican Republic">Dominican Republic</option>
-                <option value="Ecuador">Ecuador</option>
-                <option value="Egypt">Egypt</option>
-                <option value="El Salvador">El Salvador</option>
-                <option value="Equatorial Guinea">Equatorial Guinea</option>
-                <option value="Eritrea">Eritrea</option>
-                <option value="Estonia">Estonia</option>
-                <option value="Eswatini">Eswatini</option>
-                <option value="Ethiopia">Ethiopia</option>
-                <option value="Fiji">Fiji</option>
-                <option value="Finland">Finland</option>
-                <option value="France">France</option>
-                <option value="Gabon">Gabon</option>
-                <option value="Gambia">Gambia</option>
-                <option value="Georgia">Georgia</option>
-                <option value="Germany">Germany</option>
-                <option value="Ghana">Ghana</option>
-                <option value="Greece">Greece</option>
-                <option value="Grenada">Grenada</option>
-                <option value="Guatemala">Guatemala</option>
-                <option value="Guinea">Guinea</option>
-                <option value="Guinea-Bissau">Guinea-Bissau</option>
-                <option value="Guyana">Guyana</option>
-                <option value="Haiti">Haiti</option>
-                <option value="Honduras">Honduras</option>
-                <option value="Hungary">Hungary</option>
-                <option value="Iceland">Iceland</option>
-                <option value="India">India</option>
-                <option value="Indonesia">Indonesia</option>
-                <option value="Iran">Iran</option>
-                <option value="Iraq">Iraq</option>
-                <option value="Ireland">Ireland</option>
-                <option value="Israel">Israel</option>
-                <option value="Italy">Italy</option>
-                <option value="Jamaica">Jamaica</option>
-                <option value="Japan">Japan</option>
-                <option value="Jordan">Jordan</option>
-                <option value="Kazakhstan">Kazakhstan</option>
-                <option value="Kenya">Kenya</option>
-                <option value="Kiribati">Kiribati</option>
-                <option value="Korea, North">Korea, North</option>
-                <option value="Korea, South">Korea, South</option>
-                <option value="Kosovo">Kosovo</option>
-                <option value="Kuwait">Kuwait</option>
-                <option value="Kyrgyzstan">Kyrgyzstan</option>
-                <option value="Laos">Laos</option>
-                <option value="Latvia">Latvia</option>
-                <option value="Lebanon">Lebanon</option>
-                <option value="Lesotho">Lesotho</option>
-                <option value="Liberia">Liberia</option>
-                <option value="Libya">Libya</option>
-                <option value="Liechtenstein">Liechtenstein</option>
-                <option value="Lithuania">Lithuania</option>
-                <option value="Luxembourg">Luxembourg</option>
-                <option value="Madagascar">Madagascar</option>
-                <option value="Malawi">Malawi</option>
-                <option value="Malaysia">Malaysia</option>
-                <option value="Maldives">Maldives</option>
-                <option value="Mali">Mali</option>
-                <option value="Malta">Malta</option>
-                <option value="Marshall Islands">Marshall Islands</option>
-                <option value="Mauritania">Mauritania</option>
-                <option value="Mauritius">Mauritius</option>
-                <option value="Mexico">Mexico</option>
-                <option value="Micronesia">Micronesia</option>
-                <option value="Moldova">Moldova</option>
-                <option value="Monaco">Monaco</option>
-                <option value="Mongolia">Mongolia</option>
-                <option value="Montenegro">Montenegro</option>
-                <option value="Morocco">Morocco</option>
-                <option value="Mozambique">Mozambique</option>
-                <option value="Myanmar (Burma)">Myanmar (Burma)</option>
-                <option value="Namibia">Namibia</option>
-                <option value="Nauru">Nauru</option>
-                <option value="Nepal">Nepal</option>
-                <option value="Netherlands">Netherlands</option>
-                <option value="New Zealand">New Zealand</option>
-                <option value="Nicaragua">Nicaragua</option>
-                <option value="Niger">Niger</option>
-                <option value="Nigeria">Nigeria</option>
-                <option value="North Macedonia">North Macedonia</option>
-                <option value="Norway">Norway</option>
-                <option value="Oman">Oman</option>
-                <option value="Pakistan">Pakistan</option>
-                <option value="Palau">Palau</option>
-                <option value="Palestine">Palestine</option>
-                <option value="Panama">Panama</option>
-                <option value="Papua New Guinea">Papua New Guinea</option>
-                <option value="Paraguay">Paraguay</option>
-                <option value="Peru">Peru</option>
-                <option value="Philippines">Philippines</option>
-                <option value="Poland">Poland</option>
-                <option value="Portugal">Portugal</option>
-                <option value="Qatar">Qatar</option>
-                <option value="Romania">Romania</option>
-                <option value="Russia">Russia</option>
-                <option value="Rwanda">Rwanda</option>
-                <option value="Saint Kitts and Nevis">Saint Kitts and Nevis</option>
-                <option value="Saint Lucia">Saint Lucia</option>
-                <option value="Saint Vincent and the Grenadines">Saint Vincent and the Grenadines</option>
-            </select>
-
+            <input type="text" id="postalCode" name="postalcode" placeholder="Postcode">
+            <input type="text" id="country" name="country" placeholder="Land" required>
             <input type="email" id="email" name="email" placeholder="E-mailadres" required>
             <input type="password" id="password" name="password" placeholder="Wachtwoord" required>
             <input type="text" id="phone" name="phone" placeholder="Telefoonnummer">
-            <input type="url" id="profilePicture" name="profilePicture" placeholder="Profielfoto URL">
             <input type="text" id="nationality" name="nationality" placeholder="Nationaliteit">
 
             <div class="checkbox-group">
@@ -332,18 +133,8 @@
 
             <button type="submit">Registreren</button>
             <small>Heb je al een account? <a href="login.html">Log hier in</a>.</small>
-
         </form>
     </div>
-     <!-- Initialize Select2 -->
-    <script>
-        $(document).ready(function() {
-            $('#country').select2({
-                placeholder: 'Kies een land',
-                allowClear: true
-            });
-        });
-    </script>
 </body>
 </html>
-<div id="XXXX"></div>
+

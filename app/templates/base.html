@@ -22,7 +22,7 @@
                     <li><a href="/">Home</a></li> <!-- Added Home link -->
                     <li><a href="/recipes">Recipes</a></li>
                     <li><a href="/dashboard">My Account</a></li>
-                    <li><a href="/about">About Us</a></li>
+                    <li><a href="{{ url_for('main.about') }}">About Us</a></li>
                     <li><a href="{{ url_for('routes.contact') }}">Contact</a></li>
                 </ul>
         

@@ -42,9 +42,6 @@ def logout():
     session.pop('user_id', None)
     return redirect(url_for('main.index'))
 
-@main.route('/about')
-def about():
-    return render_template('about.html')
 
 
 # creates a route for the homepage
@@ -169,3 +166,8 @@ def add_recipe():
 @bp.route('/contact')
 def contact():
     return render_template('contactpage.html')
+
+@bp.route('/about')
+def about():
+    return render_template('about.html')
+

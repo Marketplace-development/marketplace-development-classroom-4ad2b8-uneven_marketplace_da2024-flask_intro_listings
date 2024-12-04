@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoek een Reis</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 20px;
+            background: #1f3d2b; /* Donkergroene achtergrond */
+            color: #ffffff;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #2a4a38;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #ffffff; /* Witte knop */
+            color: #1f3d2b; /* Donkergroene tekst */
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        button:hover {
+            transform: scale(1.03);
+            background-color: #f0f0f0; /* Lichtere tint bij hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Zoek een Reis</h1>
+        <form action="/search_trip" method="GET">
+            <!-- Land -->
+            <label for="country">Land</label>
+            <input type="text" id="country" name="country" placeholder="Voer het land in">
+
+            <!-- Reistypes -->
+            <label>Type Reis (Meerdere selecties mogelijk)</label>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="adventurous" name="trip_type" value="Avontuurlijk">
+                    <label for="adventurous">Avontuurlijk</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="cultural" name="trip_type" value="Cultureel">
+                    <label for="cultural">Cultureel</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="relaxation" name="trip_type" value="Ontspanning">
+                    <label for="relaxation">Ontspanning</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="nature" name="trip_type" value="Natuur">
+                    <label for="nature">Natuur</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="other" name="trip_type" value="Anders">
+                    <label for="other">Anders</label>
+                </div>
+            </div>
+
+            <!-- Prijs -->
+            <label for="price">Maximale Prijs (€)</label>
+            <input type="number" id="price" name="price" placeholder="Voer de maximale prijs in" min="0">
+
+            <!-- Submit -->
+            <button type="submit">Zoek Reizen</button>
+        </form>
+    </div>
+</body>
+</html>

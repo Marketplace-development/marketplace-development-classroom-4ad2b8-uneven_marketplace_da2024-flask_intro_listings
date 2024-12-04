@@ -1,70 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <header>
-        <nav class="navbar">
-            <div class="container">
-                <a href="{{ url_for('main.index') }}" class="navbar-brand">Logo</a>
-                <ul class="nav-links">
-                    <li><a href="{{ url_for('main.index') }}">Home</a></li>
-                    <li><a href="{{ url_for('routes.contact') }}">Contact</a></li>
-                    <li><a href="{{ url_for('main.about') }}">About Us</a></li>
-                </ul>
-                <a href="#" class="btn-black">Sign In</a>
-            </div>
-        </nav>
-    </header>
+{% extends "base.html" %}
 
-    <main>
-        <section class="about">
-            <h1>Our Story</h1>
-            <p>How a classroom idea became a recipe hub</p>
-            <div class="about-images">
-                <img src="{{ url_for('static', filename='images/blije-studenten.jpg') }}" alt="Happy students">
-                <img src="{{ url_for('static', filename='images/Logo_UGent_NL_RGB_2400_kleur-op-wit.png') }}" alt="University of Ghent">
-            </div>
-            <div class="about-text">
-                <h2>About Us</h2>
-                <p>Sharing Flavors, Creating Connections</p>
-                <ul>
-                    <li>
-                        <h3>From Classroom to Kitchen</h3>
-                        <p>We’re not professional chefs—we’re just a group of Business Engineering students from Ghent University with a passion for good food and great ideas! What started as a school project quickly turned into something more: a platform where anyone can share their favorite recipes and discover new ones.</p>
-                    </li>
-                    <li>
-                        <h3>A Taste of Our Story</h3>
-                        <p>During one of those typical late-night study sessions, fueled by snacks and creativity, we realized something: everyone loves sharing recipes, but there wasn’t a place that truly celebrated it. So, we decided to build it ourselves! Our website isn’t just about ingredients and instructions; it’s about stories, flavors, and the people behind them.</p>
-                    </li>
-                    <li>
-                        <h3>Our Mission: Cooking Up Community</h3>
-                        <p>We believe that food brings people together. Our goal is to create a space where culinary creativity meets community spirit. Whether you’re a seasoned home cook or just learning to boil an egg, you’re welcome here! Share your grandma’s secret soup recipe, discover exotic dishes from around the world, or find quick meals for busy days.</p>
-                    </li>
-                    <li>
-                        <h3>What's Next?</h3>
-                        <p>This is just the beginning. We dream of growing our platform into the go-to hub for food lovers everywhere. Imagine live cooking challenges, interactive tutorials, and even student-led recipe competitions. The kitchen is buzzing with possibilities!</p>
-                    </li>
-                    <li>
-                        <h3>Join Our Table!</h3>
-                        <p>We’re inviting you to be part of our journey. Share your recipes, try something new, and connect with fellow food enthusiasts. Because the best meals are those shared with others.</p>
-                    </li>
-                    <li>
-                        <h3>Let’s cook, share, and inspire—together. Welcome to our culinary adventure!</h3>
-                    </li>
-                </ul>
-            </div>
-        </section>
-    </main>
+{% block title %}
+About Us
+{% endblock %}
 
-    <footer>
-        <div class="footer-container">
-            <p>&copy; 2024 Your Website. All rights reserved.</p>
+{% block content %}
+<main>
+    <section class="about">
+        <h1>Our Story</h1>
+        <p>How a classroom idea became a recipe hub</p>
+        <div class="about-images">
+            <img src="{{ url_for('static', filename='images/blije-studenten.jpg') }}" alt="Happy students">
+            <img src="{{ url_for('static', filename='images/Logo_UGent_NL_RGB_2400_kleur-op-wit.png') }}" alt="University of Ghent">
         </div>
-    </footer>
-</body>
-</html>
+        <div class="about-text">
+            <h2>About Us</h2>
+            <p>Sharing Flavors, Creating Connections</p>
+            <ul>
+                <li>
+                    <h3>From Classroom to Kitchen</h3>
+                    <p>We’re not professional chefs—we’re just a group of Business Engineering students from Ghent University with a passion for good food and great ideas! What started as a school project quickly turned into something more: a platform where anyone can share their favorite recipes and discover new ones.</p>
+                </li>
+                <li>
+                    <h3>A Taste of Our Story</h3>
+                    <p>During one of those typical late-night study sessions, fueled by snacks and creativity, we realized something: everyone loves sharing recipes, but there wasn’t a place that truly celebrated it. So, we decided to build it ourselves! Our website isn’t just about ingredients and instructions; it’s about stories, flavors, and the people behind them.</p>
+                </li>
+                <li>
+                    <h3>Our Mission: Cooking Up Community</h3>
+                    <p>We believe that food brings people together. Our goal is to create a space where culinary creativity meets community spirit. Whether you’re a seasoned home cook or just learning to boil an egg, you’re welcome here! Share your grandma’s secret soup recipe, discover exotic dishes from around the world, or find quick meals for busy days.</p>
+                </li>
+                <li>
+                    <h3>What's Next?</h3>
+                    <p>This is just the beginning. We dream of growing our platform into the go-to hub for food lovers everywhere. Imagine live cooking challenges, interactive tutorials, and even student-led recipe competitions. The kitchen is buzzing with possibilities!</p>
+                </li>
+                <li>
+                    <h3>Join Our Table!</h3>
+                    <p>We’re inviting you to be part of our journey. Share your recipes, try something new, and connect with fellow food enthusiasts. Because the best meals are those shared with others.</p>
+                </li>
+                <li>
+                    <h3>Let’s cook, share, and inspire—together. Welcome to our culinary adventure!</h3>
+                </li>
+            </ul>
+        </div>
+    </section>
+</main>
+{% endblock %}

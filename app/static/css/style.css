@@ -827,3 +827,64 @@
 .contact-form .submit-btn:hover {
     background: #555;
 }
+
+.about {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.about h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.about p {
+    margin-bottom: 30px;
+    color: #666;
+}
+
+.about-images {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.about-images img {
+    max-width: 300px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.about-text {
+    text-align: left;
+    margin: 0 auto;
+    max-width: 800px;
+    line-height: 1.6;
+}
+
+.about-text h2 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.about-text ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.about-text ul li {
+    margin-bottom: 20px;
+}
+
+.about-text ul li h3 {
+    font-size: 1.5em;
+    color: #333;
+}
+
+.about-text ul li p {
+    color: #666;
+}

@@ -78,3 +78,11 @@ def login():
 def logout():
     session.pop('userid', None)
     return redirect(url_for('main.index'))
+
+@main.route('/post', methods=['GET', 'POST'])
+def post():
+    return render_template('post.html')
+
+@main.route('/search', methods=['GET', 'POST'])
+def search():
+    return render_template('search.html')

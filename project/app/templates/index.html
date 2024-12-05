@@ -58,26 +58,48 @@
             margin: 0 auto;
         }
 
-        .buttons {
-            margin-top: 40px;
-        }
-
-        .buttons a {
+         .buttons a,
+        .buttons button {
             display: inline-block;
             margin: 10px;
             padding: 15px 30px;
             font-size: 18px;
             font-weight: bold;
             color: #ffffff;
-            text-decoration: none;
-            background: #2e5f3d; /* Knoppenkleur */
+            text-decoration: none; /* Verwijdert onderstreping bij <a> */
+            background: #2e5f3d; /* Groene achtergrond */
+            border: none; /* Verwijdert standaardknoprand */
+            border-radius: 5px; /* Ronde hoeken */
+            cursor: pointer; /* Muisaanwijzer voor klikbare elementen */
+            text-align: center; /* Centreer de tekst */
+            transition: background 0.3s ease; /* Mooi hover-effect */
+            appearance: none; /* Verwijdert standaardstijl op knoppen (Safari) */
+        }
+        
+        .buttons a:hover,
+        .buttons button:hover {
+            background: #3c764b; /* Donkergroene hover-kleur */
+        }
+        
+        .buttons button {
+            all: unset; /* Verwijdert alle standaard buttonstijlen */
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+            background: #2e5f3d;
             border-radius: 5px;
-            transition: background 0.3s;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.3s ease;
         }
-
-        .buttons a:hover {
-            background: #3c764b; /* Hover effect */
-        }
+        
+        .buttons button:hover {
+            background: #3c764b;
+        }  
+        
 
         footer {
             margin-top: 30px;
@@ -90,11 +112,13 @@
     <header>
         <h1>Travel Tales</h1>
         {% if username %}
-            <a href="{{ url_for('main.logout') }}">Logout</a>
+            <a href="{{ url_for('main.logout') }}" class="buttons">Logout</a>
+
         {% else %}
             <a href="{{ url_for('main.login') }}" class="buttons">Login</a>
         {% endif %}
     </header>
+     
 
     <div class="container">
         <div class="hero-section">

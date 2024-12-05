@@ -63,21 +63,31 @@ def register():
     return render_template('register.html')
 
 
-@main.route('/login', methods=['GET', 'POST'])
+@main.route('/login', methods=['POST','GET'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
-        email = Users.query.filter_by(email=email).first()
-        if email:
-            session['userid'] = user.id
+        password = request.form['password']  # Zorg dat het wachtwoord ook wordt opgehaald
+
+        # Zoek de gebruiker op basis van het e-mailadres
+        user = Users.query.filter_by(email=email).first()
+
+        # Controleer of de gebruiker bestaat
+        if user and user.password == password:  # Controleer of het wachtwoord correct is
+            session['userid'] = user.userid  # Gebruik de `userid` van de specifieke gebruiker
             return redirect(url_for('main.index'))
-        return 'User not found'
+        
+        # Toon een foutbericht als de gebruiker niet wordt gevonden of het wachtwoord onjuist is
+        return 'Ongeldige inloggegevens', 401
+    
     return render_template('login.html')
 
-@main.route('/logout', methods=['POST'])
+
+@main.route('/logout', methods=['POST', 'GET'])
 def logout():
     session.pop('userid', None)
     return redirect(url_for('main.index'))
+
 
 @main.route('/post', methods=['GET', 'POST'])
 def post():

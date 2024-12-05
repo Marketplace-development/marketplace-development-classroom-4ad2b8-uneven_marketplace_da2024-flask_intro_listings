@@ -39,7 +39,16 @@
             border: none;
             border-radius: 5px;
             font-size: 16px;
+            font-family: Arial, sans-serif;
         }
+
+        input::placeholder,
+        textarea::placeholder {
+        font-size: 14px; /* Lettertypegrootte van de placeholder */
+        font-family: Arial, sans-serif; /* Zelfde lettertype als invoer */
+        color: #aaa; /* Placeholder kleur (optioneel) */
+        }
+        
         button {
             width: 100%;
             padding: 15px;
@@ -68,8 +77,7 @@
 
             <!-- Beschrijving -->
             <label for="descriptionofitinerary">Beschrijving</label>
-            <input type="text" id="descriptionofitinerary" name="descriptionofitinerary" placeholder="Voer een beschrijving in" required>
-
+            <textarea id="descriptionofitinerary" name="descriptionofitinerary" placeholder="Voer een beschrijving in" rows="5" required></textarea>
 
             <!-- Prijs -->
             <label for="price">Prijs (€)</label>

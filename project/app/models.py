@@ -56,7 +56,7 @@ class DigitalGoods(db.Model):
     
     # Eigenschappen van digitale goederen
     titleofitinerary = db.Column(db.String, nullable=False)
-    descriptionofitinerary = db.Column(db.String)
+    descriptionofitinerary = db.Column(db.TEXT)
     userid = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)
     price = db.Column(db.Numeric)
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)

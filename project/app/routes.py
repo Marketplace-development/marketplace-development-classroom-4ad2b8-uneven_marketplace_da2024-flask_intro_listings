@@ -11,7 +11,7 @@ main = Blueprint('main', __name__)
 def index():
     if 'userid' in session:
         user = Users.query.get(session['userid'])
-        return render_template('index.html', username=user.username)
+        return render_template('index.html', username=user.firstname)
     return render_template('index.html', username=None)
 
 @main.route('/register', methods=['GET', 'POST'])
@@ -54,22 +54,21 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        # Sla de userID op in de sessie
-        session['userID'] = new_user.userID
+        # Sla de userid op in de sessie
+        session['userid'] = new_user.userid
 
         return redirect(url_for('main.index'))
 
     # Bij een GET-verzoek toon het registratieformulier
-    else:
-        return render_template('register.html')
+    return render_template('register.html')
 
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        user = Users.query.filter_by(username=username).first()
-        if user:
+        email = request.form['email']
+        email = Users.query.filter_by(email=email).first()
+        if email:
             session['userid'] = user.id
             return redirect(url_for('main.index'))
         return 'User not found'
@@ -88,6 +87,3 @@ def post():
 def search():
     return render_template('search.html')
 
-@main.route('/registreer', methods=['GET', 'POST'])
-def registreer():
-    return render_template('register.html')

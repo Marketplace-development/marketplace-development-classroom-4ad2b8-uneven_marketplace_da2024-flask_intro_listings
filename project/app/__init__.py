@@ -1,23 +1,25 @@
 from flask import Flask
-from project.app.config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from .config import Config  # Zorg dat Config wordt geïmporteerd
 
 db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = Config.SECRET_KEY
+    
+    # Configuratie
     app.config['SQLALCHEMY_DATABASE_URI'] = Config.SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = Config.SQLALCHEMY_TRACK_MODIFICATIONS
+    app.config['SECRET_KEY'] = Config.SECRET_KEY
 
+    # Initialiseer extensies
     db.init_app(app)
     migrate.init_app(app, db)
-
-    # Voeg routes toe
-    from .routes import main  # Zorg ervoor dat de blueprint 'main' correct is gedefinieerd
+    
+    # Registreer blueprints
+    from .routes import main
     app.register_blueprint(main)
-
 
     return app

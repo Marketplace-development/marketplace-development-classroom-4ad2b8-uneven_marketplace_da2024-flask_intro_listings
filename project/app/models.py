@@ -2,12 +2,9 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 from . import db
 
-db = SQLAlchemy()
-
-
 class Users(db.Model):
     # Primary key
-    userid = db.Column(db.String, primary_key=True)  # Using userID as primary key for consistency with your table
+    userid = db.Column(db.String, primary_key=True)  # Using userid as primary key for consistency with your table
 
     # User information
     firstname = db.Column(db.String, nullable=False)
@@ -28,7 +25,7 @@ class Users(db.Model):
     issearcher = db.Column(db.Boolean, default=False)
 
     # Metadata
-    createdat = db.Column(db.DateTime, default=datetime.date)
+    createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     # # Relationships
     # listings = db.relationship('Listing', backref='user', lazy=True)
@@ -40,7 +37,7 @@ class Users(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
 #     listing_name = db.Column(db.String(100), nullable=False)
 #     price = db.Column(db.Float, nullable=False)
-#     user_id = db.Column(db.String, db.ForeignKey('user.userID'), nullable=False)  # ForeignKey matches userID in User
+#     user_id = db.Column(db.String, db.ForeignKey('user.userid'), nullable=False)  # ForeignKey matches userid in User
 
 #     def __repr__(self):
 #         return f'<Listing {self.listing_name}, ${self.price}>'

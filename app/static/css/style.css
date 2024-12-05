@@ -1,0 +1,890 @@
+/* General Navbar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* Logo Styling */
+.logo img {
+    height: 75px;
+    width: auto;
+}
+
+/* Navigation Links Styling */
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links a {
+    text-decoration: none;
+    padding: 5px 15px;
+    border: 1px solid black;
+    color: black;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-links a:hover {
+    background-color: black;
+    color: white;
+}
+
+/* Auth Button Styling */
+.auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.auth-buttons .btn-black {
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    padding: 5px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.auth-buttons .btn-black:hover {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    width: 100%; /* Ensure it spans the full width of the screen */
+    height: 600px; /* Increase height to make the header taller */
+    background: url('../images/hero-image.jpg') no-repeat center center/cover; /* Cover ensures the image fills the space */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    margin: 0; /* Remove any default margin around the section */
+    padding: 0; /* Remove padding */
+    overflow: hidden; /* Prevent extra white space */
+}
+
+.hero-content {
+    text-align: center;
+    color: white;
+    padding: 50px 20px;
+}
+
+.hero-content h1 {
+    font-size: 2.8rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-content p {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.header-buttons a {
+    display: inline-block;
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #333;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #555;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: white;
+    color: #333;
+    border: 1px solid #333;
+}
+
+.btn-secondary:hover {
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+/* Hero Section for Video */
+.hero.video {
+    position: relative;
+    width: 100%;
+    height: 600px; /* Zorg ervoor dat de hoogte van de video past */
+    overflow: hidden;
+}
+
+.hero.video video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Zorg dat de video de hele sectie vult */
+    z-index: 1; /* Plaats de video op de achtergrond */
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2; /* Zorg dat de content bovenop de video ligt */
+    text-align: center;
+    color: white;
+}
+
+/* Feature Highlights Section */
+.features {
+    text-align: center;
+    padding: 20px 20px; /* Reduced top padding */
+    background-color: #e9f5f2; /* New background color */
+}
+
+.features h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+.feature-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.feature-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 300px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.feature-card img {
+    height: 160px;
+    margin-bottom: 20px;
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.feature-btn {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.feature-btn:hover {
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #333;
+}
+
+/* Testimonials Section */
+.testimonials {
+    text-align: center;
+    padding: 20px 20px;
+    background-color: #f9f9f9; /* Light gray background */
+}
+
+.testimonials h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+/* Carousel Container */
+.testimonials-carousel {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 20px 0;
+    scroll-snap-type: x mandatory; /* Enable snapping for scrolling */
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+.testimonials-carousel::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in Chrome/Safari */
+}
+
+.testimonial-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    flex: 0 0 300px; /* Fixed width for each card */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    scroll-snap-align: center; /* Snap alignment for scrolling */
+}
+
+.testimonial-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    object-fit: cover;
+}
+
+.testimonial-card h3 {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.testimonial-card p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.stars {
+    font-size: 1.2rem;
+    color: #f5c518; /* Gold stars */
+}
+
+/* Authentication Pages */
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 100px); /* Subtract space for the header/footer if present */
+    background-color: #f9f9f9;
+    padding: 30px 0; /* Add padding at the top and bottom */
+}
+
+.auth-container {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px; /* Reduced padding to minimize whitespace */
+    padding-top: 30px; /* Added padding to the top */
+    padding-bottom: 30px; /* Added padding to the bottom */
+    width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left; /* Align the container content to the left */
+}
+
+.auth-container h2 {
+    margin-top: 0; /* Reduce whitespace above the title */
+    margin-bottom: 20px; /* Keep a small space below the title */
+    font-size: 1.8rem; /* Adjusted font size */
+    color: #333;
+    text-align: center; /* Center the title */
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left; /* Align labels to the left */
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem; /* Smaller, clean font size for labels */
+    color: #666;
+    margin-bottom: 5px; /* Add space between label and input field */
+}
+
+.form-group input {
+    width: 90%; /* Reduce the width to add padding to the right */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-align: left;
+    box-sizing: border-box; /* Ensure padding doesn't exceed the container */
+    margin-left: auto; /* Centers the input field horizontally */
+    margin-right: auto; /* Centers the input field horizontally */
+}
+
+.btn-primary {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin-top: 15px; /* Add spacing between the last input field and button */
+    display: block; /* Ensure the button is treated as a block element */
+    margin-left: auto; /* Automatically center horizontally */
+    margin-right: auto; /* Automatically center horizontally */
+}
+
+.btn-primary:hover {
+    background-color: white;
+    color: #333;
+    border: 1px solid #333;
+}
+
+.switch-link {
+    margin-top: 20px; /* Increased space above the link text */
+    font-size: 0.9rem; /* Slightly smaller text size */
+    color: #666;
+    text-align: center;
+}
+
+.switch-link a {
+    color: #333;
+    text-decoration: underline; /* Highlight links with an underline */
+}
+
+.error {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 15px; /* Space between error message and form */
+    text-align: center;
+}
+
+/* Featured Recipes Section */
+.featured-recipes {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #f9f9f9; /* Light gray background */
+}
+
+.featured-recipes h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+.recipes-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap; /* Ensures responsiveness */
+}
+
+.recipe-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 300px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.recipe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.recipe-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover; /* Ensures the image fits nicely in the card */
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.recipe-card h3 {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.recipe-card p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: white;
+    color: #333;
+    border: 1px solid #333;
+}
+
+/* Footer Section */
+.footer {
+    background-color: #333; /* Dark background */
+    color: white;
+    text-align: center;
+    padding: 20px 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.social-links a {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+}
+
+.social-links img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.social-links img:hover {
+    transform: scale(1.1); /* Slight zoom effect on hover */
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap; /* Ensures the links wrap on smaller screens */
+    gap: 15px;
+    justify-content: center;
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #f0a500; /* Highlight color on hover */
+}
+
+/* Dashboard Styling */
+.dashboard {
+    background-color: #f4f4f4; /* Page background */
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    align-items: flex-start; /* Align content to the top */
+    justify-content: center; /* Center content horizontally */
+    padding: 30px 0;
+    box-sizing: border-box;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    display: flex;
+    gap: 20px;
+    max-width: 1200px;
+    width: 100%;
+    padding: 0;
+    align-items: flex-start; /* Align sidebar and main content to the top */
+    box-sizing: border-box;
+}
+
+/* Sidebar Navigation Styling */
+.dashboard-sidebar {
+    flex: 1;
+    background-color: transparent;
+    padding: 20px;
+    text-align: center;
+    margin-top: 35px; /* Optional fine-tuning to align with the content */
+}
+
+.profile-section {
+    margin-bottom: 30px;
+}
+
+.profile-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    object-fit: cover;
+}
+
+.dashboard-sidebar h3 {
+    font-size: 1.5rem; /* Font size for the name */
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.dashboard-sidebar p {
+    font-size: 1rem; /* Font size for the email */
+    color: #666;
+    margin: 5px 0 20px;
+}
+
+.dashboard-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-sidebar li {
+    margin-bottom: 15px; /* Adjust spacing between sidebar links */
+}
+
+.dashboard-sidebar a {
+    text-decoration: none;
+    font-size: 1.4rem; /* Increased font size for sidebar links */
+    color: #666;
+    display: block;
+    padding: 5px 0; /* Minimal padding for alignment */
+    transition: color 0.3s ease;
+}
+
+.dashboard-sidebar a:hover {
+    color: #f0a500; /* Change text color on hover */
+    background-color: transparent; /* Remove background hover effect */
+}
+
+.dashboard-sidebar li.active a {
+    font-weight: bold;
+    color: #f0a500;
+}
+
+/* Main Content Styling */
+.dashboard-content {
+    flex: 3;
+    background-color: transparent; /* Match the page background */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.dashboard-content h2 {
+    font-size: 2rem; /* Larger heading */
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.dashboard-content p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Info Cards Styling */
+.info-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Two cards per row */
+    gap: 20px;
+}
+
+.info-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.info-card h3 {
+    font-size: 1.2rem; /* Increased size for titles */
+    font-weight: bold; /* Bold titles */
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.info-card p {
+    font-size: 1rem; /* Smaller size for content */
+    color: #666;
+}
+
+/* Newsletter Section */
+.newsletter-section {
+    background-color: #f1f1f1; /* Light grey background */
+    padding: 40px 20px; /* Spacing around the content */
+    text-align: center;
+}
+
+.newsletter-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px 20px; /* Adjusted padding inside the box */
+    padding-top: 5px; /* Reduced padding to move content upwards */
+    border-radius: 10px; /* Smooth corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.newsletter-container h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.newsletter-container p {
+    font-size: 1.3rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.newsletter-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Space between input and button */
+}
+
+.newsletter-form input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.newsletter-form button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.newsletter-form button:hover {
+    background-color: #555; /* Darker shade on hover */
+}
+
+.recipe-form-container {
+    background-color: #f9f9f9;
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* This is the code for the add-recipe page */
+.recipe-form-container h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.form-group input[type="file"] {
+    padding: 5px;
+}
+
+.btn-primary {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    display: block;
+    margin: 0 auto;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #555;
+}
+
+.contact {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.contact h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.contact p {
+    margin-bottom: 30px;
+    color: #666;
+}
+
+.contact-form {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-form label {
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+.contact-form input,
+.contact-form textarea {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.contact-form .submit-btn {
+    padding: 10px 20px;
+    background: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.contact-form .submit-btn:hover {
+    background: #555;
+}
+
+.about {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.about h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.about p {
+    margin-bottom: 30px;
+    color: #666;
+}
+
+.about-images {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.about-images img {
+    max-width: 300px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.about-text {
+    text-align: left;
+    margin: 0 auto;
+    max-width: 800px;
+    line-height: 1.6;
+}
+
+.about-text h2 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.about-text ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.about-text ul li {
+    margin-bottom: 20px;
+}
+
+.about-text ul li h3 {
+    font-size: 1.5em;
+    color: #333;
+}
+
+.about-text ul li p {
+    color: #666;
+}

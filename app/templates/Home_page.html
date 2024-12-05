@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}
+Homepage
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero video">
+    <video autoplay muted loop>
+        <source src="{{ url_for('static', filename='videos/hero-video.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="hero-content">
+        <h1>Share Your Culinary Heritage</h1>
+        <p>Post your favorite recipes and discover new ones</p>
+        <div class="header-buttons">
+            <a href="/add-recipe" class="btn-primary">Add Recipes</a>
+            <a href="/discover" class="btn-secondary">Discover</a>
+        </div>
+    </div>
+</section>
+
+<!-- Feature Highlights Section -->
+<section class="features">
+    <h2>What Makes Us Special</h2>
+    <div class="feature-container">
+        <div class="feature-card">
+            <img src="{{ url_for('static', filename='images/recipes-icon.png') }}" alt="Exclusive Recipes Icon">
+            <h3>Exclusive Recipes</h3>
+            <p>Discover an array of recipes, handpicked and crafted by world-renowned chefs. Explore cuisines from around the globe and find inspiration for your next meal.</p>
+            <a href="/recipes" class="feature-btn">Learn More</a>
+        </div>
+        <div class="feature-card">
+            <img src="{{ url_for('static', filename='images/ingredients-icon.png') }}" alt="Fresh Ingredients Icon">
+            <h3>Fresh Ingredients</h3>
+            <p>Enjoy the convenience of pre-measured, high-quality ingredients delivered to your doorstep. Our carefully sourced produce guarantees freshness and quality in every bite.</p>
+            <a href="/ingredients" class="feature-btn">Learn More</a>
+        </div>
+        <div class="feature-card">
+            <img src="{{ url_for('static', filename='images/time-icon.png') }}" alt="Save Time Icon">
+            <h3>Save Time</h3>
+            <p>Streamline your cooking experience with easy-to-follow, step-by-step recipes. Spend less time planning and more time enjoying delicious meals with your loved ones.</p>
+            <a href="/time-saving" class="feature-btn">Learn More</a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials">
+    <h2>What Our Users Say</h2>
+    <div class="testimonials-carousel">
+        <!-- Testimonial 1 -->
+        <div class="testimonial-card">
+            <img src="{{ url_for('static', filename='images/user1.jpg') }}" alt="User 1">
+            <h3>Sonia Sadiq Gandhi</h3>
+            <p>"Incredible service and recipes! I've saved so much time and money with their guidance."</p>
+            <div class="stars">★★★★★</div>
+        </div>
+        <!-- Testimonial 2 -->
+        <div class="testimonial-card">
+            <img src="{{ url_for('static', filename='images/user2.jpg') }}" alt="User 2">
+            <h3>Mira Le Mare</h3>
+            <p>"The recipes are amazing, and the step-by-step guidance makes cooking effortless."</p>
+            <div class="stars">★★★★★</div>
+        </div>
+        <!-- Testimonial 3 -->
+        <div class="testimonial-card">
+            <img src="{{ url_for('static', filename='images/user3.jpg') }}" alt="User 3">
+            <h3>Adam Yeats</h3>
+            <p>"The ingredient delivery is spot on. Fresh, high-quality produce every single time."</p>
+            <div class="stars">★★★★★</div>
+        </div>
+        <!-- Testimonial 4 -->
+        <div class="testimonial-card">
+            <img src="{{ url_for('static', filename='images/user4.jpg') }}" alt="User 4">
+            <h3>Emma Stone</h3>
+            <p>"Culinary Heritage brought my family closer together during mealtimes. A life-changer!"</p>
+            <div class="stars">★★★★★</div>
+        </div>
+        <!-- Testimonial 5 -->
+        <div class="testimonial-card">
+            <img src="{{ url_for('static', filename='images/user5.jpg') }}" alt="User 5">
+            <h3>Chris Hemsworth</h3>
+            <p>"I love the variety of recipes available. The convenience is unmatched!"</p>
+            <div class="stars">★★★★★</div>
+        </div>
+        <!-- Testimonial 6 -->
+        <div class="testimonial-card">
+            <img src="{{ url_for('static', filename='images/user6.jpg') }}" alt="User 6">
+            <h3>Olivia Wilde</h3>
+            <p>"The quality of ingredients and simplicity of the recipes is just perfect for my busy life."</p>
+            <div class="stars">★★★★★</div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Recipes Section -->
+<section class="featured-recipes">
+    <h2>Most Popular Recipes</h2>
+    <div class="recipes-container">
+        <!-- Recipe 1 -->
+        <div class="recipe-card">
+            <img src="{{ url_for('static', filename='images/recipe1.jpg') }}" alt="Recipe 1">
+            <h3>Spaghetti Carbonara</h3>
+            <p>A classic Italian pasta dish made with eggs, cheese, pancetta, and pepper.</p>
+            <a href="/recipe/1" class="btn-primary">View Recipe</a>
+        </div>
+        <!-- Recipe 2 -->
+        <div class="recipe-card">
+            <img src="{{ url_for('static', filename='images/recipe2.jpg') }}" alt="Recipe 2">
+            <h3>Chicken Tikka Masala</h3>
+            <p>Tender chicken in a creamy, spiced curry sauce. Perfect with naan or rice.</p>
+            <a href="/recipe/2" class="btn-primary">View Recipe</a>
+        </div>
+        <!-- Recipe 3 -->
+        <div class="recipe-card">
+            <img src="{{ url_for('static', filename='images/recipe3.jpg') }}" alt="Recipe 3">
+            <h3>Chocolate Lava Cake</h3>
+            <p>A warm, gooey dessert with molten chocolate inside. Perfect for chocolate lovers!</p>
+            <a href="/recipe/3" class="btn-primary">View Recipe</a>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="newsletter-section">
+    <div class="newsletter-container">
+        <h2>Follow the latest trends</h2>
+        <p>With our daily newsletter</p>
+        <form action="/subscribe" method="post" class="newsletter-form">
+            <input type="email" name="email" placeholder="you@example.com" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

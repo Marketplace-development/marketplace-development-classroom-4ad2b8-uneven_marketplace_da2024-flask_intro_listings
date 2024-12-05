@@ -1,13 +1,24 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
-    <h1>Login</h1>
-    <form method="post">
-        Username: <input type="text" name="username" required>
-        <input type="submit" value="Login">
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+Log In
+{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+    <div class="auth-container">
+        <h2>Log In</h2>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+        <form method="POST">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <button type="submit" class="btn-primary">Log In</button>
+        </form>
+        <p class="switch-link centered-link">Don't have an account? <a href="/signup">Sign Up</a></p>
+    </div>
+</section>
+{% endblock %}

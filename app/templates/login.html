@@ -8,8 +8,9 @@ Log In
 <section class="auth-page">
     <div class="auth-container">
         <h2>Log In</h2>
-        {% if error %}
-            <p class="error">{{ error }}</p>
+        <!-- Display error message if it exists -->
+        {% if error_message %}
+            <p class="error">{{ error_message }}</p>
         {% endif %}
         <form method="POST">
             <div class="form-group">

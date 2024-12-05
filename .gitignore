@@ -1,0 +1,7 @@
+/venv
+__pycache__/
+*.pyc
+__pycache__/run.cpython-312.pyc
+project/app/__pycache__/__init__.cpython-312.pyc
+project/app/__pycache__/models.cpython-312.pyc
+project/app/__pycache__/routes.cpython-312.pyc

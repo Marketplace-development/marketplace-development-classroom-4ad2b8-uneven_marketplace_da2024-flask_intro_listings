@@ -3,7 +3,7 @@
 import datetime
 import uuid
 from flask import Blueprint, request, redirect, url_for, render_template, session
-from .models import db, Users
+from .models import db, Users, DigitalGoods
 
 main = Blueprint('main', __name__)
 
@@ -91,6 +91,18 @@ def logout():
 
 @main.route('/post', methods=['GET', 'POST'])
 def post():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+    
+    if request.method == 'POST':
+        itinerary_name = request.form['titleofitinerary']
+        price = float(request.form['price'])
+        description_tekst = request.form['descriptionofitinerary']
+        new_itinerary = DigitalGoods(goodid=str(uuid.uuid4()),titleofitinerary=itinerary_name, descriptionofitinerary= description_tekst,userid=session['userid'],price=price)
+        db.session.add(new_itinerary)
+        db.session.commit()
+        return redirect(url_for('main.index'))
+
     return render_template('post.html')
 
 @main.route('/search', methods=['GET', 'POST'])

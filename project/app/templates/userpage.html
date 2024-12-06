@@ -189,7 +189,15 @@
         .alert.error {
             background-color: #f44336; /* Rood voor fouten */
         }
+
+        .alert.warning {
+            background-color: #ff9800; /* Oranje voor waarschuwingen */ 
+        }
         
+        .alert.info { 
+            background-color: #2196f3; /* Blauw voor informatie */ 
+        }
+
         
     </style>
 </head>
@@ -237,8 +245,8 @@
                     <input type="text" id="lastname" name="lastname" value="{{ user.lastname }}" required>
                 </div>
                 <div class="form-row">
-                    <label for="birthDate">Geboortedatum:</label>
-                    <input type="date" id="birthDate" name="birthdate" value="{{ user.birtDate or '' }}">
+                    <label for="birthdate">Geboortedatum:</label>
+                    <input type="date" id="birthdate" name="birthdate" value="{{ user.birtdate or '' }}">
                 </div>
                 <div class="form-row">
                     <label for="email">E-mailadres:</label>

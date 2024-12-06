@@ -157,4 +157,4 @@ def change_password():
     user.set_password(new_password)  # Zorg dat je een methode `set_password` hebt in je User-model
     db.session.commit()
     flash('Wachtwoord succesvol gewijzigd!', 'success')
-    return redirect(url_for('userpage'))
+    return redirect(url_for('main.userpage'))

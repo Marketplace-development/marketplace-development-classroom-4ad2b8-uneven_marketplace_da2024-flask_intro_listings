@@ -147,8 +147,8 @@
     <header class="main-header">
         <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
         <nav class="nav-links">
-            {% if user %}
-            <h2>Hallo, <input type="text" id="firstname" name="firstname" value="{{ user.firstname }}" required></h2>
+            {% if username %}
+            <h2>Hallo</h2>
             <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
             <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
             {% else %}
@@ -157,7 +157,6 @@
             {% endif %}
         </nav>
     </header>
-    
     
     <div class="container">
         <div class="hero-section">

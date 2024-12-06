@@ -103,7 +103,7 @@ def post():
         new_itinerary = DigitalGoods(goodid=str(uuid.uuid4()),titleofitinerary=itinerary_name, descriptionofitinerary= description_tekst,userid=session['userid'],price=price)
         db.session.add(new_itinerary)
         db.session.commit()
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.reistoegevoegd'))
 
     return render_template('post.html')
 
@@ -181,9 +181,10 @@ def gepost():
 
             db.session.commit()  # Wijzigingen opslaan
 
-        return redirect(url_for('main.gepost'))  # Vernieuw de pagina
+            return redirect(url_for('main.reistoegevoegd'))
 
     return render_template('gepost.html', user=user, geposte_reizen=geposte_reizen)
+
 
 @main.route('/gekocht', methods=['GET', 'POST'])
 def gekocht():
@@ -237,9 +238,10 @@ def verwijder_reis():
 
 @main.route('/reisverwijderd', methods=['GET'])
 def reisverwijderd():
-    if 'userid' not in session:
-        return redirect(url_for('main.login'))
-
     return render_template('reisverwijderd.html')
+
+@main.route('/reistoegevoegd', methods=['GET'])
+def reistoegevoegd():
+    return render_template('reistoegevoegd.html')
 
 

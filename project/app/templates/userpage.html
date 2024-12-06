@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profiel Instellingen</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: #ffffff; /* Witte achtergrond */
+            color: #1f3d2b; /* Donkergroene tekstkleur */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+                /* Algemene stijlen voor de hoofdheader */
+        .main-header {
+            background: #24452e; /* Donkergroene achtergrond */
+            padding: 20px 30px; /* Zorgt voor consistente hoogte */
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Verdeelt logo en navigatie */
+            position: relative;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Schaduw voor visuele separatie */
+        }
+
+        .main-header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px; /* Ruimte tussen de navigatieknoppen */
+        }
+
+        .nav-button {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 15px;
+            background: #2e5f3d; /* Groene achtergrond */
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #3c764b; /* Hover-kleur voor knoppen */
+            color: #e6ffe6; /* Lichtere tekstkleur tijdens hover */
+        }
+
+        .header-title {
+            font-size: 28px;
+            color: #ffffff;
+            font-weight: bold; /* Toegevoegd om tekst vet te maken */
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #2e5f3d; /* Groene zijbalk */
+            padding: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin: 15px 0;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 16px;
+            display: block;
+            padding: 10px;
+            background: #3c764b; /* Hover-kleur standaard tonen */
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background: #4f8a61; /* Lichtere hover */
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px 30px;
+            background: #ffffff; /* Witte achtergrond */
+        }
+
+        h1 {
+            font-size: 24px; /* Grotere titel voor "Mijn Instellingen" */
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #ffffff; /* Witte tekst */
+            font-size: 13px;
+            margin-right: 15px; /* Ruimte tussen de tekst en de knoppen */
+            display: inline-block; /* Zorgt ervoor dat het naast de knoppen staat */
+        }
+
+        .section {
+            margin-bottom: 50px;
+            padding: 15px;
+            background: #f5f5f5; /* Lichtgrijze achtergrond voor secties */
+            border: 1px solid #ddd; /* Rand om secties */
+            border-radius: 8px;
+        }
+
+        .section h2 {
+            font-size: 18px; /* Sectietitel kleiner dan hoofdtitel */
+        }
+
+        .section label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+            color: #1f3d2b;
+        }
+
+        .section input,
+        .section select,
+        .section textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #ffffff;
+            color: #333;
+        }
+
+        .toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .save-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #2e5f3d;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .save-button:hover {
+            background: #4f8a61;
+        }
+
+        .flashes {
+            margin-bottom: 20px;
+        }
+        
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        
+        .alert.success {
+            background-color: #4caf50; /* Groen voor succes */
+        }
+        
+        .alert.error {
+            background-color: #f44336; /* Rood voor fouten */
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <!--header -->
+        <!-- "Travel Tales" in de linkerhoek -->
+        <!-- <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a> -->
+        <!-- Titel in het midden -->
+        <!-- <div class="header-title">Mijn instellingen</div> -->
+    <!-- </header> -->
+
+    <header class="main-header">
+        <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        <nav class="nav-links">
+            <h2>Hallo</h2>
+            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
+        </nav>
+    </header>
+
+    
+    <div class="main-container">
+        <!-- Zijbalk -->
+        <aside class="sidebar">
+            <ul>
+                <li><a href="#">Profielgegevens</a></li>
+                <li><a href="#">Mijn aangekochte reizen</a></li>
+                <li><a href="#">Mijn geüploade reizen</a></li>
+                <li><a href="#">Mijn favorieten</a></li>
+            </ul>
+        </aside>
+
+        <!-- Hoofdgedeelte -->
+        <main class="content">
+
+            <!-- Profielgegevens sectie -->
+            <h1>Profielgegevens</h1>
+            <form class="section" method="POST">
+                <div class="form-row">
+                    <label for="firstname">Voornaam:</label>
+                    <input type="text" id="firstname" name="firstname" value="{{ user.firstname }}" required>
+                </div>
+                <div class="form-row">
+                    <label for="lastname">Achternaam:</label>
+                    <input type="text" id="lastname" name="lastname" value="{{ user.lastname }}" required>
+                </div>
+                <div class="form-row">
+                    <label for="birthDate">Geboortedatum:</label>
+                    <input type="date" id="birthDate" name="birthdate" value="{{ user.birtDate or '' }}">
+                </div>
+                <div class="form-row">
+                    <label for="email">E-mailadres:</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                </div>
+                <div class="form-row">
+                    <label for="phone">Telefoonnummer:</label>
+                    <input type="text" id="phone" name="phone" value="{{ user.phone or '' }}">
+                </div>
+                <div class="form-row">
+                    <label for="address">Straat en huisnummer:</label>
+                    <input type="text" id="address" name="address" value="{{ user.address or '' }}">
+                </div>
+                <div class="form-row">
+                    <label for="city">Stad:</label>
+                    <input type="text" id="city" name="city" value="{{ user.city or '' }}">
+                </div>
+                <div class="form-row">
+                    <label for="postalcode">Postcode:</label>
+                    <input type="text" id="postalcode" name="postalcode" value="{{ user.postalcode or '' }}">
+                </div>
+                <div class="form-row">
+                    <label for="country">Land:</label>
+                    <input type="text" id="country" name="country" value="{{ user.country or '' }}">
+                </div>
+                <div class="form-row">
+                    <label for="nationality">Nationaliteit:</label>
+                    <input type="text" id="nationality" name="nationality" value="{{ user.nationality or '' }}">
+
+                </div>
+                <div class="form-row">
+                    <button type="submit" class="save-button">Wijzigingen opslaan</button>
+                </div>
+            </form>   
+            
+            <h1>Wachtwoord aanpassen</h1>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flashes">
+                    {% for category, message in messages %}
+                        <div class="alert {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="section">
+                <form method="POST" action="/change_password">
+                    <div class="form-group">
+                        <label for="current_password">Huidig wachtwoord:</label>
+                        <input type="password" id="current_password" name="current_password" placeholder="Voer je huidige wachtwoord in" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_password">Nieuw wachtwoord:</label>
+                        <input type="password" id="new_password" name="new_password" placeholder="Voer een nieuw wachtwoord in" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Bevestig nieuw wachtwoord:</label>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Bevestig je nieuwe wachtwoord" required>
+                    </div>
+                    <button type="submit" class="save-button">Wachtwoord opslaan</button>
+                </form>
+            </div>
+
+        </main>
+    </div>
+</body>
+</html>
+

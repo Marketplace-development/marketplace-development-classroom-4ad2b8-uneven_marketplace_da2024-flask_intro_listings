@@ -4,6 +4,8 @@ import datetime
 import uuid
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from .models import db, Users, DigitalGoods
+from flask import flash
+
 
 main = Blueprint('main', __name__)
 
@@ -109,3 +111,50 @@ def post():
 def search():
     return render_template('search.html')
 
+@main.route('/userpage', methods=['GET', 'POST'])
+def userpage():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Stuur gebruiker naar login als deze niet is ingelogd
+    
+    user = Users.query.get(session['userid'])  # Haal de huidige gebruiker op
+    if not user:
+        return redirect(url_for('main.logout'))  # Log gebruiker uit als de gebruiker niet bestaat
+
+    if request.method == 'POST':
+        # Haal gegevens uit het formulier
+        user.firstname = request.form.get('firstname')
+        user.lastname = request.form.get('lastname')
+        user.email = request.form.get('email')
+        user.phone = request.form.get('phone')
+        user.address = request.form.get('address')
+        user.city = request.form.get('city')
+        user.postalcode = request.form.get('postalcode')
+        user.country = request.form.get('country')
+
+        # Sla wijzigingen op in de database
+        db.session.commit()
+
+        return redirect(url_for('main.userpage'))  # Refresh de pagina met de nieuwe gegevens
+
+    return render_template('userpage.html', user=user)
+
+@main.route('/change_password', methods=['POST'])
+def change_password():
+    user = Users.query.filter_by(userid=session['userid']).first()
+    
+    current_password = request.form.get('current_password')
+    new_password = request.form.get('new_password')
+    confirm_password = request.form.get('confirm_password')
+
+    if not user or not user.check_password(current_password):
+        flash('Huidig wachtwoord is onjuist.', 'error')
+        return redirect(url_for('main.userpage'))
+    
+    if new_password != confirm_password:
+        flash('Nieuwe wachtwoorden komen niet overeen.', 'error')
+        return redirect(url_for('main.userpage'))
+
+    user.set_password(new_password)  # Zorg dat je een methode `set_password` hebt in je User-model
+    db.session.commit()
+    flash('Wachtwoord succesvol gewijzigd!', 'success')
+    return redirect(url_for('userpage'))

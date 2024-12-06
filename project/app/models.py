@@ -12,16 +12,16 @@ class Users(db.Model):
     # User information
     firstname = db.Column(db.String, nullable=False)
     lastname = db.Column(db.String, nullable=False)
-    birthdate = db.Column(db.Date)
-    address = db.Column(db.String)
-    city = db.Column(db.String)
-    postalcode = db.Column(db.String)
-    country = db.Column(db.String)
+    birthdate = db.Column(db.Date, default="")
+    address = db.Column(db.String, default="")
+    city = db.Column(db.String, default="")
+    postalcode = db.Column(db.String, default="")
+    country = db.Column(db.String, default="")
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
-    phone = db.Column(db.String)
-    profilepicture = db.Column(db.String)
-    nationality = db.Column(db.String)
+    phone = db.Column(db.String, default="")
+    profilepicture = db.Column(db.String, default="")
+    nationality = db.Column(db.String, default="")
 
     # Booleans for roles
     isprovider = db.Column(db.Boolean, default=False)
@@ -33,7 +33,11 @@ class Users(db.Model):
      # Relationships
     digitalgoods = db.relationship('DigitalGoods', backref='user', lazy=True)
     
+    def check_password(self, password):
+        return self.password == password
 
+    def set_password(self, password):
+        self.password = password
 
     def __repr__(self):
         return f'<User {self.email}>'

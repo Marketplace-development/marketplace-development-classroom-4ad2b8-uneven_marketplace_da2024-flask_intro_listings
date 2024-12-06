@@ -1,32 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registreren bij Travel Tales</title>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Georgia', serif;
-            background-color: #013220; /* Chic dark green background */
-            color: white;
             margin: 0;
-            padding: 50px 0; /* 3 cm whitespace at the top and bottom */
+            padding: 0;
+            background: #1f3d2b; /* Donkergroene achtergrondkleur */
+            color: #ffffff;
             display: flex;
-            justify-content: center;
+            flex-direction: column; /* Zorgt dat de header bovenaan blijft */
+            min-height: 100vh; /* Houdt de pagina fullscreen */
+        }
+
+        /* Algemene stijlen voor de hoofdheader */
+        .main-header {
+            background: #24452e; /* Donkergroene achtergrond */
+            padding: 20px 30px; /* Zorgt voor consistente hoogte */
+            display: flex;
             align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
+            justify-content: space-between; /* Verdeelt logo en navigatie */
+            position: sticky; /* Zorgt dat de header bovenaan blijft */
+            top: 0; /* Header vastzetten aan de bovenkant */
+            z-index: 10; /* Zorgt dat de header altijd zichtbaar is */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Schaduw voor visuele separatie */
+        }
+        
+
+        .main-header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px; /* Ruimte tussen de navigatieknoppen */
+        }
+
+        .nav-button {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 15px;
+            background: #2e5f3d; /* Groene achtergrond */
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #3c764b; /* Hover-kleur voor knoppen */
+            color: #e6ffe6; /* Lichtere tekstkleur tijdens hover */
         }
 
         .container {
             text-align: center;
-            width: 90%;
             max-width: 400px;
+            width: 100%;
+            margin: auto; /* Centraal plaatsen */
+            padding-bottom: 100px
         }
 
         h1 {
@@ -65,15 +106,17 @@
         }
 
         .submit-button {
-            padding: 12px;
+            margin-top: 30px;
+            width: 100%;
+            padding: 15px;
             border: none;
-            border-radius: 20px;
-            background: #ffffff; /* White background for button */
-            color: #013220; /* Dark green text on the button */
-            font-size: 16px;
-            font-weight: 700;
+            border-radius: 25px;
+            background-color: #ffffff;
+            color: #1f3d2b;
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: transform 0.2s ease, background-color 0.2s ease;
         }
 
         .submit-button:hover {
@@ -106,6 +149,16 @@
     </style>
 </head>
 <body>
+    <header class="main-header">
+        <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        <nav class="nav-links">
+            {% if username %}
+            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
+            {% endif %}
+        </nav>
+    </header>
+
     <div class="container">
         <h1>Registreren bij Travel Tales</h1>
         <form id="registration-form" method="POST" action="/register">
@@ -131,7 +184,6 @@
                 <label for="isSearcher">Ik ben een zoeker</label>
             </div>
 
-            <!-- Submit knop -->
             <div class="form-group">
                 <button type="submit" class="submit-button">Registreren</button>
             </div>

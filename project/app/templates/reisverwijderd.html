@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reis Verwijderd</title>
+    <style>
+        /* Algemene styling */
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: #1f3d2b; /* Donkergroene achtergrond */
+            color: #ffffff;
+        }
+
+        /* Header styling */
+        .main-header {
+            background: #24452e; /* Donkergroene achtergrond */
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-button {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 15px;
+            background: #2e5f3d;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #3c764b;
+            color: #e6ffe6;
+        }
+
+        .main-header h2 {
+            font-size: 16px;
+            margin: 0;
+        }
+
+        /* Bevestigingsbericht styling */
+        .confirmation-container {
+            text-align: center;
+            margin: 50px auto;
+            max-width: 600px;
+            padding: 20px;
+            background: #2a4a38;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .confirmation-container h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .confirmation-container button {
+            padding: 15px 30px;
+            background-color: #ffffff; /* Witte knop */
+            color: #1f3d2b; /* Donkergroene tekst */
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .confirmation-container button:hover {
+            transform: scale(1.03);
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        <nav class="nav-links">
+            {% if user %}
+            <h2>Hallo, {{ user.firstname }}</h2>
+            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
+            {% else %}
+            <a href="{{ url_for('main.login') }}" class="nav-button">Login</a>
+            <a href="{{ url_for('main.register') }}" class="nav-button">Registreer</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="confirmation-container">
+        <h1>Reis succesvol verwijderd</h1>
+        <form action="{{ url_for('main.gepost') }}">
+            <button type="submit">Terug naar Mijn Geüploade Reizen</button>
+        </form>
+    </div>
+</body>
+</html>

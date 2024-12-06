@@ -99,17 +99,13 @@ def post():
     if request.method == 'POST':
         itinerary_name = request.form['titleofitinerary']
         price = float(request.form['price'])
-        description_tekst = request.form['descriptionofitinerary']
+        description_tekst = request.form['descriptionofitinerary']    
         new_itinerary = DigitalGoods(goodid=str(uuid.uuid4()),titleofitinerary=itinerary_name, descriptionofitinerary= description_tekst,userid=session['userid'],price=price)
         db.session.add(new_itinerary)
         db.session.commit()
         return redirect(url_for('main.index'))
 
     return render_template('post.html')
-
-@main.route('/search', methods=['GET', 'POST'])
-def search():
-    return render_template('search.html')
 
 @main.route('/userpage', methods=['GET', 'POST'])
 def userpage():
@@ -158,3 +154,92 @@ def change_password():
     db.session.commit()
     flash('Wachtwoord succesvol gewijzigd!', 'success')
     return redirect(url_for('main.userpage'))
+
+
+@main.route('/gepost', methods=['GET', 'POST'])
+def gepost():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijzen naar login als gebruiker niet is ingelogd
+
+    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
+    if not user:
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+
+    # Geposte reizen van de ingelogde gebruiker ophalen
+    geposte_reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
+
+    if request.method == 'POST':
+        # Update een specifieke reis
+        goodid = request.form.get('goodid')  # ID van het item dat wordt bewerkt
+        reis = DigitalGoods.query.filter_by(goodid=goodid, userid=user.userid).first()
+
+        if reis:
+            # Gegevens updaten vanuit het formulier
+            reis.titleofitinerary = request.form.get('titleofitinerary')
+            reis.descriptionofitinerary = request.form.get('descriptionofitinerary')
+            reis.price = request.form.get('price')
+
+            db.session.commit()  # Wijzigingen opslaan
+
+        return redirect(url_for('main.gepost'))  # Vernieuw de pagina
+
+    return render_template('gepost.html', user=user, geposte_reizen=geposte_reizen)
+
+@main.route('/gekocht', methods=['GET', 'POST'])
+def gekocht():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Stuur gebruiker naar login als deze niet is ingelogd
+    
+    user = Users.query.get(session['userid'])  # Haal de huidige gebruiker op
+    if not user:
+        return redirect(url_for('main.logout'))  # Log gebruiker uit als de gebruiker niet bestaat
+
+    return render_template('gekocht.html', user=user)
+
+@main.route('/favoriet', methods=['GET', 'POST'])
+def favoriet():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Stuur gebruiker naar login als deze niet is ingelogd
+    
+    user = Users.query.get(session['userid'])  # Haal de huidige gebruiker op
+    if not user:
+        return redirect(url_for('main.logout'))  # Log gebruiker uit als de gebruiker niet bestaat
+
+    return render_template('favoriet.html', user=user)
+
+@main.route('/search', methods=['GET', 'POST'])
+def search():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijzen naar login als gebruiker niet is ingelogd
+
+    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
+    if not user:
+        return redirect(url_for('main.logout'))
+    return render_template('search.html')
+
+
+@main.route('/verwijder_reis', methods=['POST'])
+def verwijder_reis():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    goodid = request.form.get('goodid')
+    reis = DigitalGoods.query.filter_by(goodid=goodid, userid=session['userid']).first()
+
+    if reis:
+        db.session.delete(reis)
+        db.session.commit()
+        return redirect(url_for('main.reisverwijderd'))
+
+    flash('Reis kon niet worden gevonden of verwijderd.', 'error')
+    return redirect(url_for('main.gepost'))
+
+
+@main.route('/reisverwijderd', methods=['GET'])
+def reisverwijderd():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    return render_template('reisverwijderd.html')
+
+

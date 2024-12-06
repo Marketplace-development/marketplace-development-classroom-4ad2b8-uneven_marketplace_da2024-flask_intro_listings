@@ -198,17 +198,99 @@
             background-color: #2196f3; /* Blauw voor informatie */ 
         }
 
+        .uploaded-travels {
+            display: flex;
+            flex-direction: column;
+            gap: 30px; /* Witruimte tussen reisitems */
+        }
         
+        .travel-item {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        
+        .travel-item h2.travel-title {
+            margin-top: 0;
+            font-size: 24px; /* Maak de titel groter */
+            color: #24452e;
+        }
+        
+        .travel-item p {
+            margin: 10px 0; /* Meer witruimte tussen paragrafen */
+        }
+        
+        .edit-form, .delete-form {
+            margin-top: 20px; /* Meer witruimte boven de knoppen */
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Witruimte tussen velden */
+        }
+        
+        .edit-form label {
+            font-weight: bold;
+        }
+        
+        .edit-form input,
+        .edit-form textarea,
+        .delete-button,
+        .save-button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .save-button {
+            background-color: #24452e;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .save-button:hover {
+            background-color: #3c764b;
+        }
+        
+        .delete-button {
+            background-color: #d3d3d3; /* Lichtgrijs */
+            color: black;
+            cursor: pointer;
+            border: none;
+            padding: 10px 15px;
+            margin-top: 10px; /* Witruimte tussen wijzigknop en verwijderknop */
+            border-radius: 5px;
+        }
+        
+        .delete-button:hover {
+            background-color: #a9a9a9; /* Donkerder grijs bij hover */
+        }
+        
+        .add-button-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .add-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #24452e;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .add-button:hover {
+            background-color: #3c764b;
+        }
+        
+        
+    
     </style>
 </head>
 <body>
-    <!--header -->
-        <!-- "Travel Tales" in de linkerhoek -->
-        <!-- <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a> -->
-        <!-- Titel in het midden -->
-        <!-- <div class="header-title">Mijn instellingen</div> -->
-    <!-- </header> -->
-
     <header class="main-header">
         <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
         <nav class="nav-links">
@@ -218,7 +300,6 @@
         </nav>
     </header>
 
-    
     <div class="main-container">
         <!-- Zijbalk -->
         <aside class="sidebar">
@@ -230,91 +311,52 @@
             </ul>
         </aside>
 
-        <!-- Hoofdgedeelte -->
         <main class="content">
+            <h1>Mijn Geüploade Reizen</h1>
 
-            <!-- Profielgegevens sectie -->
-            <h1>Profielgegevens</h1>
-            <form class="section" method="POST">
-                <div class="form-row">
-                    <label for="firstname">Voornaam:</label>
-                    <input type="text" id="firstname" name="firstname" value="{{ user.firstname }}" required>
-                </div>
-                <div class="form-row">
-                    <label for="lastname">Achternaam:</label>
-                    <input type="text" id="lastname" name="lastname" value="{{ user.lastname }}" required>
-                </div>
-                <div class="form-row">
-                    <label for="birthdate">Geboortedatum:</label>
-                    <input type="date" id="birthdate" name="birthdate" value="{{ user.birtdate or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="email">E-mailadres:</label>
-                    <input type="email" id="email" name="email" value="{{ user.email }}" required>
-                </div>
-                <div class="form-row">
-                    <label for="phone">Telefoonnummer:</label>
-                    <input type="text" id="phone" name="phone" value="{{ user.phone or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="address">Straat en huisnummer:</label>
-                    <input type="text" id="address" name="address" value="{{ user.address or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="city">Stad:</label>
-                    <input type="text" id="city" name="city" value="{{ user.city or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="postalcode">Postcode:</label>
-                    <input type="text" id="postalcode" name="postalcode" value="{{ user.postalcode or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="country">Land:</label>
-                    <input type="text" id="country" name="country" value="{{ user.country or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="nationality">Nationaliteit:</label>
-                    <input type="text" id="nationality" name="nationality" value="{{ user.nationality or '' }}">
+            {% if geposte_reizen %}
+            <div class="uploaded-travels">
+                {% for reis in geposte_reizen %}
+                <div class="travel-item">
+                    <h2 class="travel-title">{{ reis.titleofitinerary }}</h2>
+                    <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
+                    <p><strong>Prijs (€):</strong> {{ reis.price }}</p>
 
-                </div>
-                <div class="form-row">
-                    <button type="submit" class="save-button">Wijzigingen opslaan</button>
-                </div>
-            </form>   
-            
-            <h1>Wachtwoord aanpassen</h1>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <div class="flashes">
-                    {% for category, message in messages %}
-                        <div class="alert {{ category }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
+                    <!-- Formulier voor bewerken -->
+                    <form action="/gepost" method="POST" class="edit-form">
+                        <input type="hidden" name="goodid" value="{{ reis.goodid }}">
+                        
+                        <label for="titleofitinerary">Titel:</label>
+                        <input type="text" name="titleofitinerary" value="{{ reis.titleofitinerary }}" required>
 
-            <div class="section">
-                <form method="POST" action="/change_password">
-                    <div class="form-group">
-                        <label for="current_password">Huidig wachtwoord:</label>
-                        <input type="password" id="current_password" name="current_password" placeholder="Voer je huidige wachtwoord in" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="new_password">Nieuw wachtwoord:</label>
-                        <input type="password" id="new_password" name="new_password" placeholder="Voer een nieuw wachtwoord in" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirm_password">Bevestig nieuw wachtwoord:</label>
-                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Bevestig je nieuwe wachtwoord" required>
-                    </div>
-                    <button type="submit" class="save-button">Wachtwoord opslaan</button>
-                </form>
+                        <label for="descriptionofitinerary">Beschrijving:</label>
+                        <textarea name="descriptionofitinerary" rows="3" required>{{ reis.descriptionofitinerary }}</textarea>
+
+                        <label for="price">Prijs (€):</label>
+                        <input type="number" name="price" value="{{ reis.price }}" required>
+
+                        <button type="submit" class="save-button">Wijzig deze reis</button>
+                    </form>
+
+                    <!-- Verwijderknop -->
+                    <form action="{{ url_for('main.verwijder_reis') }}" method="POST" class="delete-form">
+                        <input type="hidden" name="goodid" value="{{ reis.goodid }}">
+                        <button type="submit" class="delete-button">Verwijder deze reis</button>
+                    </form>
+                </div>
+                {% endfor %}
             </div>
+            {% else %}
+            <p>Je hebt nog geen reizen gepost.</p>
+            {% endif %}
 
+            <!-- Knop om reizen toe te voegen -->
+            <div class="add-button-container">
+                <a href="{{ url_for('main.post') }}" class="add-button">Nog reizen toevoegen</a>
+            </div>
         </main>
     </div>
 </body>
-</html>
+
+
 

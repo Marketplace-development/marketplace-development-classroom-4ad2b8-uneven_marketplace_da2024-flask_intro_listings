@@ -225,28 +225,37 @@
 
         <main class="content">
             <h1>Mijn Geüploade Reizen</h1>
-
+        
             {% if geposte_reizen %}
             {% for reis in geposte_reizen %}
             <div class="travel-item">
                 <h2>{{ reis.titleofitinerary }}</h2>
                 <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
                 <p><strong>Prijs (€):</strong> {{ reis.price }}</p>
-
+        
+                <!-- Open PDF-knop -->
+                {% if reis.pdf_url %}
+                <a href="{{ url_for('main.download_pdf', goodid=reis.goodid) }}" target="_blank" class="add-button">
+                    Open mijn reis (PDF)
+                </a>
+                {% endif %}
+        
+                <!-- Bewerken formulier -->
                 <form action="/gepost" method="POST" class="edit-form">
                     <input type="hidden" name="goodid" value="{{ reis.goodid }}">
                     <label for="titleofitinerary">Titel:</label>
                     <input type="text" name="titleofitinerary" value="{{ reis.titleofitinerary }}" required>
-
+        
                     <label for="descriptionofitinerary">Beschrijving:</label>
                     <textarea name="descriptionofitinerary" rows="3" required>{{ reis.descriptionofitinerary }}</textarea>
-
+        
                     <label for="price">Prijs (€):</label>
                     <input type="number" name="price" value="{{ reis.price }}" required>
-
+        
                     <button type="submit" class="save-button">Wijzig deze reis</button>
                 </form>
-
+        
+                <!-- Verwijder formulier -->
                 <form action="{{ url_for('main.verwijder_reis') }}" method="POST" class="delete-form">
                     <input type="hidden" name="goodid" value="{{ reis.goodid }}">
                     <button type="submit" class="delete-button">Verwijder deze reis</button>
@@ -256,9 +265,11 @@
             {% else %}
             <p>Je hebt nog geen reizen gepost.</p>
             {% endif %}
-
+        
             <a href="{{ url_for('main.post') }}" class="add-button">Nog reizen toevoegen</a>
         </main>
+        
+        
     </div>
 </body>
 </html>

@@ -1,5 +1,4 @@
 # app/routes.py
-
 import datetime
 import uuid
 from flask import Blueprint, request, redirect, url_for, render_template, session
@@ -8,6 +7,7 @@ from flask import flash
 from werkzeug.utils import secure_filename
 from .config import supabase
 from supabase import Client
+from flask import Response
 
 
 main = Blueprint('main', __name__)
@@ -182,6 +182,34 @@ def change_password():
     flash('Wachtwoord succesvol gewijzigd!', 'success')
     return redirect(url_for('main.userpage'))
 
+from flask import Response
+
+@main.route('/download_pdf/<goodid>', methods=['GET'])
+def download_pdf(goodid):
+    # Haal de reis op uit de database
+    reis = DigitalGoods.query.filter_by(goodid=goodid).first()
+
+    if reis:
+        # Controleer of een geldige PDF-URL aanwezig is
+        if reis.pdf_url:
+            pdf_path = reis.pdf_url.split('pdfs/')[1]  # Haal het pad naar de PDF uit de URL
+            response = supabase.storage.from_("pdf_files").download(f"pdfs/{pdf_path}")
+
+            if response:
+                # Stuur de PDF terug met juiste headers
+                return Response(
+                    response,
+                    mimetype="application/pdf",
+                    headers={
+                        "Content-Disposition": f"inline; filename={pdf_path}",
+                        "Content-Type": "application/pdf"
+                    }
+                )
+        else:
+            return "PDF niet gevonden of niet gekoppeld aan deze reis.", 404
+    else:
+        return "Reis niet gevonden.", 404
+
 
 @main.route('/gepost', methods=['GET', 'POST'])
 def gepost():
@@ -208,7 +236,7 @@ def gepost():
 
             db.session.commit()  # Wijzigingen opslaan
 
-            return redirect(url_for('main.reistoegevoegd'))
+            return redirect(url_for('main.gepost'))
 
     return render_template('gepost.html', user=user, geposte_reizen=geposte_reizen)
 

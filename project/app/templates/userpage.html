@@ -40,6 +40,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            margin-left: auto; /* Zorgt ervoor dat de knoppen naar rechts verschuiven */
         }
 
         .nav-links h2.user-greeting {
@@ -163,8 +164,8 @@
         <nav class="nav-links">
             <h2 class="user-greeting">Hallo {{ user.firstname }}</h2>
             <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
-            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
             <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
+            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
         </nav>
     </header>
 
@@ -231,4 +232,3 @@
     </div>
 </body>
 </html>
-

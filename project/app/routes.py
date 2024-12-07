@@ -5,6 +5,9 @@ import uuid
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from .models import db, Users, DigitalGoods
 from flask import flash
+from werkzeug.utils import secure_filename
+from .config import supabase
+from supabase import Client
 
 
 main = Blueprint('main', __name__)
@@ -95,10 +98,35 @@ def post():
         return redirect(url_for('main.login'))
     
     if request.method == 'POST':
-        itinerary_name = request.form['titleofitinerary']
+
+        itinerary_name = request.form['titleofitinerary']  # Ophalen uit HTML
         price = float(request.form['price'])
-        description_tekst = request.form['descriptionofitinerary']    
-        new_itinerary = DigitalGoods(goodid=str(uuid.uuid4()),titleofitinerary=itinerary_name, descriptionofitinerary= description_tekst,userid=session['userid'],price=price)
+        description_tekst = request.form['descriptionofitinerary']
+        pdf_file = request.files['file']
+        if pdf_file and pdf_file.filename.endswith('.pdf'):
+            # Beveilig de bestandsnaam
+            filename = secure_filename(pdf_file.filename)
+            unique_filename = f"{uuid.uuid4()}_{filename}"  # Maak een unieke bestandsnaam
+
+            # Upload bestand naar Supabase Storage
+            file_data = pdf_file.read()  # Lees de PDF als binary data
+            result = supabase.storage.from_("pdf_files").upload(f"pdfs/{unique_filename}", file_data)
+
+
+            # Haal de publieke URL van het geüploade bestand op
+            public_url = supabase.storage.from_("pdf_files").get_public_url(f"pdfs/{unique_filename}")
+        else:
+            return "Ongeldig bestandstype. Upload een PDF-bestand.", 400
+
+        # Maak een nieuw record in de database
+        new_itinerary = DigitalGoods(
+            goodid=str(uuid.uuid4()),
+            titleofitinerary=itinerary_name,    # Eerste waarde is de naam van je database & de 2e komt van HTML
+            descriptionofitinerary=description_tekst,
+            userid=session['userid'],
+            price=price,
+            pdf_url=public_url
+        )
         db.session.add(new_itinerary)
         db.session.commit()
         return redirect(url_for('main.reistoegevoegd'))

@@ -42,16 +42,6 @@ class Users(db.Model):
     def __repr__(self):
         return f'<User {self.email}>'
 
-# class Listing(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     listing_name = db.Column(db.String(100), nullable=False)
-#     price = db.Column(db.Float, nullable=False)
-#     user_id = db.Column(db.String, db.ForeignKey('user.userid'), nullable=False)  # ForeignKey matches userid in User
-
-#     def __repr__(self):
-#         return f'<Listing {self.listing_name}, ${self.price}>'
-
-
 class DigitalGoods(db.Model):
     __tablename__ = 'digitalgoods'
     
@@ -64,6 +54,7 @@ class DigitalGoods(db.Model):
     userid = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)
     price = db.Column(db.Numeric)
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    pdf_url = db.Column(db.String(1024), nullable=False)
 
     def __repr__(self):
         return f'<DigitalGoods {self.titleofitinerary} - ${self.price}>' 

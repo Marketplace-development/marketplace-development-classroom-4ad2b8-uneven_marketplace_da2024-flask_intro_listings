@@ -1,91 +1,177 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post een Reis</title>
+    <title>Travel Tales - Dashboard</title>
     <style>
         body {
             font-family: 'Georgia', serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background: #1f3d2b; /* Donkergroene achtergrond */
             color: #ffffff;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #2a4a38;
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-        }
-        h1 {
-            text-align: center;
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #ffffff;
-        }
-        label {
-            display: block;
-            margin: 15px 0 5px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="number"], textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        input::placeholder,
-        textarea::placeholder {
-        font-size: 14px; /* Lettertypegrootte van de placeholder */
-        font-family: Arial, sans-serif; /* Zelfde lettertype als invoer */
-        color: #aaa; /* Placeholder kleur (optioneel) */
+        .main-header {
+            background: #24452e;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-links h2 {
+            color: #f0f0f0;
+            font-size: 18px;
+            margin: 0;
+            margin-right: 20px;
+            font-weight: bold;
+        }
+
+        .nav-button {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 12px 20px;
+            background: #2e5f3d;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .nav-button:hover {
+            background: #3c764b;
+            color: #e6ffe6;
+        }
+
+        
+        .container {
+            padding: 20px 40px;
+            width: 80%;
+            max-width: 2000px; /* Breder vlak */
+            margin: 20px auto;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-family: 'Georgia', serif;
+            color: #24452e;
         }
         
-        button {
-            width: 100%;
-            padding: 15px;
-            background-color: #ffffff; /* Witte knop */
-            color: #1f3d2b; /* Donkergroene tekst */
-            font-size: 18px;
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        form label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            color: #24452e;
+        }
+        
+        form input,
+        form textarea {
+            width:calc(100% - 80px); /* Korter dan de container */
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            font-family: 'Georgia', serif;
+            background: #fff;
+            color: #24452e;
+        }
+        
+        form textarea {
+            resize: none;
+        }
+        
+        form button {
+            width:calc(100% - 80px); /* Knop is even breed als de velden */
+            padding: 10px;
+            background: #24452e;
+            color: #fff;
             font-weight: bold;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
-            transition: transform 0.3s ease, background-color 0.3s ease;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            display: block;
+            margin: 0 auto; /* Centraal plaatsen */
         }
-        button:hover {
-            transform: scale(1.03);
-            background-color: #f0f0f0; /* Lichtere tint bij hover */
+        
+        form button:hover {
+            background: #3c764b;
         }
+        
+        
+        
     </style>
 </head>
 <body>
+    <header class="main-header">
+        <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        <nav class="nav-links">
+            {% if username %}
+            <h2>Hallo {{ username }}</h2>
+            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
+            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
+            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+            {% else %}
+            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
+            <a href="{{ url_for('main.login') }}" class="nav-button">Login</a>
+            <a href="{{ url_for('main.register') }}" class="nav-button">Registreer</a>
+            {% endif %}
+        </nav>
+    </header>
+  
     <div class="container">
         <h1>Post een Reis</h1>
-        <form action="/post" method="POST">
+        <form action="/post" method="POST" enctype="multipart/form-data">
             <!-- Titel -->
             <label for="titleofitinerary">Titel van de Reis</label>
             <input type="text" id="titleofitinerary" name="titleofitinerary" placeholder="Voer de titel in" required>
-
+    
             <!-- Beschrijving -->
             <label for="descriptionofitinerary">Beschrijving</label>
             <textarea id="descriptionofitinerary" name="descriptionofitinerary" placeholder="Voer een beschrijving in" rows="5" required></textarea>
-
+    
             <!-- Prijs -->
             <label for="price">Prijs (€)</label>
             <input type="number" id="price" name="price" placeholder="Voer de prijs in" min="0" required>
-
+    
+            <!-- PDF Upload -->
+            <label for="file">Upload een PDF</label>
+            <input type="file" id="file" name="file" accept=".pdf" required>
+    
             <!-- Submit -->
             <button type="submit">Post Reis</button>
         </form>
     </div>
+    
 </body>
 </html>

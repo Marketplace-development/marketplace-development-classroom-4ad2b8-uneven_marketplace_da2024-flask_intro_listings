@@ -223,7 +223,39 @@
                 <div class="form-row">
                     <button type="submit" class="save-button">Wijzigingen opslaan</button>
                 </div>
+                
             </form>
+
+            <h1>Wachtwoord aanpassen</h1>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flashes">
+                        {% for category, message in messages %}
+                            <div class="alert {{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+    
+                <div class="section">
+                    <form method="POST" action="/change_password">
+                        <div class="form-group">
+                            <label for="current_password">Huidig wachtwoord:</label>
+                            <input type="password" id="current_password" name="current_password" placeholder="Voer je huidige wachtwoord in" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="new_password">Nieuw wachtwoord:</label>
+                            <input type="password" id="new_password" name="new_password" placeholder="Voer een nieuw wachtwoord in" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm_password">Bevestig nieuw wachtwoord:</label>
+                            <input type="password" id="confirm_password" name="confirm_password" placeholder="Bevestig je nieuwe wachtwoord" required>
+                        </div>
+                        <button type="submit" class="save-button">Wachtwoord opslaan</button>
+                    </form>
+                </div>
         </main>
     </div>
 </body>

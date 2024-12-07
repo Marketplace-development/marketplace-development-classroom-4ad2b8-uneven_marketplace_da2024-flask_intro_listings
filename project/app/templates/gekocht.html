@@ -3,28 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profiel Instellingen</title>
+    <title>Mijn Aangekochte Reizen</title>
     <style>
         body {
             font-family: 'Georgia', serif;
             margin: 0;
             padding: 0;
-            background: #ffffff; /* Witte achtergrond */
-            color: #1f3d2b; /* Donkergroene tekstkleur */
+            background: #ffffff;
+            color: #1f3d2b;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-                /* Algemene stijlen voor de hoofdheader */
         .main-header {
-            background: #24452e; /* Donkergroene achtergrond */
-            padding: 20px 30px; /* Zorgt voor consistente hoogte */
+            background: #24452e;
+            padding: 20px 30px;
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Verdeelt logo en navigatie */
+            justify-content: space-between;
             position: relative;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Schaduw voor visuele separatie */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .main-header .logo {
@@ -32,35 +31,37 @@
             font-weight: bold;
             color: #ffffff;
             text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background 0.3s ease, color 0.3s ease;
         }
 
         .nav-links {
             display: flex;
-            gap: 15px; /* Ruimte tussen de navigatieknoppen */
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-links h2 {
+            color: #f0f0f0;
+            font-size: 18px;
+            margin: 0;
+            margin-right: 20px;
+            font-weight: bold;
         }
 
         .nav-button {
             color: #ffffff;
             text-decoration: none;
             font-size: 16px;
-            padding: 10px 15px;
-            background: #2e5f3d; /* Groene achtergrond */
+            padding: 12px 20px;
+            background: #2e5f3d;
             border-radius: 5px;
             transition: background 0.3s ease, color 0.3s ease;
+            min-width: 120px;
+            text-align: center;
         }
 
         .nav-button:hover {
-            background: #3c764b; /* Hover-kleur voor knoppen */
-            color: #e6ffe6; /* Lichtere tekstkleur tijdens hover */
-        }
-
-        .header-title {
-            font-size: 28px;
-            color: #ffffff;
-            font-weight: bold; /* Toegevoegd om tekst vet te maken */
+            background: #3c764b;
+            color: #e6ffe6;
         }
 
         .main-container {
@@ -70,7 +71,7 @@
 
         .sidebar {
             width: 250px;
-            background: #2e5f3d; /* Groene zijbalk */
+            background: #2e5f3d;
             padding: 20px;
         }
 
@@ -89,138 +90,62 @@
             font-size: 16px;
             display: block;
             padding: 10px;
-            background: #3c764b; /* Hover-kleur standaard tonen */
+            background: #3c764b;
             border-radius: 5px;
             transition: background 0.3s ease;
         }
 
         .sidebar a:hover {
-            background: #4f8a61; /* Lichtere hover */
+            background: #4f8a61;
         }
 
         .content {
             flex: 1;
             padding: 20px 30px;
-            background: #ffffff; /* Witte achtergrond */
+            background: #ffffff;
         }
 
         h1 {
-            font-size: 24px; /* Grotere titel voor "Mijn Instellingen" */
+            font-size: 24px;
             margin-bottom: 20px;
         }
 
-        h2 {
-            color: #ffffff; /* Witte tekst */
-            font-size: 13px;
-            margin-right: 15px; /* Ruimte tussen de tekst en de knoppen */
-            display: inline-block; /* Zorgt ervoor dat het naast de knoppen staat */
-        }
-
-        .section {
-            margin-bottom: 50px;
-            padding: 15px;
-            background: #f5f5f5; /* Lichtgrijze achtergrond voor secties */
-            border: 1px solid #ddd; /* Rand om secties */
-            border-radius: 8px;
-        }
-
-        .section h2 {
-            font-size: 18px; /* Sectietitel kleiner dan hoofdtitel */
-        }
-
-        .section label {
-            display: block;
-            margin-bottom: 5px;
+        p {
             font-size: 16px;
-            color: #1f3d2b;
+            line-height: 1.6;
         }
 
-        .section input,
-        .section select,
-        .section textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+        .purchased-travel-item {
             border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #ffffff;
-            color: #333;
-        }
-
-        .toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .save-button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background: #2e5f3d;
-            color: #ffffff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 18px;
-            text-align: center;
-        }
-
-        .save-button:hover {
-            background: #4f8a61;
-        }
-
-        .flashes {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
             margin-bottom: 20px;
         }
-        
-        .alert {
-            padding: 10px;
-            border-radius: 5px;
+
+        .purchased-travel-item h2 {
+            font-size: 20px;
+            color: #24452e;
             margin-bottom: 10px;
-            color: #ffffff;
-            font-weight: bold;
-        }
-        
-        .alert.success {
-            background-color: #4caf50; /* Groen voor succes */
-        }
-        
-        .alert.error {
-            background-color: #f44336; /* Rood voor fouten */
         }
 
-        .alert.warning {
-            background-color: #ff9800; /* Oranje voor waarschuwingen */ 
+        .purchased-travel-item p {
+            margin: 5px 0;
         }
-        
-        .alert.info { 
-            background-color: #2196f3; /* Blauw voor informatie */ 
-        }
-
-        
     </style>
 </head>
 <body>
-    <!--header -->
-        <!-- "Travel Tales" in de linkerhoek -->
-        <!-- <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a> -->
-        <!-- Titel in het midden -->
-        <!-- <div class="header-title">Mijn instellingen</div> -->
-    <!-- </header> -->
-
     <header class="main-header">
         <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
         <nav class="nav-links">
-            <h2>Hallo</h2>
-            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+            <h2>Hallo {{ user.firstname }}</h2>
+            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
             <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
+            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
         </nav>
     </header>
 
-    
     <div class="main-container">
-        <!-- Zijbalk -->
         <aside class="sidebar">
             <ul>
                 <li><a href="{{ url_for('main.userpage') }}">Profielgegevens</a></li>
@@ -229,3 +154,22 @@
                 <li><a href="{{ url_for('main.favoriet') }}">Mijn favorieten</a></li>
             </ul>
         </aside>
+
+        <main class="content">
+            <h1>Mijn Aangekochte Reizen</h1>
+            {% if aangekochte_reizen %}
+            {% for reis in aangekochte_reizen %}
+            <div class="purchased-travel-item">
+                <h2>{{ reis.title }}</h2>
+                <p><strong>Beschrijving:</strong> {{ reis.description }}</p>
+                <p><strong>Prijs (€):</strong> {{ reis.price }}</p>
+                <p><strong>Aangekocht op:</strong> {{ reis.purchase_date }}</p>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>Je hebt nog geen reizen aangekocht.</p>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>

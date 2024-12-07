@@ -102,23 +102,6 @@
             background: #4f8a61;
         }
 
-        .sidebar a.back-to-index {
-            background: #24452e; /* Donkergroene achtergrond */
-            color: #ffffff;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 15px;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background 0.3s ease;
-        }
-
-        .sidebar a.back-to-index:hover {
-            background: #3c764b; /* Lichtere groen voor hover */
-        }
-
         .content {
             flex: 1;
             padding: 20px 30px;
@@ -172,26 +155,6 @@
         .save-button:hover {
             background: #4f8a61;
         }
-
-        .flashes {
-            margin-bottom: 20px;
-        }
-
-        .alert {
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            color: #ffffff;
-            font-weight: bold;
-        }
-
-        .alert.success {
-            background-color: #4caf50; /* Groen voor succes */
-        }
-
-        .alert.error {
-            background-color: #f44336; /* Rood voor fouten */
-        }
     </style>
 </head>
 <body>
@@ -199,6 +162,7 @@
         <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
         <nav class="nav-links">
             <h2 class="user-greeting">Hallo {{ user.firstname }}</h2>
+            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
             <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
             <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
         </nav>
@@ -208,7 +172,6 @@
         <!-- Zijbalk -->
         <aside class="sidebar">
             <ul>
-                <li><a href="{{ url_for('main.index') }}" class="back-to-index">Terug naar Home</a></li>
                 <li><a href="{{ url_for('main.userpage') }}">Profielgegevens</a></li>
                 <li><a href="{{ url_for('main.gekocht') }}">Mijn aangekochte reizen</a></li>
                 <li><a href="{{ url_for('main.gepost') }}">Mijn geüploade reizen</a></li>
@@ -230,7 +193,7 @@
                 </div>
                 <div class="form-row">
                     <label for="birthdate">Geboortedatum:</label>
-                    <input type="date" id="birthdate" name="birthdate" value="{{ user.birtdate or '' }}">
+                    <input type="date" id="birthdate" name="birthdate" value="{{ user.birthdate or '' }}">
                 </div>
                 <div class="form-row">
                     <label for="email">E-mailadres:</label>
@@ -268,3 +231,4 @@
     </div>
 </body>
 </html>
+

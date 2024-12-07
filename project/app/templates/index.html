@@ -11,25 +11,21 @@
             padding: 0;
             background: #1f3d2b; /* Donkergroene achtergrond */
             color: #ffffff;
-            text-align: center;
-        }
-
-        .container {
-            padding: 20px;
-            margin-top: 50px
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .main-header {
-            background: #24452e; /* Donkergroene achtergrond */
-            padding: 20px 30px; /* Zorgt voor consistente hoogte */
+            background: #24452e;
+            padding: 20px 30px;
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Verdeelt logo en navigatie */
-            position: sticky; /* Zorgt dat de header bovenaan blijft */
-            top: 0; /* Header vastzetten aan de bovenkant */
-            z-index: 10; /* Zorgt dat de header altijd zichtbaar is */
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Schaduw voor visuele separatie */
-            overflow: hidden; /* Voorkomt dat inhoud buiten de container valt */
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .main-header .logo {
@@ -37,47 +33,42 @@
             font-weight: bold;
             color: #ffffff;
             text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background 0.3s ease, color 0.3s ease;
         }
-        
+
         .nav-links {
             display: flex;
-            gap: 15px; /* Ruimte tussen de knoppen */
-            justify-content: flex-end; /* Knoppen rechts uitlijnen */
-            flex-wrap: wrap; /* Voorkomt overflow door knoppen */
+            align-items: center;
+            gap: 15px;
         }
-        
+
+        .nav-links h2 {
+            color: #f0f0f0;
+            font-size: 18px;
+            margin: 0;
+            margin-right: 20px;
+            font-weight: bold;
+        }
+
         .nav-button {
             color: #ffffff;
             text-decoration: none;
             font-size: 16px;
-            padding: 10px 15px;
+            padding: 12px 20px;
             background: #2e5f3d;
             border-radius: 5px;
             transition: background 0.3s ease, color 0.3s ease;
-            white-space: nowrap; /* Zorg dat de knop niet afbreekt */
-        }        
-        
+            min-width: 120px;
+            text-align: center;
+        }
+
         .nav-button:hover {
-            background: #3c764b; /* Hover-kleur voor knoppen */
-            color: #e6ffe6; /* Lichtere tekstkleur tijdens hover */
-        }
-        
-        header h1 {
-            font-size: 24px;
+            background: #3c764b;
+            color: #e6ffe6;
         }
 
-        header h2 {
-            color: #ffffff; /* Witte tekst */
-            font-size: 15px;
-            margin-right: 15px; /* Ruimte tussen de tekst en de knoppen */
-            display: inline-block; /* Zorgt ervoor dat het naast de knoppen staat */
-        }
-
-        .hero-section {
-            margin-top: 20px;
+        .container {
+            text-align: center;
+            padding: 20px;
         }
 
         .hero-section h1 {
@@ -93,53 +84,29 @@
             margin: 0 auto;
         }
 
-         .buttons a,
-        .buttons button {
+        .buttons a {
             display: inline-block;
             margin: 10px;
             padding: 15px 30px;
             font-size: 18px;
             font-weight: bold;
             color: #ffffff;
-            text-decoration: none; /* Verwijdert onderstreping bij <a> */
-            background: #2e5f3d; /* Groene achtergrond */
-            border: none; /* Verwijdert standaardknoprand */
-            border-radius: 5px; /* Ronde hoeken */
-            cursor: pointer; /* Muisaanwijzer voor klikbare elementen */
-            text-align: right; /* Centreer de tekst */
-            transition: background 0.3s ease; /* Mooi hover-effect */
-            appearance: none; /* Verwijdert standaardstijl op knoppen (Safari) */
-        }
-        
-        .buttons a:hover,
-        .buttons button:hover {
-            background: #3c764b; /* Donkergroene hover-kleur */
-        }
-        
-        .buttons button {
-            all: unset; /* Verwijdert alle standaard buttonstijlen */
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #ffffff;
+            text-decoration: none;
             background: #2e5f3d;
             border-radius: 5px;
-            cursor: pointer;
-            text-align: right;
-            text-decoration: none;
             transition: background 0.3s ease;
         }
-        
-        .buttons button:hover {
+
+        .buttons a:hover {
             background: #3c764b;
-        }  
-        
+        }
 
         footer {
-            margin-top: 30px;
+            margin-top: auto;
+            padding: 20px 0;
             font-size: 14px;
             color: #b3b3b3;
+            background: #24452e;
         }
     </style>
 </head>
@@ -148,10 +115,12 @@
         <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
         <nav class="nav-links">
             {% if username %}
-            <h2>Hallo</h2>
-            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+            <h2>Hallo {{ username }}</h2>
+            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
             <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
+            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
             {% else %}
+            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
             <a href="{{ url_for('main.login') }}" class="nav-button">Login</a>
             <a href="{{ url_for('main.register') }}" class="nav-button">Registreer</a>
             {% endif %}
@@ -165,8 +134,8 @@
         </div>
 
         <div class="buttons">
-            <a href="{{ url_for('main.post') }}" class="buttons">Post Reis</a>
-            <a href="{{ url_for('main.search') }}" class="buttons">Zoek Reis</a>            
+            <a href="{{ url_for('main.post') }}">Post Reis</a>
+            <a href="{{ url_for('main.search') }}">Zoek Reis</a>
         </div>
     </div>
 

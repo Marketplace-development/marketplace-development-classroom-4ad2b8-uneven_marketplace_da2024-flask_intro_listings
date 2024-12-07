@@ -81,7 +81,8 @@ def login():
             return redirect(url_for('main.index'))
         
         # Toon een foutbericht als de gebruiker niet wordt gevonden of het wachtwoord onjuist is
-        return 'Ongeldige inloggegevens', 401
+        flash('Ongeldige inloggegevens. Controleer je e-mailadres en wachtwoord.', 'error')
+        return redirect(url_for('main.login'))
     
     return render_template('login.html')
 

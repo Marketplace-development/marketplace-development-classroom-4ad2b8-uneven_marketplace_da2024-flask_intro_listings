@@ -238,8 +238,14 @@ def verwijder_reis():
 def reisverwijderd():
     return render_template('reisverwijderd.html')
 
+
 @main.route('/reistoegevoegd', methods=['GET'])
 def reistoegevoegd():
-    return render_template('reistoegevoegd.html')
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
+    
+    user = Users.query.get(session['userid'])  # Haal de huidige gebruiker op
+    if not user:
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
-
+    return render_template('reistoegevoegd.html', user=user)

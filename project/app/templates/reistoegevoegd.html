@@ -39,9 +39,18 @@
 
         .nav-links {
             display: flex;
+            align-items: center;
             gap: 15px; /* Ruimte tussen de knoppen */
             justify-content: flex-end;
             flex-wrap: wrap; /* Voorkomt overflow door knoppen */
+        }
+
+        .nav-links h2 {
+            color: #f0f0f0;
+            font-size: 18px;
+            margin: 0;
+            margin-right: 20px;
+            font-weight: bold;
         }
 
         .nav-button {
@@ -93,20 +102,20 @@
     <header class="main-header">
         <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
         <nav class="nav-links">
-            {% if user %}
-            <h2>Hallo, {{ user.firstname }}</h2>
-            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+            <h2>Hallo {{ user.firstname }}</h2>
+            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
             <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
-            {% else %}
-            <a href="{{ url_for('main.login') }}" class="nav-button">Login</a>
-            <a href="{{ url_for('main.register') }}" class="nav-button">Registreer</a>
-            {% endif %}
+            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
         </nav>
     </header>
 
     <div class="content">
         <h1>Reis succesvol toegevoegd!</h1>
         <a href="{{ url_for('main.post') }}">Nog een reis toevoegen</a>
+        <br>
+        <a href="{{ url_for('main.gepost') }}">Naar mijn geüploade reizen</a>
     </div>
 </body>
 </html>
+
+

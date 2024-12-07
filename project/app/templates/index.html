@@ -107,6 +107,38 @@
             font-size: 14px;
             color: #b3b3b3;
             text-align: center;
+            margin-bottom: 40px; /* Ruimte onder de footer */
+        }
+
+        #chat-button {
+            position: fixed;
+            bottom: 20px;
+            right: 130px; /* Verplaatst naar links */
+            z-index: 1000;
+        }
+
+        .chat-btn {
+            background-color: #2e5f3d; /* Donkergroen */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .chat-btn:hover {
+            background-color: #3c764b; /* Lichter groen bij hover */
+        }
+    </style>
+    <style>
+        iframe#tawkchat-container {
+            width: 300px !important; /* Pas de breedte aan */
+            height: 400px !important; /* Pas de hoogte aan */
+            bottom: 100px !important; /* Optioneel: meer ruimte onderaan toevoegen */
+            right: 20px !important; /* Optioneel: meer ruimte rechts toevoegen */
         }
     </style>
 </head>
@@ -143,5 +175,22 @@
         <p>Bij Travel Tales geloven we dat de mooiste verhalen gedeeld moeten worden. Sluit je aan bij onze community en laat jouw reisverhaal de wereld rondgaan!</p>
         <p>~ Travel Tales-team</p>
     </footer>
+
+    <div id="chat-button">
+        <button onclick="Tawk_API.toggle();" class="chat-btn">Maak gebruik van onze chatbox</button>
+    </div>
+
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6754505c2480f5b4f5a99bf6/1iegljr6f';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    
 </body>
 </html>

@@ -98,12 +98,16 @@ def post():
     if 'userid' not in session:
         return redirect(url_for('main.login'))
     
+    error_message = None  # Variabele om foutmeldingen op te slaan
+
     if request.method == 'POST':
 
         itinerary_name = request.form['titleofitinerary']  # Ophalen uit HTML
         price = float(request.form['price'])
         description_tekst = request.form['descriptionofitinerary']
         pdf_file = request.files['file']
+
+        # Server-side validatie voor bestandstype
         if pdf_file and pdf_file.filename.endswith('.pdf'):
             # Beveilig de bestandsnaam
             filename = secure_filename(pdf_file.filename)
@@ -113,26 +117,29 @@ def post():
             file_data = pdf_file.read()  # Lees de PDF als binary data
             result = supabase.storage.from_("pdf_files").upload(f"pdfs/{unique_filename}", file_data)
 
-
             # Haal de publieke URL van het geüploade bestand op
             public_url = supabase.storage.from_("pdf_files").get_public_url(f"pdfs/{unique_filename}")
+
+            # Maak een nieuw record in de database
+            new_itinerary = DigitalGoods(
+                goodid=str(uuid.uuid4()),
+                titleofitinerary=itinerary_name,
+                descriptionofitinerary=description_tekst,
+                userid=session['userid'],
+                price=price,
+                pdf_url=public_url
+            )
+            db.session.add(new_itinerary)
+            db.session.commit()
+
+            return redirect(url_for('main.reistoegevoegd'))
+
         else:
-            return "Ongeldig bestandstype. Upload een PDF-bestand.", 400
+            # Foutmelding voor ongeldig bestandstype
+            error_message = "Ongeldig bestandstype. Upload een PDF-bestand."
 
-        # Maak een nieuw record in de database
-        new_itinerary = DigitalGoods(
-            goodid=str(uuid.uuid4()),
-            titleofitinerary=itinerary_name,    # Eerste waarde is de naam van je database & de 2e komt van HTML
-            descriptionofitinerary=description_tekst,
-            userid=session['userid'],
-            price=price,
-            pdf_url=public_url
-        )
-        db.session.add(new_itinerary)
-        db.session.commit()
-        return redirect(url_for('main.reistoegevoegd'))
+    return render_template('post.html', error_message=error_message)
 
-    return render_template('post.html')
 
 @main.route('/userpage', methods=['GET', 'POST'])
 def userpage():
@@ -181,8 +188,6 @@ def change_password():
     db.session.commit()
     flash('Wachtwoord succesvol gewijzigd!', 'success')
     return redirect(url_for('main.userpage'))
-
-from flask import Response
 
 @main.route('/download_pdf/<goodid>', methods=['GET'])
 def download_pdf(goodid):

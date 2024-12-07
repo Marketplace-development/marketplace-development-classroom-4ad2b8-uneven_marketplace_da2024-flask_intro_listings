@@ -151,26 +151,56 @@
   
     <div class="container">
         <h1>Post een Reis</h1>
-        <form action="/post" method="POST" enctype="multipart/form-data">
+        <form action="/post" method="POST" enctype="multipart/form-data" id="uploadForm">
             <!-- Titel -->
             <label for="titleofitinerary">Titel van de Reis</label>
             <input type="text" id="titleofitinerary" name="titleofitinerary" placeholder="Voer de titel in" required>
-    
+        
             <!-- Beschrijving -->
             <label for="descriptionofitinerary">Beschrijving</label>
             <textarea id="descriptionofitinerary" name="descriptionofitinerary" placeholder="Voer een beschrijving in" rows="5" required></textarea>
-    
+        
             <!-- Prijs -->
             <label for="price">Prijs (€)</label>
             <input type="number" id="price" name="price" placeholder="Voer de prijs in" min="0" required>
-    
+        
             <!-- PDF Upload -->
             <label for="file">Upload een PDF</label>
             <input type="file" id="file" name="file" accept=".pdf" required>
-    
+            <small id="fileError" style="color: red; display: none; margin-top: 10px; margin-bottom: 20px;">
+                Ongeldig bestandstype. Upload een PDF-bestand.
+            </small>
+        
+            {% if error_message %}
+            <div style="color: red; margin-bottom: 20px;">
+                {{ error_message }}
+            </div>
+            {% endif %}
+        
             <!-- Submit -->
             <button type="submit">Post Reis</button>
         </form>
+        
+        <script>
+            document.getElementById("uploadForm").addEventListener("submit", function(event) {
+                const fileInput = document.getElementById("file");
+                const fileError = document.getElementById("fileError");
+        
+                // Controleer of het bestand een PDF is
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    if (file.type !== "application/pdf") {
+                        event.preventDefault(); // Voorkom dat het formulier wordt verzonden
+                        fileError.style.display = "block";
+                        return false;
+                    }
+                }
+                fileError.style.display = "none";
+                return true;
+            });
+        </script>
+        
+        
     </div>
     
 </body>

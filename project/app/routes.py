@@ -268,15 +268,28 @@ def favoriet():
 
     return render_template('favoriet.html', user=user)
 
-@main.route('/search', methods=['GET', 'POST'])
+
+@main.route('/search', methods=['GET'])
 def search():
     if 'userid' not in session:
         return redirect(url_for('main.login'))  # Verwijzen naar login als gebruiker niet is ingelogd
 
     user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
     if not user:
-        return redirect(url_for('main.logout'))
-    return render_template('search.html')
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+
+    # Zoekterm ophalen uit de querystring (GET-parameter)
+    zoekterm = request.args.get('zoekterm', '')
+
+    # Haal alle reizen uit de database
+    reizen = DigitalGoods.query.all()
+
+    # Filter de reizen op basis van de zoekterm
+    if zoekterm:
+        reizen = [reis for reis in reizen if zoekterm.lower() in reis.titleofitinerary.lower()]
+
+    # Render de template en stuur de reizen naar de frontend
+    return render_template('search.html', user=user, reizen=reizen, zoekterm=zoekterm)
 
 
 @main.route('/verwijder_reis', methods=['POST'])

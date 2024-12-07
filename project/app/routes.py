@@ -2,7 +2,7 @@
 import datetime
 import uuid
 from flask import Blueprint, request, redirect, url_for, render_template, session
-from .models import db, Users, DigitalGoods
+from .models import db, Users, DigitalGoods, Gekocht
 from flask import flash
 from werkzeug.utils import secure_filename
 from .config import supabase
@@ -246,17 +246,6 @@ def gepost():
     return render_template('gepost.html', user=user, geposte_reizen=geposte_reizen)
 
 
-@main.route('/gekocht', methods=['GET', 'POST'])
-def gekocht():
-    if 'userid' not in session:
-        return redirect(url_for('main.login'))  # Stuur gebruiker naar login als deze niet is ingelogd
-    
-    user = Users.query.get(session['userid'])  # Haal de huidige gebruiker op
-    if not user:
-        return redirect(url_for('main.logout'))  # Log gebruiker uit als de gebruiker niet bestaat
-
-    return render_template('gekocht.html', user=user)
-
 @main.route('/favoriet', methods=['GET', 'POST'])
 def favoriet():
     if 'userid' not in session:
@@ -290,6 +279,70 @@ def search():
 
     # Render de template en stuur de reizen naar de frontend
     return render_template('search.html', user=user, reizen=reizen, zoekterm=zoekterm)
+
+@main.route('/reis/<goodid>', methods=['GET'])
+def reisdetail(goodid):
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijzen naar login als gebruiker niet is ingelogd
+
+    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
+    if not user:
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+
+    # Haal de specifieke reis op uit de database
+    reis = DigitalGoods.query.filter_by(goodid=goodid).first()
+
+    if not reis:
+        flash('Reis niet gevonden.', 'error')
+        return redirect(url_for('main.search'))
+
+    # Render de template met reisgegevens
+    return render_template('reisdetail.html', reis=reis, user=user)
+
+
+@main.route('/koop/<goodid>', methods=['POST'])
+def koop(goodid):
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
+
+    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
+    if not user:
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+
+    # Haal de specifieke reis op uit de database
+    reis = DigitalGoods.query.filter_by(goodid=goodid).first()
+    if not reis:
+        flash('Reis niet gevonden.', 'error')
+        return redirect(url_for('main.search'))  # Verwijs terug naar de zoekpagina
+
+    # Controleer of deze reis al gekocht is door de gebruiker
+    bestaande_aankoop = Gekocht.query.filter_by(userid=user.userid, goodid=goodid).first()
+    if bestaande_aankoop:
+        flash('Je hebt deze reis al gekocht.', 'info')
+        return redirect(url_for('main.gekocht'))  # Verwijs naar de pagina met gekochte reizen
+
+    # Voeg de aankoop toe aan de database, aan de tabel 'gekocht'
+    nieuwe_aankoop = Gekocht(userid=user.userid, goodid=goodid)
+    db.session.add(nieuwe_aankoop)
+    db.session.commit()
+
+    # Render de koop.html-pagina
+    return render_template('koop.html', user=user, reis=reis)  
+
+@main.route('/gekocht', methods=['GET'])
+def gekocht():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
+
+    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
+    if not user:
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+
+    # Haal alle gekochte reizen van de gebruiker op via de `Gekocht`-tabel
+    gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
+
+    # Render de gekocht.html-pagina
+    return render_template('gekocht.html', user=user, gekochte_reizen=gekochte_reizen)
 
 
 @main.route('/verwijder_reis', methods=['POST'])

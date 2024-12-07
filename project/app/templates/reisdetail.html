@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Tales - Zoek een Reis</title>
+    <title>{{ reis.titleofitinerary }}</title>
     <style>
         body {
             font-family: 'Georgia', serif;
@@ -41,15 +41,6 @@
             gap: 15px;
         }
 
-        .nav-links h2 {
-            color: #f0f0f0;
-            font-size: 18px;
-            margin: 0;
-            margin-right: 20px;
-            font-weight: bold;
-        }
-
-
         .nav-button {
             color: #ffffff;
             text-decoration: none;
@@ -67,11 +58,10 @@
             color: #e6ffe6;
         }
 
-
         .container {
             padding: 20px 40px;
             width: 80%;
-            max-width: 2000px; /* Breder vlak */
+            max-width: 800px;
             margin: 20px auto;
             background: #f9f9f9;
             border-radius: 8px;
@@ -81,53 +71,41 @@
         }
 
         .container h1 {
-            font-size: 24px;
+            font-size: 32px;
             margin-bottom: 20px;
             font-weight: bold;
+            text-align: left;
+        }
+
+        .details p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .details a {
+            color: #24452e;
+            text-decoration: underline;
+        }
+
+        .button-container {
+            margin-top: 20px;
             text-align: center;
         }
 
-        .search-bar {
-            width: calc(100% - 80px);
-            margin: 0 auto;
-            margin-bottom: 20px;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 10px;
+        .button-container .koop-knop {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+            background: #2e5f3d;
             border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            font-family: 'Georgia', serif;
-            background: #fff;
-            color: #24452e;
+            transition: background 0.3s ease;
         }
 
-        .travel-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .travel-item {
-            background: #e9f5e9;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .travel-item h2 {
-            margin: 0 0 10px;
-        }
-
-        .travel-item p {
-            margin: 0 0 5px;
-        }
-
-        .travel-item a {
-            color: #24452e;
-            text-decoration: underline;
+        .button-container .koop-knop:hover {
+            background: #3c764b;
         }
     </style>
 </head>
@@ -135,8 +113,7 @@
     <header class="main-header">
         <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
         <nav class="nav-links">
-            {% if username %}
-            <h2>Hallo {{ username }}</h2>
+            {% if user %}
             <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
             <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
             <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
@@ -149,29 +126,17 @@
     </header>
   
     <div class="container">
-        <h1>Zoek een Reis</h1>
-        <!-- Zoekbalk -->
-        <div class="search-bar">
-            <form action="{{ url_for('main.search') }}" method="get">
-                <input type="text" name="zoekterm" placeholder="Zoek op titel..." value="{{ zoekterm }}">
-            </form>
+        <h1>{{ reis.titleofitinerary }}</h1>
+        <div class="details">
+            <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
+            <p><strong>Prijs:</strong> €{{ reis.price }}</p>
+            <p><strong>PDF:</strong> <a href="{{ reis.pdf_url }}" target="_blank">Bekijk hier</a></p>
         </div>
-
-        <!-- Lijst van reizen -->
-        <div class="travel-list">
-            {% if reizen %}
-                {% for reis in reizen %}
-                <div class="travel-item">
-                    <!-- Maak de titel klikbaar -->
-                    <h2><a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}">{{ reis.titleofitinerary }}</a></h2>
-                    <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
-                    <p><strong>Prijs:</strong> €{{ reis.price }}</p>
-                    <p><strong>PDF:</strong> <a href="{{ reis.pdf_url }}" target="_blank">Bekijk hier</a></p>
-                </div>
-                {% endfor %}
-            {% else %}
-                <p>Geen reizen gevonden.</p>
-            {% endif %}
+        <div class="button-container">
+            <!-- Formulier voor de Koop Reis-knop -->
+            <form action="{{ url_for('main.koop', goodid=reis.goodid) }}" method="POST">
+                <button type="submit" class="koop-knop">Koop Reis</button>
+            </form>
         </div>
     </div>
 </body>

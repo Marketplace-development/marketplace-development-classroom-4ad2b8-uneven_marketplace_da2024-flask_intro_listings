@@ -201,11 +201,14 @@ def download_pdf(goodid):
             response = supabase.storage.from_("pdf_files").download(f"pdfs/{pdf_path}")
 
             if response:
-                # Stuur het bestand als een response terug naar de gebruiker
+                # Stuur de PDF terug met juiste headers
                 return Response(
                     response,
                     mimetype="application/pdf",
-                    headers={"Content-Disposition": f"attachment;filename={pdf_path}"}
+                    headers={
+                        "Content-Disposition": f"inline; filename={pdf_path}",
+                        "Content-Type": "application/pdf"
+                    }
                 )
         else:
             return "PDF niet gevonden of niet gekoppeld aan deze reis.", 404

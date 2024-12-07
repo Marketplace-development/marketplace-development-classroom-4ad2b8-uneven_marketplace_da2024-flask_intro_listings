@@ -24,7 +24,6 @@ def register():
         password = request.form.get('password')  # Zorg dat je wachtwoord veilig opslaat!
         first_name = request.form.get('firstname')
         last_name = request.form.get('lastname')
-        birth_date = request.form.get('birthdate')
         address = request.form.get('address')
         city = request.form.get('city')
         postal_code = request.form.get('postalcode')
@@ -43,7 +42,6 @@ def register():
             password=password,  # Hash het wachtwoord
             firstname=first_name,
             lastname=last_name,
-            birthdate=datetime.datetime.strptime(birth_date, '%Y-%m-%d') if birth_date else None,
             address=address,
             city=city,
             postalcode=postal_code,

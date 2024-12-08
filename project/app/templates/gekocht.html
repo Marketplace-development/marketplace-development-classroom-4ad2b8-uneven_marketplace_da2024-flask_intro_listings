@@ -26,6 +26,29 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container .globe {
+            width: 50px;
+            height: 50px;
+            background-color: #24452e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+
+        .logo-container .globe img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+
         .main-header .logo {
             font-size: 24px;
             font-weight: bold;
@@ -125,7 +148,7 @@
             flex-direction: column;
             justify-content: space-between;
         }
-    
+
         .add-button {
             display: inline-block;
             padding: 10px 20px;
@@ -138,11 +161,11 @@
             margin-top: 10px;
             text-align: center;
         }
-    
+
         .add-button:hover {
             background-color: #3c764b;
         }
-    
+
         .delete-button {
             background-color: #d9534f;
             color: white;
@@ -154,7 +177,7 @@
             text-align: center;
             min-width: 100px;
         }
-    
+
         .delete-button:hover {
             background-color: #c9302c;
         }
@@ -162,7 +185,12 @@
 </head>
 <body>
     <header class="main-header">
-        <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        <div class="logo-container">
+            <div class="globe">
+                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
+            </div>
+            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        </div>
         <nav class="nav-links">
             <h2>Hallo {{ user.firstname }}</h2>
             <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
@@ -221,9 +249,6 @@
         
             <a href="{{ url_for('main.search') }}" class="add-button">Terug naar zoeken</a>
         </main>
-        
-               
-        
     </div>
 </body>
 </html>

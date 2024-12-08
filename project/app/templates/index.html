@@ -9,7 +9,8 @@
             font-family: 'Georgia', serif;
             margin: 0;
             padding: 0;
-            background: #1f3d2b; /* Donkergroene achtergrond */
+            background: url('https://media.cntraveler.com/photos/5eb18e42fc043ed5d9779733/4:3/w_3820,h_2865,c_limit/BlackForest-Germany-GettyImages-147180370.jpg') no-repeat center center;
+            background-size: cover;
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -26,6 +27,29 @@
             top: 0;
             z-index: 10;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container .globe {
+            width: 50px;
+            height: 50px;
+            background-color: #24452e; /* Donkergroene achtergrond */
+            border-radius: 50%; /* Maakt het rond */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px; /* Ruimte tussen wereldbol en tekst */
+            overflow: hidden;
+        }
+
+        .logo-container .globe img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
         }
 
         .main-header .logo {
@@ -68,7 +92,15 @@
 
         .container {
             text-align: center;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .hero-section {
+            margin-top: -50px; /* Brengt de tekst iets lager */
         }
 
         .hero-section h1 {
@@ -81,7 +113,8 @@
             font-size: 18px;
             line-height: 1.8;
             max-width: 800px;
-            margin: 0 auto;
+            margin: 20px auto;
+            font-weight: bold; /* Vetgedrukt */
         }
 
         .buttons a {
@@ -107,18 +140,17 @@
             font-size: 14px;
             color: #b3b3b3;
             text-align: center;
-            margin-bottom: 40px; /* Ruimte onder de footer */
         }
 
         #chat-button {
             position: fixed;
             bottom: 20px;
-            right: 130px; /* Verplaatst naar links */
+            right: 130px;
             z-index: 1000;
         }
 
         .chat-btn {
-            background-color: #2e5f3d; /* Donkergroen */
+            background-color: #2e5f3d;
             color: white;
             border: none;
             border-radius: 5px;
@@ -130,21 +162,18 @@
         }
 
         .chat-btn:hover {
-            background-color: #3c764b; /* Lichter groen bij hover */
-        }
-    </style>
-    <style>
-        iframe#tawkchat-container {
-            width: 300px !important; /* Pas de breedte aan */
-            height: 400px !important; /* Pas de hoogte aan */
-            bottom: 100px !important; /* Optioneel: meer ruimte onderaan toevoegen */
-            right: 20px !important; /* Optioneel: meer ruimte rechts toevoegen */
+            background-color: #3c764b;
         }
     </style>
 </head>
 <body>
     <header class="main-header">
-        <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        <div class="logo-container">
+            <div class="globe">
+                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
+            </div>
+            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        </div>
         <nav class="nav-links">
             {% if username %}
             <h2>Hallo {{ username }}</h2>
@@ -191,6 +220,5 @@
     s0.parentNode.insertBefore(s1,s0);
     })();
     </script>
-    
 </body>
 </html>

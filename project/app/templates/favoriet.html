@@ -27,6 +27,29 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container .globe {
+            width: 50px;
+            height: 50px;
+            background-color: #24452e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+
+        .logo-container .globe img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+
         .main-header .logo {
             font-size: 24px;
             font-weight: bold;
@@ -110,12 +133,52 @@
             font-size: 24px;
             margin-bottom: 20px;
         }
+
+        .favorite-item {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .favorite-item h2 {
+            font-size: 20px;
+            color: #24452e;
+            margin: 0;
+        }
+
+        .favorite-item p {
+            margin: 5px 0;
+        }
+
+        .remove-button {
+            background-color: #d9534f;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .remove-button:hover {
+            background-color: #c9302c;
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header class="main-header">
-        <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        <div class="logo-container">
+            <div class="globe">
+                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
+            </div>
+            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        </div>
         <nav class="nav-links">
             <h2>Hallo {{ user.firstname }}</h2>
             <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
@@ -139,10 +202,24 @@
         <!-- Inhoud -->
         <main class="content">
             <h1>Mijn Favorieten</h1>
-            <p>Hier komen de favorieten van de gebruiker te staan.</p>
-            <!-- Voeg de dynamische inhoud toe van favorieten -->
+
+            {% if favorieten %}
+            {% for favoriet in favorieten %}
+            <div class="favorite-item">
+                <div>
+                    <h2>{{ favoriet.good.titleofitinerary }}</h2>
+                    <p>{{ favoriet.good.descriptionofitinerary }}</p>
+                </div>
+                <form action="{{ url_for('main.remove_favoriet') }}" method="POST">
+                    <input type="hidden" name="favorietid" value="{{ favoriet.favorietid }}">
+                    <button type="submit" class="remove-button">Verwijder</button>
+                </form>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>Je hebt nog geen favorieten toegevoegd.</p>
+            {% endif %}
         </main>
     </div>
 </body>
 </html>
-

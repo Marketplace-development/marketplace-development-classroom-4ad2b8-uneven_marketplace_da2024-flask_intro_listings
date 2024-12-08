@@ -27,14 +27,34 @@
             overflow: hidden;
         }
 
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container .globe {
+            width: 50px;
+            height: 50px;
+            background-color: #24452e; /* Donkergroene achtergrond */
+            border-radius: 50%; /* Maakt het rond */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px; /* Ruimte tussen wereldbol en tekst */
+            overflow: hidden;
+        }
+
+        .logo-container .globe img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+
         .main-header .logo {
             font-size: 24px;
             font-weight: bold;
             color: #ffffff;
             text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background 0.3s ease, color 0.3s ease;
         }
 
         .nav-links {
@@ -100,7 +120,12 @@
 </head>
 <body>
     <header class="main-header">
-        <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        <div class="logo-container">
+            <div class="globe">
+                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
+            </div>
+            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        </div>
         <nav class="nav-links">
             <h2>Hallo {{ user.firstname }}</h2>
             <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
@@ -115,8 +140,6 @@
         <br>
         <a href="{{ url_for('main.gekocht') }}">Naar mijn gekochte reizen</a>
     </div>
-    
 </body>
 </html>
-
 

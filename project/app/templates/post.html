@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Tales - Dashboard</title>
+    <title>Travel Tales - Post een Reis</title>
     <style>
         body {
             font-family: 'Georgia', serif;
@@ -26,6 +26,29 @@
             top: 0;
             z-index: 10;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container .globe {
+            width: 50px;
+            height: 50px;
+            background-color: #24452e; /* Donkergroene achtergrond */
+            border-radius: 50%; /* Maakt het rond */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px; /* Ruimte tussen wereldbol en tekst */
+            overflow: hidden;
+        }
+
+        .logo-container .globe img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
         }
 
         .main-header .logo {
@@ -66,11 +89,10 @@
             color: #e6ffe6;
         }
 
-        
         .container {
             padding: 20px 40px;
             width: 80%;
-            max-width: 2000px; /* Breder vlak */
+            max-width: 2000px;
             margin: 20px auto;
             background: #f9f9f9;
             border-radius: 8px;
@@ -78,24 +100,24 @@
             font-family: 'Georgia', serif;
             color: #24452e;
         }
-        
+
         .container h1 {
             font-size: 24px;
             margin-bottom: 20px;
             font-weight: bold;
             text-align: center;
         }
-        
+
         form label {
             font-weight: bold;
             margin-bottom: 5px;
             display: block;
             color: #24452e;
         }
-        
+
         form input,
         form textarea {
-            width:calc(100% - 80px); /* Korter dan de container */
+            width: calc(100% - 80px); /* Korter dan de container */
             padding: 10px;
             margin-bottom: 15px;
             border-radius: 5px;
@@ -105,13 +127,13 @@
             background: #fff;
             color: #24452e;
         }
-        
+
         form textarea {
             resize: none;
         }
-        
+
         form button {
-            width:calc(100% - 80px); /* Knop is even breed als de velden */
+            width: calc(100% - 80px); /* Knop is even breed als de velden */
             padding: 10px;
             background: #24452e;
             color: #fff;
@@ -123,18 +145,20 @@
             display: block;
             margin: 0 auto; /* Centraal plaatsen */
         }
-        
+
         form button:hover {
             background: #3c764b;
         }
-        
-        
-        
     </style>
 </head>
 <body>
     <header class="main-header">
-        <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        <div class="logo-container">
+            <div class="globe">
+                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
+            </div>
+            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        </div>
         <nav class="nav-links">
             {% if username %}
             <h2>Hallo {{ username }}</h2>
@@ -152,19 +176,15 @@
     <div class="container">
         <h1>Post een Reis</h1>
         <form action="/post" method="POST" enctype="multipart/form-data" id="uploadForm">
-            <!-- Titel -->
             <label for="titleofitinerary">Titel van de Reis</label>
             <input type="text" id="titleofitinerary" name="titleofitinerary" placeholder="Voer de titel in" required>
         
-            <!-- Beschrijving -->
             <label for="descriptionofitinerary">Beschrijving</label>
             <textarea id="descriptionofitinerary" name="descriptionofitinerary" placeholder="Voer een beschrijving in" rows="5" required></textarea>
         
-            <!-- Prijs -->
             <label for="price">Prijs (€)</label>
             <input type="number" id="price" name="price" placeholder="Voer de prijs in" min="0" required>
         
-            <!-- PDF Upload -->
             <label for="file">Upload een PDF</label>
             <input type="file" id="file" name="file" accept=".pdf" required>
             <small id="fileError" style="color: red; display: none; margin-top: 10px; margin-bottom: 20px;">
@@ -177,7 +197,6 @@
             </div>
             {% endif %}
         
-            <!-- Submit -->
             <button type="submit">Post Reis</button>
         </form>
         
@@ -186,11 +205,10 @@
                 const fileInput = document.getElementById("file");
                 const fileError = document.getElementById("fileError");
         
-                // Controleer of het bestand een PDF is
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
                     if (file.type !== "application/pdf") {
-                        event.preventDefault(); // Voorkom dat het formulier wordt verzonden
+                        event.preventDefault();
                         fileError.style.display = "block";
                         return false;
                     }
@@ -199,9 +217,6 @@
                 return true;
             });
         </script>
-        
-        
     </div>
-    
 </body>
 </html>

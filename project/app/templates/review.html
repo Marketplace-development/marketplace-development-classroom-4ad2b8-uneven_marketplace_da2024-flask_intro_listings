@@ -1,0 +1,187 @@
+
+final_fixed_html_stars = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Tales - Schrijf een Review</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: #1f3d2b; /* Donkergroene achtergrond */
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-header {
+            background: #24452e;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-button {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 12px 20px;
+            background: #2e5f3d;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .nav-button:hover {
+            background: #3c764b;
+            color: #e6ffe6;
+        }
+
+        .container {
+            padding: 20px;
+            width: 80%;
+            margin: 20px auto;
+            background: #f9f9f9;
+            border-radius: 8px;
+            color: #24452e;
+        }
+
+        h1 {
+            text-align: center;
+            color: #24452e;
+        }
+
+        .review-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .review-form textarea, .review-form select, .review-form button {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .review-form button {
+            background: #2e5f3d;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .review-form button:hover {
+            background: #3c764b;
+        }
+
+        .stars {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .stars i {
+            font-size: 40px;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .stars i.active {
+            color: gold;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <a href="#" class="logo">Travel Tales</a>
+        <nav class="nav-links">
+            <h2 class="user-greeting">Hallo {{ user.firstname }}</h2>
+            <a href="#" class="nav-button">Home</a>
+            <a href="#" class="nav-button">Mijn Reizen</a>
+            <a href="#" class="nav-button">Uitloggen</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Schrijf een Review</h1>
+
+        <form action="#" method="post" class="review-form">
+            <label for="reis">Kies een reis:</label>
+            <select id="reis" name="reis_id" required>
+                <!-- Dynamisch gegenereerde lijst van aangekochte reizen -->
+                <option value="1">Reis naar Dromenland</option>
+                <option value="2">Noorwegen</option>
+                <option value="3">YeeY</option>
+            </select>
+
+            <label for="review">Jouw review:</label>
+            <textarea id="review" name="review_text" rows="5" placeholder="Schrijf hier je review..." required></textarea>
+
+            <label>Beoordeling:</label>
+            <div class="stars" id="star-rating">
+                <i class="star" data-value="1">&#9733;</i>
+                <i class="star" data-value="2">&#9733;</i>
+                <i class="star" data-value="3">&#9733;</i>
+                <i class="star" data-value="4">&#9733;</i>
+                <i class="star" data-value="5">&#9733;</i>
+            </div>
+            <input type="hidden" id="rating" name="rating" value="">
+
+            <button type="submit">Review indienen</button>
+        </form>
+    </div>
+
+    <script>
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating');
+
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                // Update actieve sterren
+                stars.forEach((s, i) => {
+                    if (i <= index) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+
+                // Update verborgen invoerwaarde
+                ratingInput.value = index + 1;
+            });
+        });
+    </script>
+</body>
+</html>
+"""
+
+final_fixed_file_path = "/mnt/data/final_review_with_fixed_stars.html"
+with open(final_fixed_file_path, "w", encoding="utf-8") as file:
+    file.write(final_fixed_html_stars)
+
+final_fixed_file_path

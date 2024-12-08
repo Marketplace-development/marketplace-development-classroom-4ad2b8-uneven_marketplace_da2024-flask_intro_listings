@@ -9,7 +9,7 @@
             font-family: 'Georgia', serif;
             margin: 0;
             padding: 0;
-            background: #1f3d2b; /* Donkergroene achtergrond */
+            background: #1f3d2b;
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -49,7 +49,6 @@
             font-weight: bold;
         }
 
-
         .nav-button {
             color: #ffffff;
             text-decoration: none;
@@ -67,11 +66,10 @@
             color: #e6ffe6;
         }
 
-
         .container {
             padding: 20px 40px;
             width: 80%;
-            max-width: 2000px; /* Breder vlak */
+            max-width: 2000px;
             margin: 20px auto;
             background: #f9f9f9;
             border-radius: 8px;
@@ -129,6 +127,19 @@
             color: #24452e;
             text-decoration: underline;
         }
+
+        .favorite-button {
+            background: none;
+            border: none;
+            color: red;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+    
+        .favorite-button:hover {
+            color: darkred;
+        }
     </style>
 </head>
 <body>
@@ -162,16 +173,29 @@
             {% if reizen %}
                 {% for reis in reizen %}
                 <div class="travel-item">
-                    <!-- Maak de titel klikbaar -->
                     <h2><a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}">{{ reis.titleofitinerary }}</a></h2>
                     <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
                     <p><strong>Prijs:</strong> €{{ reis.price }}</p>
+                
+                    <!-- Favoriet-knop rechts -->
+                    <form action="{{ url_for('main.toggle_favoriet') }}" method="POST" style="display: flex; justify-content: flex-end;">
+                        <input type="hidden" name="goodid" value="{{ reis.goodid }}">
+                        <button type="submit" class="favorite-button" title="Favoriet">
+                            {% if reis.goodid in favorieten %}
+                            ❤️
+                            {% else %}
+                            🤍
+                            {% endif %}
+                        </button>
+                    </form>
                 </div>
                 {% endfor %}
             {% else %}
                 <p>Geen reizen gevonden.</p>
             {% endif %}
         </div>
+        
     </div>
 </body>
 </html>
+

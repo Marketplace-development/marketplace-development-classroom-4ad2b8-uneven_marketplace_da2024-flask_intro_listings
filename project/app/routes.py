@@ -2,7 +2,7 @@
 import datetime
 import uuid
 from flask import Blueprint, request, redirect, url_for, render_template, session
-from .models import db, Users, DigitalGoods, Gekocht
+from .models import db, Users, DigitalGoods, Gekocht, Favoriet
 from flask import flash
 from werkzeug.utils import secure_filename
 from .config import supabase
@@ -312,7 +312,6 @@ def favoriet():
 
     return render_template('favoriet.html', user=user)
 
-
 @main.route('/search', methods=['GET'])
 def search():
     if 'userid' not in session:
@@ -323,7 +322,7 @@ def search():
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
     # Zoekterm ophalen uit de querystring (GET-parameter)
-    zoekterm = request.args.get('zoekterm', '')
+    zoekterm = request.args.get('zoekterm', '').strip()
 
     # Haal alle reizen uit de database
     reizen = DigitalGoods.query.all()
@@ -332,8 +331,20 @@ def search():
     if zoekterm:
         reizen = [reis for reis in reizen if zoekterm.lower() in reis.titleofitinerary.lower()]
 
-    # Render de template en stuur de reizen naar de frontend
-    return render_template('search.html', user=user, reizen=reizen, zoekterm=zoekterm)
+    # Haal de favorieten van de gebruiker op
+    favorieten = []
+    if 'userid' in session:
+        favorieten = [favoriet.goodid for favoriet in Favoriet.query.filter_by(userid=session['userid']).all()]
+
+    # Render de template en stuur de reizen en favorieten naar de frontend
+    return render_template(
+        'search.html',
+        user=user,
+        reizen=reizen,
+        favorieten=favorieten,
+        zoekterm=zoekterm
+    )
+
 
 @main.route('/reis/<goodid>', methods=['GET'])
 def reisdetail(goodid):
@@ -455,5 +466,38 @@ def verwijder_aankoop():
         flash('Er is iets misgegaan bij het verwijderen.', 'error')
 
     return render_template('aankoopverwijderd.html')
+
+@main.route('/toggle_favoriet', methods=['POST'])
+def toggle_favoriet():
+    if 'userid' not in session:
+        flash("Je moet ingelogd zijn om een reis als favoriet te markeren of verwijderen.", "error")
+        return redirect(url_for('main.login'))
+
+    user_id = session['userid']
+    goodid = request.form.get('goodid')
+
+    if not goodid:
+        flash("Geen geldige reis geselecteerd.", "error")
+        return redirect(url_for('main.search'))
+
+    # Controleer of de reis al in de favorieten staat
+    favoriet = Favoriet.query.filter_by(userid=user_id, goodid=goodid).first()
+    if favoriet:
+        # Verwijder de favoriet
+        db.session.delete(favoriet)
+        db.session.commit()
+        flash("Reis verwijderd uit je favorieten.", "info")
+    else:
+        # Voeg de favoriet toe
+        nieuwe_favoriet = Favoriet(
+            favorietid=str(uuid.uuid4()),
+            userid=user_id,
+            goodid=goodid
+        )
+        db.session.add(nieuwe_favoriet)
+        db.session.commit()
+        flash("Reis toegevoegd aan je favorieten!", "success")
+
+    return redirect(url_for('main.search'))
 
 

@@ -73,4 +73,24 @@ class Gekocht(db.Model):
 
     def __repr__(self):
         return f'<Gekocht {self.gekochtid} door {self.userid} - {self.goodid}>'
+    
+class Favoriet(db.Model):
+    __tablename__ = 'favorieten'
+
+    # Primaire sleutel
+    favorietid = db.Column(db.String, primary_key=True) 
+
+    # Foreign keys
+    userid = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)  # Verwijst naar Users.userid
+    goodid = db.Column(db.String, db.ForeignKey('digitalgoods.goodid'), nullable=False)  # Verwijst naar DigitalGoods.goodid
+
+    # Metadata
+    createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)  # Datum van favoriet maken
+
+    # Relaties
+    user = db.relationship('Users', backref='favoriete_reizen', lazy=True)  # Relatie naar Users
+    good = db.relationship('DigitalGoods', backref='favoriet_door', lazy=True)  # Relatie naar DigitalGoods
+
+    def __repr__(self):
+        return f'<Favoriet {self.favorietid} door {self.userid} - {self.goodid}>'
 

@@ -345,8 +345,8 @@ def koopbevestiging():
 
     return render_template('koopbevestiging.html', user=user)
 
-#@main.route('/gekocht', methods=['GET'])
-#def gekocht():
+@main.route('/gekocht', methods=['GET'])
+def gekocht():
     if 'userid' not in session:
         return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
 
@@ -357,8 +357,9 @@ def koopbevestiging():
     # Haal alle gekochte reizen van de gebruiker op via de `Gekocht`-tabel
     gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
 
-    # Render de gekocht.html-pagina
+    # Render de gekocht.html-pagina en geef de gekochte reizen door
     return render_template('gekocht.html', user=user, gekochte_reizen=gekochte_reizen)
+
 
 
 @main.route('/verwijder_reis', methods=['POST'])

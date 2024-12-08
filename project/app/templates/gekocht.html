@@ -156,20 +156,31 @@
         </aside>
 
         <main class="content">
-            <h1>Mijn Aangekochte Reizen</h1>
-            {% if aangekochte_reizen %}
-            {% for reis in aangekochte_reizen %}
-            <div class="purchased-travel-item">
-                <h2>{{ reis.title }}</h2>
-                <p><strong>Beschrijving:</strong> {{ reis.description }}</p>
-                <p><strong>Prijs (€):</strong> {{ reis.price }}</p>
-                <p><strong>Aangekocht op:</strong> {{ reis.purchase_date }}</p>
+            <h1>Mijn Gekochte Reizen</h1>
+        
+            {% if gekochte_reizen %}
+            {% for aankoop in gekochte_reizen %}
+            <div class="travel-item">
+                <h2>{{ aankoop.good.titleofitinerary }}</h2>
+                <p><strong>Beschrijving:</strong> {{ aankoop.good.descriptionofitinerary }}</p>
+                <p><strong>Prijs (€):</strong> {{ aankoop.good.price }}</p>
+                <p><strong>Aangekocht op:</strong> {{ aankoop.createdat.strftime('%d-%m-%Y') }}</p>
+        
+                <!-- Open PDF-knop -->
+                {% if aankoop.good.pdf_url %}
+                <a href="{{ aankoop.good.pdf_url }}" target="_blank" class="add-button">
+                    Open mijn reis (PDF)
+                </a>
+                {% endif %}
             </div>
             {% endfor %}
             {% else %}
-            <p>Je hebt nog geen reizen aangekocht.</p>
+            <p>Je hebt nog geen reizen gekocht.</p>
             {% endif %}
+        
+            <a href="{{ url_for('main.search') }}" class="add-button">Terug naar zoeken</a>
         </main>
+        
     </div>
 </body>
 </html>

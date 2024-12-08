@@ -245,6 +245,31 @@ def gepost():
 
     return render_template('gepost.html', user=user, geposte_reizen=geposte_reizen)
 
+@main.route('/gekocht', methods=['GET'])
+def gekocht():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
+
+    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
+    if not user:
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+
+    # Haal alle gekochte reizen van de gebruiker op
+    gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
+
+    # Render de pagina met de gekochte reizen
+    return render_template('gekocht.html', user=user, gekochte_reizen=gekochte_reizen)
+
+@main.route('/algekocht')
+def algekocht():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
+    
+    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
+    if not user:
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+
+    return render_template('algekocht.html', user=user)
 
 @main.route('/favoriet', methods=['GET', 'POST'])
 def favoriet():
@@ -319,7 +344,7 @@ def koop(goodid):
     bestaande_aankoop = Gekocht.query.filter_by(userid=user.userid, goodid=goodid).first()
     if bestaande_aankoop:
         flash('Je hebt deze reis al gekocht.', 'info')
-        return redirect(url_for('main.userpage'))  # Verwijs naar de pagina met gekochte reizen
+        return redirect(url_for('main.algekocht'))  # Verwijs naar de pagina met gekochte reizen
 
     # Voeg de aankoop toe aan de database
     nieuwe_aankoop = Gekocht(
@@ -345,22 +370,6 @@ def koopbevestiging():
 
     return render_template('koopbevestiging.html', user=user)
 
-@main.route('/gekocht', methods=['GET'])
-def gekocht():
-    if 'userid' not in session:
-        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
-
-    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
-    if not user:
-        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
-
-    # Haal alle gekochte reizen van de gebruiker op via de `Gekocht`-tabel
-    gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
-
-    # Render de gekocht.html-pagina en geef de gekochte reizen door
-    return render_template('gekocht.html', user=user, gekochte_reizen=gekochte_reizen)
-
-
 
 @main.route('/verwijder_reis', methods=['POST'])
 def verwijder_reis():
@@ -381,6 +390,13 @@ def verwijder_reis():
 
 @main.route('/reisverwijderd', methods=['GET'])
 def reisverwijderd():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
+    
+    user = Users.query.get(session['userid'])  # Haal de huidige gebruiker op
+    if not user:
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+
     return render_template('reisverwijderd.html')
 
 

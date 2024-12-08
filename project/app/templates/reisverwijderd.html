@@ -122,7 +122,7 @@
         </div>
         <nav class="nav-links">
             {% if user %}
-            <h2>Hallo, {{ user.firstname }}</h2>
+            <h2>Hallo {{ user.firstname }}</h2>
             <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
             <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
             {% else %}

@@ -107,6 +107,26 @@
         .button-container .koop-knop:hover {
             background: #3c764b;
         }
+        .favorite-button {
+            background: none;
+            border: none;
+            color: red;
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+    
+        .favorite-button:hover {
+            color: darkred;
+        }
+        .details {
+            display: flex;
+            justify-content: space-between; /* Plaatst elementen aan beide uiteinden */
+            align-items: center; /* Centreert elementen verticaal */
+        }
+        .favorite-button {
+            margin-left: 20px; /* Optionele marge links van de knop */
+        }
     </style>
 </head>
 <body>
@@ -124,21 +144,35 @@
             {% endif %}
         </nav>
     </header>
-  
+
     <div class="container">
         <h1>{{ reis.titleofitinerary }}</h1>
-        <div class="details">
-            <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
-            <p><strong>Prijs:</strong> €{{ reis.price }}</p>
-            
+        <div class="details" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
+                <p><strong>Prijs:</strong> €{{ reis.price }}</p>
+            </div>
+    
+            <!-- Favorietenknop -->
+            <form action="{{ url_for('main.toggle_favoriet') }}" method="POST" style="margin-left: 20px;">
+                <input type="hidden" name="goodid" value="{{ reis.goodid }}">
+                <input type="hidden" name="referer" value="reisdetail">
+                <button type="submit" class="favorite-button" title="Favoriet">
+                    {% if is_favoriet %}
+                    ❤️
+                    {% else %}
+                    🤍
+                    {% endif %}
+                </button>
+            </form>
         </div>
-        <div class="button-container">
+    
+        <div class="button-container" style="margin-top: 20px;">
             <!-- Formulier voor de Koop Reis-knop -->
             <form action="{{ url_for('main.koop', goodid=reis.goodid) }}" method="POST">
                 <button type="submit" class="koop-knop">Koop Reis</button>
             </form>
         </div>
-    </div>
-    
+    </div> 
 </body>
 </html>

@@ -362,8 +362,11 @@ def reisdetail(goodid):
         flash('Reis niet gevonden.', 'error')
         return redirect(url_for('main.search'))
 
-    # Render de template met reisgegevens
-    return render_template('reisdetail.html', reis=reis, user=user)
+    # Controleer of deze reis een favoriet is van de gebruiker
+    is_favoriet = Favoriet.query.filter_by(userid=user.userid, goodid=goodid).first() is not None
+
+    # Render de template met reisgegevens en favorietstatus
+    return render_template('reisdetail.html', reis=reis, user=user, is_favoriet=is_favoriet)
 
 
 @main.route('/koop/<goodid>', methods=['POST'])
@@ -475,6 +478,7 @@ def toggle_favoriet():
 
     user_id = session['userid']
     goodid = request.form.get('goodid')
+    referer_page = request.form.get('referer')  # Haal de referentiepagina op
 
     if not goodid:
         flash("Geen geldige reis geselecteerd.", "error")
@@ -498,6 +502,13 @@ def toggle_favoriet():
         db.session.commit()
         flash("Reis toegevoegd aan je favorieten!", "success")
 
-    return redirect(url_for('main.search'))
+    # Verwijs terug naar de juiste pagina
+    if referer_page == 'search':
+        return redirect(url_for('main.search'))
+    elif referer_page == 'reisdetail':
+        return redirect(url_for('main.reisdetail', goodid=goodid))
+    else:
+        return redirect(url_for('main.search'))  # Fallback naar search
+
 
 

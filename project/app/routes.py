@@ -418,6 +418,7 @@ def verwijder_reis():
     return redirect(url_for('main.gepost'))
 
 
+
 @main.route('/reisverwijderd', methods=['GET'])
 def reisverwijderd():
     return render_template('reisverwijderd.html')
@@ -454,3 +455,5 @@ def verwijder_aankoop():
         flash('Er is iets misgegaan bij het verwijderen.', 'error')
 
     return render_template('aankoopverwijderd.html')
+
+

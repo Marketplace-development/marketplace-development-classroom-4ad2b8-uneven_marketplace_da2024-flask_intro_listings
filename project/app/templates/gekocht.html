@@ -201,14 +201,18 @@
                         <button type="submit" class="delete-button">Verwijder</button>
                     </form>
                 </div>
-
+        
                 <!-- Open PDF-knop -->
                 {% if aankoop.good.pdf_url %}
                 <a href="{{ url_for('main.download_aankoop_pdf', gekochtid=aankoop.gekochtid) }}" target="_blank" class="add-button">
                     Open mijn reis (PDF)
                 </a>
                 {% endif %}
-                
+        
+                <!-- Review-knop -->
+                <a href="" class="add-button" style="margin-top: 10px;">
+                    Review deze reis
+                </a>
             </div>
             {% endfor %}
             {% else %}
@@ -217,6 +221,7 @@
         
             <a href="{{ url_for('main.search') }}" class="add-button">Terug naar zoeken</a>
         </main>
+        
                
         
     </div>

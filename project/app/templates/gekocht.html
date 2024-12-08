@@ -115,22 +115,48 @@
             line-height: 1.6;
         }
 
-        .purchased-travel-item {
+        .travel-item {
             border: 1px solid #ddd;
             padding: 20px;
             border-radius: 8px;
             background-color: #f9f9f9;
             margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-
-        .purchased-travel-item h2 {
-            font-size: 20px;
-            color: #24452e;
-            margin-bottom: 10px;
+    
+        .add-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #24452e;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
         }
-
-        .purchased-travel-item p {
-            margin: 5px 0;
+    
+        .add-button:hover {
+            background-color: #3c764b;
+        }
+    
+        .delete-button {
+            background-color: #d9534f;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: center;
+            min-width: 100px;
+        }
+    
+        .delete-button:hover {
+            background-color: #c9302c;
         }
     </style>
 </head>
@@ -161,17 +187,28 @@
             {% if gekochte_reizen %}
             {% for aankoop in gekochte_reizen %}
             <div class="travel-item">
-                <h2>{{ aankoop.good.titleofitinerary }}</h2>
-                <p><strong>Beschrijving:</strong> {{ aankoop.good.descriptionofitinerary }}</p>
-                <p><strong>Prijs (€):</strong> {{ aankoop.good.price }}</p>
-                <p><strong>Aangekocht op:</strong> {{ aankoop.createdat.strftime('%d-%m-%Y') }}</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h2>{{ aankoop.good.titleofitinerary }}</h2>
+                        <p><strong>Beschrijving:</strong> {{ aankoop.good.descriptionofitinerary }}</p>
+                        <p><strong>Prijs (€):</strong> {{ aankoop.good.price }}</p>
+                        <p><strong>Aangekocht op:</strong> {{ aankoop.createdat.strftime('%d-%m-%Y') }}</p>
+                    </div>
         
+                    <!-- Verwijderknop rechts -->
+                    <form action="{{ url_for('main.verwijder_aankoop') }}" method="POST" style="margin-left: 20px;">
+                        <input type="hidden" name="gekochtid" value="{{ aankoop.gekochtid }}">
+                        <button type="submit" class="delete-button">Verwijder</button>
+                    </form>
+                </div>
+
                 <!-- Open PDF-knop -->
                 {% if aankoop.good.pdf_url %}
-                <a href="{{ aankoop.good.pdf_url }}" target="_blank" class="add-button">
+                <a href="{{ url_for('main.download_aankoop_pdf', gekochtid=aankoop.gekochtid) }}" target="_blank" class="add-button">
                     Open mijn reis (PDF)
                 </a>
                 {% endif %}
+                
             </div>
             {% endfor %}
             {% else %}
@@ -180,6 +217,7 @@
         
             <a href="{{ url_for('main.search') }}" class="add-button">Terug naar zoeken</a>
         </main>
+               
         
     </div>
 </body>

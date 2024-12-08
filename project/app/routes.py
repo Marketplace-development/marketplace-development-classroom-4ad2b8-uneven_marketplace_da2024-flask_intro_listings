@@ -245,6 +245,35 @@ def gepost():
 
     return render_template('gepost.html', user=user, geposte_reizen=geposte_reizen)
 
+@main.route('/download_aankoop_pdf/<gekochtid>', methods=['GET'])
+def download_aankoop_pdf(gekochtid):
+    # Haal de aankoop op uit de database
+    aankoop = Gekocht.query.filter_by(gekochtid=gekochtid).first()
+
+    if aankoop:
+        # Verkrijg de gekoppelde `DigitalGoods` via de foreign key `goodid`
+        reis = DigitalGoods.query.filter_by(goodid=aankoop.goodid).first()
+        if reis and reis.pdf_url:
+            # Extract het pad naar de PDF uit de URL
+            pdf_path = reis.pdf_url.split('pdfs/')[1]  # Pad achter "pdfs/" verkrijgen
+            response = supabase.storage.from_("pdf_files").download(f"pdfs/{pdf_path}")
+
+            if response:
+                # Retourneer de PDF met de juiste headers
+                return Response(
+                    response,
+                    mimetype="application/pdf",
+                    headers={
+                        "Content-Disposition": f"inline; filename={pdf_path}",
+                        "Content-Type": "application/pdf"
+                    }
+                )
+        else:
+            return "PDF niet gevonden of niet gekoppeld aan deze aankoop.", 404
+    else:
+        return "Aankoop niet gevonden.", 404
+
+
 @main.route('/gekocht', methods=['GET'])
 def gekocht():
     if 'userid' not in session:
@@ -259,6 +288,7 @@ def gekocht():
 
     # Render de pagina met de gekochte reizen
     return render_template('gekocht.html', user=user, gekochte_reizen=gekochte_reizen)
+
 
 @main.route('/algekocht')
 def algekocht():
@@ -390,13 +420,6 @@ def verwijder_reis():
 
 @main.route('/reisverwijderd', methods=['GET'])
 def reisverwijderd():
-    if 'userid' not in session:
-        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
-    
-    user = Users.query.get(session['userid'])  # Haal de huidige gebruiker op
-    if not user:
-        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
-
     return render_template('reisverwijderd.html')
 
 
@@ -410,3 +433,24 @@ def reistoegevoegd():
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
     return render_template('reistoegevoegd.html', user=user)
+
+@main.route('/verwijder_aankoop', methods=['POST'])
+def verwijder_aankoop():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+    
+    user = Users.query.get(session['userid'])  # Haal de huidige gebruiker op
+    if not user:
+        return redirect(url_for('main.logout'))
+
+    gekochtid = request.form.get('gekochtid')
+    aankoop = Gekocht.query.filter_by(gekochtid=gekochtid).first()
+
+    if aankoop and aankoop.userid == session['userid']:
+        db.session.delete(aankoop)
+        db.session.commit()
+        flash('Aankoop succesvol verwijderd.', 'success')
+    else:
+        flash('Er is iets misgegaan bij het verwijderen.', 'error')
+
+    return render_template('aankoopverwijderd.html')

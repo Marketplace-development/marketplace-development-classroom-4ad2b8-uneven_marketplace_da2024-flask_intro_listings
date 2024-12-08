@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Tales - Schrijf een Review</title>
+    <title>Schrijf een Review</title>
     <style>
         body {
             font-family: 'Georgia', serif;
             margin: 0;
             padding: 0;
-            background: #1f3d2b; /* Donkergroene achtergrond */
-            color: #ffffff;
+            background: #ffffff;
+            color: #1f3d2b;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -23,9 +22,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            position: relative;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -40,6 +37,14 @@
             display: flex;
             align-items: center;
             gap: 15px;
+        }
+
+        .nav-links h2 {
+            color: #f0f0f0;
+            font-size: 18px;
+            margin: 0;
+            margin-right: 20px;
+            font-weight: bold;
         }
 
         .nav-button {
@@ -59,24 +64,61 @@
             color: #e6ffe6;
         }
 
-        .container {
+        .main-container {
+            display: flex;
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #2e5f3d;
             padding: 20px;
-            width: 80%;
-            margin: 20px auto;
-            background: #f9f9f9;
-            border-radius: 8px;
-            color: #24452e;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin: 15px 0;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 16px;
+            display: block;
+            padding: 10px;
+            background: #3c764b;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background: #4f8a61;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px 30px;
+            background: #ffffff;
         }
 
         h1 {
-            text-align: center;
-            color: #24452e;
+            font-size: 24px;
+            margin-bottom: 20px;
         }
 
         .review-form {
             display: flex;
             flex-direction: column;
             gap: 15px;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            color: #24452e;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .review-form textarea, .review-form select, .review-form button {
@@ -84,6 +126,7 @@
             font-size: 16px;
             border-radius: 5px;
             border: 1px solid #ccc;
+            width: 100%;
         }
 
         .review-form button {
@@ -101,11 +144,11 @@
         .stars {
             display: flex;
             gap: 5px;
-            justify-content: center;
+            justify-content: start;
         }
 
         .stars i {
-            font-size: 40px;
+            font-size: 30px;
             color: #ccc;
             cursor: pointer;
             transition: color 0.2s ease;
@@ -120,40 +163,50 @@
     <header class="main-header">
         <a href="#" class="logo">Travel Tales</a>
         <nav class="nav-links">
-            <h2 class="user-greeting">Hallo {{ user.firstname }}</h2>
+            <h2>Hallo {{ user.firstname }}</h2>
             <a href="#" class="nav-button">Home</a>
-            <a href="#" class="nav-button">Mijn Reizen</a>
+            <a href="#" class="nav-button">Mijn profiel</a>
             <a href="#" class="nav-button">Uitloggen</a>
         </nav>
     </header>
 
-    <div class="container">
-        <h1>Schrijf een Review</h1>
+    <div class="main-container">
+        <aside class="sidebar">
+            <ul>
+                <li><a href="#">Profielgegevens</a></li>
+                <li><a href="#">Mijn aangekochte reizen</a></li>
+                <li><a href="#">Mijn geüploade reizen</a></li>
+                <li><a href="#">Mijn favorieten</a></li>
+            </ul>
+        </aside>
 
-        <form action="#" method="post" class="review-form">
-            <label for="reis">Kies een reis:</label>
-            <select id="reis" name="reis_id" required>
-                <!-- Dynamisch gegenereerde lijst van aangekochte reizen -->
-                <option value="1">Reis naar Dromenland</option>
-                <option value="2">Noorwegen</option>
-                <option value="3">YeeY</option>
-            </select>
+        <main class="content">
+            <h1>Schrijf een Review</h1>
 
-            <label for="review">Jouw review:</label>
-            <textarea id="review" name="review_text" rows="5" placeholder="Schrijf hier je review..." required></textarea>
+            <form action="#" method="post" class="review-form">
+                <label for="reis">Kies een reis:</label>
+                <select id="reis" name="reis_id" required>
+                    <option value="1">Reis naar Dromenland</option>
+                    <option value="2">Noorwegen</option>
+                    <option value="3">YeeY</option>
+                </select>
 
-            <label>Beoordeling:</label>
-            <div class="stars" id="star-rating">
-                <i class="star" data-value="1">&#9733;</i>
-                <i class="star" data-value="2">&#9733;</i>
-                <i class="star" data-value="3">&#9733;</i>
-                <i class="star" data-value="4">&#9733;</i>
-                <i class="star" data-value="5">&#9733;</i>
-            </div>
-            <input type="hidden" id="rating" name="rating" value="">
+                <label for="review">Jouw review:</label>
+                <textarea id="review" name="review_text" rows="5" placeholder="Schrijf hier je review..." required></textarea>
 
-            <button type="submit">Review indienen</button>
-        </form>
+                <label>Beoordeling:</label>
+                <div class="stars" id="star-rating">
+                    <i class="star" data-value="1">&#9733;</i>
+                    <i class="star" data-value="2">&#9733;</i>
+                    <i class="star" data-value="3">&#9733;</i>
+                    <i class="star" data-value="4">&#9733;</i>
+                    <i class="star" data-value="5">&#9733;</i>
+                </div>
+                <input type="hidden" id="rating" name="rating" value="">
+
+                <button type="submit">Review indienen</button>
+            </form>
+        </main>
     </div>
 
     <script>
@@ -162,7 +215,6 @@
 
         stars.forEach((star, index) => {
             star.addEventListener('click', () => {
-                // Update actieve sterren
                 stars.forEach((s, i) => {
                     if (i <= index) {
                         s.classList.add('active');
@@ -170,8 +222,6 @@
                         s.classList.remove('active');
                     }
                 });
-
-                // Update verborgen invoerwaarde
                 ratingInput.value = index + 1;
             });
         });

@@ -319,18 +319,34 @@ def koop(goodid):
     bestaande_aankoop = Gekocht.query.filter_by(userid=user.userid, goodid=goodid).first()
     if bestaande_aankoop:
         flash('Je hebt deze reis al gekocht.', 'info')
-        return redirect(url_for('main.gekocht'))  # Verwijs naar de pagina met gekochte reizen
+        return redirect(url_for('main.userpage'))  # Verwijs naar de pagina met gekochte reizen
 
-    # Voeg de aankoop toe aan de database, aan de tabel 'gekocht'
-    nieuwe_aankoop = Gekocht(userid=user.userid, goodid=goodid)
+    # Voeg de aankoop toe aan de database
+    nieuwe_aankoop = Gekocht(
+    gekochtid=str(uuid.uuid4()),  # Unieke ID voor gekochtid
+    userid=user.userid,
+    goodid=reis.goodid,
+    createdat=datetime.datetime.utcnow()  # Dit wordt standaard gebruikt
+    )
     db.session.add(nieuwe_aankoop)
     db.session.commit()
 
-    # Render de koop.html-pagina
-    return render_template('koop.html', user=user, reis=reis)  
+    return redirect(url_for('main.koopbevestiging'))
 
-@main.route('/gekocht', methods=['GET'])
-def gekocht():
+
+@main.route('/koopbevestiging', methods=['GET'])
+def koopbevestiging():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
+    
+    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
+    if not user:
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+
+    return render_template('koopbevestiging.html', user=user)
+
+#@main.route('/gekocht', methods=['GET'])
+#def gekocht():
     if 'userid' not in session:
         return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
 

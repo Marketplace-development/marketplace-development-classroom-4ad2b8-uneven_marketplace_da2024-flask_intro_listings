@@ -59,27 +59,20 @@ class DigitalGoods(db.Model):
     def __repr__(self):
         return f'<DigitalGoods {self.titleofitinerary} - ${self.price}>' 
     
-
 class Gekocht(db.Model):
     __tablename__ = 'gekocht'
 
-    # Primaire sleutel
-    gekochtid = db.Column(db.String, primary_key=True)
-
-    # Foreign keys
-    userid = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)  # Verwijst naar Users.userid
-    goodid = db.Column(db.String, db.ForeignKey('digitalgoods.goodid'), nullable=False)  # Verwijst naar DigitalGoods.goodid
-
-    # Metadata
+    gekochtid = db.Column(db.String, primary_key=True, nullable=False)  # Unieke ID, NOT NULL
+    userid = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)
+    goodid = db.Column(db.String, db.ForeignKey('digitalgoods.goodid'), nullable=False)
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
     # Relaties
-    user = db.relationship('Users', backref='gekochte_reizen', lazy=True)  # Relatie naar Users
-    good = db.relationship('DigitalGoods', backref='gekocht_door', lazy=True)  # Relatie naar DigitalGoods
+    user = db.relationship('Users', backref='gekochte_reizen', lazy=True)
+    good = db.relationship('DigitalGoods', backref='gekocht_door', lazy=True)
 
     def __repr__(self):
         return f'<Gekocht {self.gekochtid} door {self.userid} - {self.goodid}>'
-
 
 class Favoriet(db.Model):
     __tablename__ = 'favorieten'

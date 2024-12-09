@@ -238,9 +238,7 @@
                 {% endif %}
         
                 <!-- Review-knop -->
-                <a href="" class="add-button" style="margin-top: 10px;">
-                    Review deze reis
-                </a>
+                <a href="{{ url_for('main.review_page', goodid=aankoop.good.goodid) }}" class="add-button">Review deze reis</a>
             </div>
             {% endfor %}
             {% else %}

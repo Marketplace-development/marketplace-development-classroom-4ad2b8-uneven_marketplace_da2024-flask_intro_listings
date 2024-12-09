@@ -94,3 +94,18 @@ class Favoriet(db.Model):
     def __repr__(self):
         return f'<Favoriet {self.favorietid} door {self.userid} - {self.goodid}>'
 
+class Feedback(db.Model):
+    __tablename__ = 'feedback'
+
+    feedbackid = db.Column(db.String, primary_key=True)  # Unieke ID voor feedback
+    userid = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)  # Gebruiker die feedback geeft
+    targetgoodid = db.Column(db.String, db.ForeignKey('digitalgoods.goodid'), nullable=False)  # Reispakket waarop de feedback gericht is
+    rating = db.Column(db.Integer, nullable=False)  # Beoordeling van 1 tot 5
+    comment = db.Column(db.Text)  # Optioneel commentaar
+    createdat = db.Column(db.TIMESTAMP, default=datetime.datetime.utcnow)  
+
+    user = db.relationship('Users', backref='feedbacks_given', lazy=True)  # Feedbacks gegeven door gebruiker
+    digitalgood = db.relationship('DigitalGoods', backref='feedbacks_received', lazy=True)
+
+    def __repr__(self):
+        return f'<Feedback {self.feedbackid} - User: {self.userid}, Good: {self.targetgoodid}>'

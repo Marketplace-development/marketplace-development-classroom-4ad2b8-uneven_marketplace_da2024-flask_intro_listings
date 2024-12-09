@@ -2,7 +2,7 @@
 import datetime
 import uuid
 from flask import Blueprint, request, redirect, url_for, render_template, session
-from .models import db, Users, DigitalGoods, Gekocht, Favoriet
+from .models import db, Users, DigitalGoods, Gekocht, Favoriet, Feedback
 from flask import flash
 from werkzeug.utils import secure_filename
 from .config import supabase
@@ -511,4 +511,64 @@ def toggle_favoriet():
         return redirect(url_for('main.search'))  # Fallback naar search
 
 
+@main.route('/review/<goodid>', methods=['GET'])
 
+def review_page(goodid):
+    # Haal de digitale goederen op die overeenkomen met het opgegeven goodid
+    reis = DigitalGoods.query.filter_by(goodid=goodid).first()
+
+    # Controleer of de reis bestaat
+    if not reis:
+        flash('De geselecteerde reis bestaat niet.', 'error')
+        return redirect(url_for('main.gekocht'))  # Stuur terug naar de gekocht-pagina
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+    
+    user = Users.query.get(session['userid'])  # Zorg ervoor dat userid in de sessie zit
+    if not user:
+        return redirect(url_for('main.login'))
+    # Render de review-pagina met de reisdetails
+    return render_template('review.html', reis=reis)
+
+@main.route('/submit_review', methods=['POST'])
+def submit_review():
+    if 'userid' not in session:
+        flash("Je moet ingelogd zijn om een reis als favoriet te markeren of verwijderen.", "error")
+        return redirect(url_for('main.login'))
+
+    userid = session['userid']
+    goodid = request.form.get('goodid')
+    review_text = request.form.get('review_text')
+    rating = request.form.get('rating')
+
+    # Controleer of alle velden correct zijn ingevuld
+    if not (goodid and review_text and rating):
+        flash('Alle velden zijn verplicht.', 'danger')
+        return redirect(request.referrer)
+
+    # Controleer of de gebruiker deze reis heeft gekocht
+    aankoop = Gekocht.query.filter_by(userid=userid, goodid=goodid).first()
+    if not aankoop:
+        flash('Je kunt alleen een review schrijven voor een gekochte reis.', 'danger')
+        return redirect(url_for('main.gekocht'))
+
+    # Controleer of er al een review bestaat voor deze gebruiker en reis
+    bestaande_review = Feedback.query.filter_by(userid=userid, targetgoodid=goodid).first()
+    if bestaande_review:
+        flash('Je hebt al een review geschreven voor deze reis.', 'warning')
+        return redirect(url_for('main.gekocht'))
+
+    # Voeg een nieuwe review toe aan de database
+    new_feedback = Feedback(
+        feedbackid=str(uuid.uuid4()),  # Genereer een unieke ID
+        userid=userid,
+        targetgoodid=goodid,
+        rating=int(rating),
+        comment=review_text,
+        createdat=datetime.datetime.utcnow()
+    )
+    db.session.add(new_feedback)
+    db.session.commit()
+
+    flash('Review succesvol ingediend!', 'success')
+    return redirect(url_for('main.gekocht'))

@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 import datetime
+import json
 from . import db
 
 
@@ -55,6 +56,8 @@ class DigitalGoods(db.Model):
     price = db.Column(db.Numeric)
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     pdf_url = db.Column(db.String(1024), nullable=False)
+    image_urls = db.Column(db.Text, nullable=True)  # Gebruik Text om JSON-lijsten op te slaan
+
 
     def __repr__(self):
         return f'<DigitalGoods {self.titleofitinerary} - ${self.price}>' 

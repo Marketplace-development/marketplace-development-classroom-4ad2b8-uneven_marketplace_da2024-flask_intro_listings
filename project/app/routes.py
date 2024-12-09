@@ -1,6 +1,7 @@
 # app/routes.py
 import datetime
 import uuid
+import json
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from .models import db, Users, DigitalGoods, Gekocht, Favoriet, Feedback
 from flask import flash
@@ -98,50 +99,59 @@ def post():
     if 'userid' not in session:
         return redirect(url_for('main.login'))
     
-    user = Users.query.get(session['userid'])  
-    if not user:
-        return redirect(url_for('main.login'))
-    
+    error_message = None
+
     if request.method == 'POST':
+        try:
+            itinerary_name = request.form['titleofitinerary']
+            price = float(request.form['price'])
+            description_tekst = request.form['descriptionofitinerary']
+            pdf_file = request.files['file']
+            image_files = request.files.getlist('images[]')
 
-        itinerary_name = request.form['titleofitinerary']  # Ophalen uit HTML
-        price = float(request.form['price'])
-        description_tekst = request.form['descriptionofitinerary']
-        pdf_file = request.files['file']
+            # Valideer en upload PDF
+            if pdf_file and pdf_file.filename.endswith('.pdf'):
+                filename = secure_filename(pdf_file.filename)
+                unique_filename = f"{uuid.uuid4()}_{filename}"
+                pdf_data = pdf_file.read()
+                supabase.storage.from_("pdf_files").upload(f"pdfs/{unique_filename}", pdf_data)
+                public_url = supabase.storage.from_("pdf_files").get_public_url(f"pdfs/{unique_filename}")
+            else:
+                raise ValueError("Ongeldig bestandstype. Upload een PDF-bestand.")
 
-        # Server-side validatie voor bestandstype
-        if pdf_file and pdf_file.filename.endswith('.pdf'):
-            # Beveilig de bestandsnaam
-            filename = secure_filename(pdf_file.filename)
-            unique_filename = f"{uuid.uuid4()}_{filename}"  # Maak een unieke bestandsnaam
+            # Valideer en upload afbeeldingen
+            image_urls = []
+            for image_file in image_files:
+                if image_file.filename.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
+                    image_filename = secure_filename(image_file.filename)
+                    unique_image_filename = f"{uuid.uuid4()}_{image_filename}"
+                    image_data = image_file.read()
+                    supabase.storage.from_("travel_images").upload(f"images/{unique_image_filename}", image_data)
+                    image_public_url = supabase.storage.from_("travel_images").get_public_url(f"images/{unique_image_filename}")
+                    image_urls.append(image_public_url)
+                    image_urls_json = json.dumps(image_urls)
 
-            # Upload bestand naar Supabase Storage
-            file_data = pdf_file.read()  # Lees de PDF als binary data
-            result = supabase.storage.from_("pdf_files").upload(f"pdfs/{unique_filename}", file_data)
-
-            # Haal de publieke URL van het geüploade bestand op
-            public_url = supabase.storage.from_("pdf_files").get_public_url(f"pdfs/{unique_filename}")
-
-            # Maak een nieuw record in de database
+            # Voeg toe aan database
             new_itinerary = DigitalGoods(
                 goodid=str(uuid.uuid4()),
                 titleofitinerary=itinerary_name,
                 descriptionofitinerary=description_tekst,
                 userid=session['userid'],
                 price=price,
-                pdf_url=public_url
+                pdf_url=public_url,
+                image_urls=json.dumps(image_urls)  # Opslaan als JSON string
             )
             db.session.add(new_itinerary)
             db.session.commit()
 
             return redirect(url_for('main.reistoegevoegd'))
 
-        else:
-            # Foutmelding voor ongeldig bestandstype
-            error_message = "Ongeldig bestandstype. Upload een PDF-bestand."
-            return render_template('post.html', user=user, error_message=error_message)
-        
-    return render_template('post.html', user = user)
+        except Exception as e:
+            print(f"Error: {e}")
+            db.session.rollback()
+            error_message = "Er ging iets mis bij het opslaan van de reis."
+
+    return render_template('post.html', error_message=error_message)
 
 
 @main.route('/userpage', methods=['GET', 'POST'])
@@ -332,11 +342,18 @@ def search():
 
     # Haal alle reizen uit de database
     reizen = DigitalGoods.query.all()
+    for reis in reizen:
+        try:
+            reis.image_urls = json.loads(reis.image_urls) if reis.image_urls else []
+        except json.JSONDecodeError:
+            reis.image_urls = []  # Gebruik een lege lijst als fallback
 
     # Filter de reizen op basis van de zoekterm
     if zoekterm:
         reizen = [reis for reis in reizen if zoekterm.lower() in reis.titleofitinerary.lower()]
 
+    # Haal de afbeeldingen van de reis op
+    
     # Haal de favorieten van de gebruiker op
     favorieten = []
     if 'userid' in session:
@@ -348,9 +365,8 @@ def search():
         user=user,
         reizen=reizen,
         favorieten=favorieten,
-        zoekterm=zoekterm
+        zoekterm=zoekterm,
     )
-
 
 @main.route('/reis/<goodid>', methods=['GET'])
 def reisdetail(goodid):

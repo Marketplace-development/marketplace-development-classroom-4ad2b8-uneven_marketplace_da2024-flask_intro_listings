@@ -201,6 +201,7 @@
             {% if reizen %}
                 {% for reis in reizen %}
                 <div class="travel-item">
+                    <img src="{{ reis.image_urls[0] if reis.image_urls else '/static/default_image.jpg' }}" style="width: auto; height: 100px;">
                     <h2><a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}">{{ reis.titleofitinerary }}</a></h2>
                     <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
                     <p><strong>Prijs:</strong> €{{ reis.price }}</p>

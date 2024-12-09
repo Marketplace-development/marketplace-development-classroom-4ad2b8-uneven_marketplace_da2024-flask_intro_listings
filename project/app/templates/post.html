@@ -189,6 +189,12 @@
             <small id="fileError" style="color: red; display: none; margin-top: 10px; margin-bottom: 20px;">
                 Ongeldig bestandstype. Upload een PDF-bestand.
             </small>
+
+            <label for="images">Upload foto('s)</label>
+            <input type="file" id="images" name="images[]" accept=".jpg, .jpeg, .png, .gif" multiple>
+            <small id="imageError" style="color: red; display: none; margin-top: 10px; margin-bottom: 20px;">
+                Upload alleen geldige afbeeldingsbestanden (JPG, JPEG, PNG, GIF).
+            </small>     
         
             {% if error_message %}
             <div style="color: red; margin-bottom: 20px;">
@@ -203,6 +209,7 @@
             document.getElementById("uploadForm").addEventListener("submit", function(event) {
                 const fileInput = document.getElementById("file");
                 const fileError = document.getElementById("fileError");
+                const imagesInput = document.getElementById("images");
         
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
@@ -210,6 +217,20 @@
                         event.preventDefault();
                         fileError.style.display = "block";
                         return false;
+                    }
+                }
+
+                if (imagesInput.files.length > 0) {
+                    const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+                    for (let i = 0; i < imagesInput.files.length; i++) {
+                        const image = imagesInput.files[i];
+                        if (!validImageTypes.includes(image.type)) {
+                            isValid = false;
+                            imageError.style.display = "block";
+                            break;
+                        } else {
+                            imageError.style.display = "none";
+                        }
                     }
                 }
                 fileError.style.display = "none";

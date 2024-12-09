@@ -611,4 +611,8 @@ def submit_review():
     db.session.commit()
 
     flash('Review succesvol ingediend!', 'success')
-    return redirect(url_for('main.gekocht'))
+    return redirect(url_for('main.review_bedanking'))
+
+@main.route('/review_bedanking', methods=['GET'])
+def review_bedanking():
+    return render_template('reviewbedanking.html')

@@ -11,13 +11,13 @@ User Dashboard
         <nav class="dashboard-sidebar">
             <div class="profile-section">
                 <img src="{{ url_for('static', filename='images/profile-placeholder.png') }}" alt="Profile Picture" class="profile-picture">
-                <h3>John Doe</h3>
-                <p>johndoe@example.com</p>
+                <h3>{{ user.username }}</h3>
+                <p>{{ user.email }}</p>
             </div>
             <ul>
                 <li class="active"><a href="#">Personal Information</a></li>
-                <li><a href="#">Submitted Recipes</a></li>
-                <li><a href="#">Favorites</a></li>
+                <li><a href="{{ url_for('routes.submitted_recipes') }}">Submitted Recipes</a></li>
+                <li><a href="{{ url_for('routes.favorites') }}">Favorites</a></li>
                 <li><a href="#">Billing & Payments</a></li>
             </ul>
         </nav>
@@ -29,23 +29,23 @@ User Dashboard
             <div class="info-cards">
                 <div class="info-card">
                     <h3>Name</h3>
-                    <p>John Doe</p>
+                    <p>{{ user.username }}</p>
                 </div>
                 <div class="info-card">
                     <h3>Date of Birth</h3>
-                    <p>07 July 1993</p>
+                    <p>{{ user.date_of_birth }}</p>
                 </div>
                 <div class="info-card">
                     <h3>Country/Region</h3>
-                    <p>Georgia, Tbilisi</p>
+                    <p>{{ user.country }}, {{ user.city }}</p>
                 </div>
                 <div class="info-card">
                     <h3>Language</h3>
-                    <p>English (UK)</p>
+                    <p>{{ user.language }}</p>
                 </div>
                 <div class="info-card">
                     <h3>Email Address</h3>
-                    <p>johndoe@example.com</p>
+                    <p>{{ user.email }}</p>
                 </div>
             </div>
         </div>

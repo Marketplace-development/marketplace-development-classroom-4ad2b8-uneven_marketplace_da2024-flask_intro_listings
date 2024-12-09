@@ -25,10 +25,18 @@
                     <li><a href="{{ url_for('routes.about') }}">About Us</a></li>
                     <li><a href="{{ url_for('routes.contact') }}">Contact</a></li>
                 </ul>
-
-                <!-- Sign-In Button -->
+        
+                <!-- Sign-In or Log-Out Button -->
                 <div class="auth-buttons">
-                    <a href="/login" class="btn-black">Sign In</a>
+                    {% if session.get('user_id') %}
+                        <!-- Log Out Button -->
+                        <form action="{{ url_for('routes.logout') }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn-black">Log Out</button>
+                        </form>
+                    {% else %}
+                        <!-- Sign In Button -->
+                        <a href="/login" class="btn-black">Sign In</a>
+                    {% endif %}
                 </div>
             </div>
         </nav>

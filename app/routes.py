@@ -225,3 +225,27 @@ def contact():
 def about():
     return render_template('about.html')
 
+@bp.route('/recipes')
+def list_recipes():
+    recipes = Recipe.query.all()  # Fetch all recipes from the database
+    return render_template('recipes.html', recipes=recipes)
+
+@bp.route('/submitted-recipes')
+def submitted_recipes():
+    try:
+        # Fetch the logged-in user's ID from the session
+        user_id = session.get('user_id')
+
+        # If no user is logged in, redirect to the login page
+        if not user_id:
+            return redirect(url_for('routes.login'))
+
+        # Query recipes based on the logged-in user's ID
+        recipes = Recipe.query.filter_by(user_id=user_id).all()
+        return render_template('submitted_recipes.html', recipes=recipes)
+    except Exception as e:
+        return f"An error occurred: {e}"
+
+@bp.route("/favorites")
+def favorites():
+    return "Favorites Page"  # Placeholder

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Recipes</title>
+</head>
+<body>
+    <h1>All Recipes</h1>
+    <ul>
+    {% for recipe in recipes %}
+        <li>
+            <h2>{{ recipe.title }}</h2>
+            <p>{{ recipe.description }}</p>
+            <p>Ingredients: {{ recipe.ingredients }}</p>
+            <p>Price: ${{ recipe.price }}</p>
+        </li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

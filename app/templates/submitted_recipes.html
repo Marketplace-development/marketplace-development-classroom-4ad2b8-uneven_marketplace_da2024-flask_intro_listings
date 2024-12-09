@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+Submitted Recipes
+{% endblock %}
+
+{% block content %}
+<section class="submitted-recipes">
+    <div class="recipes-container">
+        {% for recipe in recipes %}
+        <div class="recipe-card">
+            <img src="{{ recipe.imageurl }}" alt="{{ recipe.title }}" class="recipe-image">
+            <div class="recipe-info">
+                <h3>{{ recipe.title }}</h3>
+                <p>{{ recipe.description }}</p>
+                <p><strong>Region:</strong> {{ recipe.userid }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

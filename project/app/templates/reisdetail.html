@@ -9,7 +9,7 @@
             font-family: 'Georgia', serif;
             margin: 0;
             padding: 0;
-            background: #1f3d2b; /* Donkergroene achtergrond */
+            background: #1f3d2b;
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -36,7 +36,7 @@
         .logo-container .globe {
             width: 50px;
             height: 50px;
-            background-color: #24452e; /* Donkergroene achtergrond */
+            background-color: #24452e;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -88,7 +88,6 @@
             background: #f9f9f9;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            font-family: 'Georgia', serif;
             color: #24452e;
         }
 
@@ -96,7 +95,16 @@
             font-size: 32px;
             margin-bottom: 20px;
             font-weight: bold;
-            text-align: left;
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .description {
+            flex-grow: 1;
         }
 
         .details p {
@@ -104,9 +112,17 @@
             margin: 10px 0;
         }
 
-        .details a {
-            color: #24452e;
-            text-decoration: underline;
+        .favorite-button {
+            background: none;
+            border: none;
+            color: red;
+            font-size: 24px;
+            cursor: pointer;
+            margin-left: 20px;
+        }
+
+        .favorite-button:hover {
+            color: darkred;
         }
 
         .button-container {
@@ -149,7 +165,7 @@
 
         .review-item .rating {
             font-size: 18px;
-            color: #ffa500; /* Goudkleur voor sterren */
+            color: #ffa500;
         }
 
         .review-item p {
@@ -182,8 +198,21 @@
     <div class="container">
         <h1>{{ reis.titleofitinerary }}</h1>
         <div class="details">
-            <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
-            <p><strong>Prijs:</strong> €{{ reis.price }}</p>
+            <div class="description">
+                <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
+                <p><strong>Prijs:</strong> €{{ reis.price }}</p>
+            </div>
+            <form action="{{ url_for('main.toggle_favoriet') }}" method="POST">
+                <input type="hidden" name="goodid" value="{{ reis.goodid }}">
+                <input type="hidden" name="referer" value="reisdetail">
+                <button type="submit" class="favorite-button" title="Favoriet">
+                    {% if is_favoriet %}
+                    ❤️
+                    {% else %}
+                    🤍
+                    {% endif %}
+                </button>
+            </form>
         </div>
 
         <div class="button-container">
@@ -195,22 +224,21 @@
         <div class="reviews">
             <h2>Reviews</h2>
             {% if reviews %}
-                {% for review in reviews %}
-                <div class="review-item">
-                    <h3>{{ review.user.firstname }} {{ review.user.lastname }}</h3>
-                    <p>
-                        <strong>Rating:</strong> 
-                        {% for _ in range(review.rating) %}
-                            ⭐
-                        {% endfor %}
-                    </p>
-                    <p><em>"{{ review.comment }}"</em></p>
-                </div>
-                {% endfor %}
+            {% for review in reviews %}
+            <div class="review-item">
+                <h3>{{ review.user.firstname }} {{ review.user.lastname }}</h3>
+                <p class="rating">
+                    {% for _ in range(review.rating) %}
+                        ⭐
+                    {% endfor %}
+                </p>
+                <p><em>"{{ review.comment }}"</em></p>
+            </div>
+            {% endfor %}
             {% else %}
-                <p>Er zijn nog geen reviews voor deze reis.</p>
+            <p>Er zijn nog geen reviews voor deze reis.</p>
             {% endif %}
-        </div>        
+        </div>
     </div>
 </body>
 </html>

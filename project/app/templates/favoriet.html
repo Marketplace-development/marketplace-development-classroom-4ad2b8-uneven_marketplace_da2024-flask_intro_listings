@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mijn Favorieten</title>
     <style>
-        /* Algemene stijlen */
         body {
             font-family: 'Georgia', serif;
             margin: 0;
@@ -134,44 +133,67 @@
             margin-bottom: 20px;
         }
 
-        .favorite-item {
-            border: 1px solid #ddd;
+        .travel-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .travel-item {
+            background: #e9f5e9;
             padding: 20px;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .favorite-item h2 {
-            font-size: 20px;
-            color: #24452e;
+        .travel-item h2 {
+            margin: 0 0 10px;
+        }
+
+        .travel-item p {
             margin: 0;
         }
 
-        .favorite-item p {
-            margin: 5px 0;
+        .travel-item a {
+            color: #24452e;
+            text-decoration: underline;
         }
 
-        .remove-button {
-            background-color: #d9534f;
-            color: white;
-            padding: 10px 15px;
+        .favorite-button {
+            background: none;
             border: none;
-            border-radius: 5px;
+            color: red;
+            font-size: 24px;
             cursor: pointer;
-            font-size: 14px;
+            transition: color 0.3s ease;
         }
 
-        .remove-button:hover {
-            background-color: #c9302c;
+        .favorite-button:hover {
+            color: darkred;
+        }
+
+        .search-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #24452e;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .search-button:hover {
+            background-color: #3c764b;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="main-header">
         <div class="logo-container">
             <div class="globe">
@@ -187,9 +209,7 @@
         </nav>
     </header>
 
-    <!-- Hoofdcontainer -->
     <div class="main-container">
-        <!-- Zijbalk -->
         <aside class="sidebar">
             <ul>
                 <li><a href="{{ url_for('main.userpage') }}">Profielgegevens</a></li>
@@ -199,26 +219,33 @@
             </ul>
         </aside>
 
-        <!-- Inhoud -->
         <main class="content">
             <h1>Mijn Favorieten</h1>
-
-            {% if favorieten %}
-            {% for favoriet in favorieten %}
-            <div class="favorite-item">
-                <div>
-                    <h2>{{ favoriet.good.titleofitinerary }}</h2>
-                    <p>{{ favoriet.good.descriptionofitinerary }}</p>
+            <div class="travel-list">
+                {% if favorieten %}
+                {% for favoriet in favorieten %}
+                <div class="travel-item">
+                    <div>
+                        <a href="{{ url_for('main.reisdetail', goodid=favoriet.good.goodid) }}">
+                            <h2>{{ favoriet.good.titleofitinerary }}</h2>
+                        </a>
+                        <p>{{ favoriet.good.descriptionofitinerary }}</p>
+                        <p><strong>Prijs:</strong> €{{ favoriet.good.price }}</p>
+                    </div>
+                    <form action="{{ url_for('main.toggle_favoriet') }}" method="POST">
+                        <input type="hidden" name="goodid" value="{{ favoriet.good.goodid }}">
+                        <input type="hidden" name="referer" value="favoriet">
+                        <button type="submit" class="favorite-button" title="Verwijder favoriet">❤️</button>
+                    </form>
                 </div>
-                <form action="{{ url_for('main.remove_favoriet') }}" method="POST">
-                    <input type="hidden" name="favorietid" value="{{ favoriet.favorietid }}">
-                    <button type="submit" class="remove-button">Verwijder</button>
-                </form>
+                {% endfor %}
+                {% else %}
+                <p>Je hebt nog geen favorieten toegevoegd.</p>
+                {% endif %}
             </div>
-            {% endfor %}
-            {% else %}
-            <p>Je hebt nog geen favorieten toegevoegd.</p>
-            {% endif %}
+
+            <!-- Knop om terug te gaan naar zoeken -->
+            <a href="{{ url_for('main.search') }}" class="search-button">Terug naar zoeken</a>
         </main>
     </div>
 </body>

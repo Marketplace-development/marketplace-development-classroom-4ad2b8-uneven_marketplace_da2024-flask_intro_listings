@@ -304,16 +304,19 @@ def algekocht():
 
     return render_template('algekocht.html', user=user)
 
-@main.route('/favoriet', methods=['GET', 'POST'])
+@main.route('/favoriet', methods=['GET'])
 def favoriet():
     if 'userid' not in session:
-        return redirect(url_for('main.login'))  # Stuur gebruiker naar login als deze niet is ingelogd
-    
-    user = Users.query.get(session['userid'])  # Haal de huidige gebruiker op
-    if not user:
-        return redirect(url_for('main.logout'))  # Log gebruiker uit als de gebruiker niet bestaat
+        return redirect(url_for('main.login'))
 
-    return render_template('favoriet.html', user=user)
+    user = Users.query.get(session['userid'])
+    if not user:
+        return redirect(url_for('main.logout'))
+
+    # Haal favorieten op voor de huidige gebruiker
+    favorieten = Favoriet.query.filter_by(userid=user.userid).all()
+
+    return render_template('favoriet.html', user=user, favorieten=favorieten)
 
 @main.route('/search', methods=['GET'])
 def search():
@@ -477,6 +480,7 @@ def verwijder_aankoop():
 
     return render_template('aankoopverwijderd.html')
 
+
 @main.route('/toggle_favoriet', methods=['POST'])
 def toggle_favoriet():
     if 'userid' not in session:
@@ -514,6 +518,8 @@ def toggle_favoriet():
         return redirect(url_for('main.search'))
     elif referer_page == 'reisdetail':
         return redirect(url_for('main.reisdetail', goodid=goodid))
+    elif referer_page == 'favoriet':
+        return redirect(url_for('main.favoriet'))
     else:
         return redirect(url_for('main.search'))  # Fallback naar search
 

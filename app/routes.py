@@ -1,15 +1,14 @@
 # app/routes.py
-from flask import Blueprint, render_template
 from flask import Blueprint, request, redirect, url_for, render_template, session
-from .models import db, User
-from flask import Blueprint, render_template, request, redirect, url_for
+from .models import db, Customer
+from app.models import Customer, Recipe
 
 main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
     if 'user_id' in session:
-        user = User.query.get(session['user_id'])
+        user = Customer.query.get(session['user_id'])
         return render_template('index.html', username=user.username)
     return render_template('index.html', username=None)
 
@@ -17,8 +16,8 @@ def index():
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        if User.query.filter_by(username=username).first() is None:
-            new_user = User(username=username)
+        if Customer.query.filter_by(username=username).first() is None:
+            new_user = Customer(username=username)
             db.session.add(new_user)
             db.session.commit()
             session['user_id'] = new_user.id
@@ -30,7 +29,7 @@ def register():
 def login():
     if request.method == 'POST':
         username = request.form['username']
-        user = User.query.filter_by(username=username).first()
+        user = Customer.query.filter_by(username=username).first()
         if user:
             session['user_id'] = user.id
             return redirect(url_for('main.index'))
@@ -58,24 +57,55 @@ users = []
 # Login Page
 @bp.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        username = request.form.get("username")
-        # Check if username exists in the database
-        if username in [user["username"] for user in users]:
-            return redirect(url_for("routes.home"))
-        else:
-            # Redirect to signup with an error message
-            return redirect(url_for("routes.signup", error="Username not found. Please sign up."))
-    return render_template("login.html")
+    error_message = None  # To store login error messages
 
-# Signup Page
+    if request.method == "POST":
+        # Retrieve login form data
+        username = request.form.get("username")
+
+        # Check if the username exists in the database
+        user = Customer.query.filter_by(username=username).first()
+
+        if user:
+            # Successful login, save user ID to the session
+            session["user_id"] = user.customer_id
+            session["username"] = user.username
+            return redirect(url_for("routes.account"))
+        else:
+            # Username doesn't exist
+            error_message = "Invalid username. Please try again."
+
+    return render_template("login.html", error_message=error_message)
+
+# Logout Route
+@bp.route("/logout", methods=["POST"])
+def logout():
+    # Clear the user session
+    session.clear()
+    return redirect(url_for("routes.login"))
+
+# Adjust the My Account Route
+@bp.route("/account")
+def account():
+    # Ensure a user is logged in
+    if "user_id" not in session:
+        return redirect(url_for("routes.login"))
+
+    # Fetch the logged-in user's data
+    user = Customer.query.get(session["user_id"])
+    if not user:
+        return redirect(url_for("routes.login"))  # Redirect if user doesn't exist
+
+    # Pass user data to the dashboard template
+    return render_template("dashboard.html", user=user)
+
 @bp.route("/signup", methods=["GET", "POST"])
 def signup():
-    error = request.args.get("error", None)
+    error_username = None  # Error message for the username
+
     if request.method == "POST":
         # Retrieve form data
         username = request.form.get("username")
-        full_name = request.form.get("full_name")
         email = request.form.get("email")
         dob = request.form.get("dob")
         address = request.form.get("address")
@@ -83,12 +113,47 @@ def signup():
         postcode = request.form.get("postcode")
         country = request.form.get("country")
         language = request.form.get("language")
-        
-        # Example: Save this data to the database (you'll need a database connection)
-        # db.insert_user(username, full_name, email, dob, address, city, postcode, country, language)
 
-        return redirect(url_for("routes.login"))
-    return render_template("signup.html", error=error)
+        # Check if the username already exists
+        existing_user = Customer.query.filter_by(username=username).first()
+        if existing_user:
+            error_username = "Username is already taken. Please choose a different one."
+            return render_template(
+                "signup.html",
+                error_username=error_username,
+                username=username,
+                email=email,
+                dob=dob,
+                address=address,
+                city=city,
+                postcode=postcode,
+                country=country,
+                language=language,
+            )
+
+        # Create a new customer object
+        new_customer = Customer(
+            username=username,
+            email=email,
+            date_of_birth=dob,
+            address=address,
+            city=city,
+            country=country,
+            postcode=postcode,
+            language=language,
+        )
+
+        # Add the new customer to the database
+        try:
+            db.session.add(new_customer)
+            db.session.commit()
+            return redirect(url_for("routes.login"))  # Redirect to login page after successful signup
+        except Exception as e:
+            db.session.rollback()
+            error_message = f"An error occurred: {e}"
+            return render_template("signup.html", error_message=error_message)
+
+    return render_template("signup.html")
 
 @bp.route("/privacy-policy")
 def privacy_policy():
@@ -100,36 +165,25 @@ def terms_of_service():
 
 @bp.route("/dashboard")
 def dashboard():
-    # Dummy data for now (to simulate real user data)
-    user_info = {
-        "username": "JohnDoe",
-        "email": "johndoe@example.com",
-        "address": "123 Foodie Lane",
-        "city": "Gourmet City",
-        "postcode": "12345",
-    }
+    # Check if the user is logged in
+    if "user_id" not in session:
+        return redirect(url_for("routes.login"))
 
-    recent_activity = [
-        {"title": "Spaghetti Carbonara", "link": "/recipe/1"},
-        {"title": "Chicken Tikka Masala", "link": "/recipe/2"},
-        {"title": "Chocolate Lava Cake", "link": "/recipe/3"},
-    ]
+    # Fetch the logged-in user's details from the database
+    user = Customer.query.get(session["user_id"])
 
-    favorite_recipes = [
-        {"title": "Homemade Pizza", "link": "/recipe/4"},
-        {"title": "Beef Stroganoff", "link": "/recipe/5"},
-    ]
+    # Fetch additional user-specific data (e.g., their submitted recipes and favorite recipes)
+    submitted_recipes = Recipe.query.filter_by(user_id=user.customer_id).all()
+    favorite_recipes = []  # Placeholder if you decide to implement a favorites system later
 
+    # Render the dashboard with dynamic user data
     return render_template(
         "dashboard.html",
-        user_info=user_info,
-        recent_activity=recent_activity,
-        favorite_recipes=favorite_recipes,
+        user=user,
+        submitted_recipes=submitted_recipes,
+        favorite_recipes=favorite_recipes
     )
 
-@bp.route("/account")
-def account():
-    return render_template("dashboard.html")
 
 @bp.route("/subscribe", methods=["POST"])
 def subscribe():

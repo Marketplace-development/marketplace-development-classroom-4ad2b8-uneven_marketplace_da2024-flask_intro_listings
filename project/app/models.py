@@ -57,6 +57,12 @@ class DigitalGoods(db.Model):
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     pdf_url = db.Column(db.String(1024), nullable=False)
     image_urls = db.Column(db.Text, nullable=True)  # Gebruik Text om JSON-lijsten op te slaan
+    latitude = db.Column(db.String, nullable=True)
+    longitude = db.Column(db.String, nullable=True)
+    
+    # Nieuwe variabele voor de startstad
+    start_city = db.Column(db.String, nullable=True)  # Maak het optioneel
+
 
 
     def __repr__(self):

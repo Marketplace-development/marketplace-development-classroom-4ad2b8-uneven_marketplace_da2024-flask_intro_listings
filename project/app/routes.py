@@ -9,6 +9,8 @@ from werkzeug.utils import secure_filename
 from .config import supabase
 from supabase import Client
 from flask import Response
+import requests
+from flask import jsonify
 
 
 main = Blueprint('main', __name__)
@@ -103,10 +105,12 @@ def post():
 
     if request.method == 'POST':
         try:
+            # Haal formuliergegevens op
             itinerary_name = request.form['titleofitinerary']
             price = float(request.form['price'])
             description_tekst = request.form['descriptionofitinerary']
             pdf_file = request.files['file']
+            stad = request.form['start_city']
             image_files = request.files.getlist('images[]')
 
             # Valideer en upload PDF
@@ -119,6 +123,30 @@ def post():
             else:
                 raise ValueError("Ongeldig bestandstype. Upload een PDF-bestand.")
 
+            # Haal coördinaten op voor de startstad
+            api_url = f"https://nominatim.openstreetmap.org/search"
+            params = {
+                'q': stad,
+                'format': 'json',
+                'limit': 1,
+                'accept-language': 'nl'
+            }
+            headers = {'User-Agent': 'MyApp/1.0 (vermeulen.anna@outlook.be)'}
+            try:
+                response = requests.get(api_url, params=params, headers=headers)
+                response.raise_for_status()
+                data = response.json()
+                if data and len(data) > 0:
+                    latitude = str(data[0]['lat'])
+                    longitude = str(data[0]['lon'])
+                else:
+                    latitude = None
+                    longitude = None
+            except requests.RequestException as e:
+                print(f"Fout bij het ophalen van coördinaten: {e}")
+                latitude = None
+                longitude = None
+
             # Valideer en upload afbeeldingen
             image_urls = []
             for image_file in image_files:
@@ -129,7 +157,6 @@ def post():
                     supabase.storage.from_("travel_images").upload(f"images/{unique_image_filename}", image_data)
                     image_public_url = supabase.storage.from_("travel_images").get_public_url(f"images/{unique_image_filename}")
                     image_urls.append(image_public_url)
-                    image_urls_json = json.dumps(image_urls)
 
             # Voeg toe aan database
             new_itinerary = DigitalGoods(
@@ -139,13 +166,18 @@ def post():
                 userid=session['userid'],
                 price=price,
                 pdf_url=public_url,
-                image_urls=json.dumps(image_urls)  # Opslaan als JSON string
+                image_urls=json.dumps(image_urls),  # Opslaan als JSON string
+                start_city=stad,
+                latitude=latitude,
+                longitude=longitude
             )
             db.session.add(new_itinerary)
             db.session.commit()
 
             return redirect(url_for('main.reistoegevoegd'))
 
+        except ValueError as ve:
+            error_message = str(ve)
         except Exception as e:
             print(f"Error: {e}")
             db.session.rollback()
@@ -616,3 +648,21 @@ def submit_review():
 @main.route('/review_bedanking', methods=['GET'])
 def review_bedanking():
     return render_template('reviewbedanking.html')
+
+
+@main.route('/api/travels', methods=['GET'])
+def get_travels():
+    travels = DigitalGoods.query.all()  # Haal alle reizen op
+    travel_list = []
+
+    for travel in travels:
+        travel_list.append({
+            'id': travel.goodid,
+            'titleofitinerary': travel.titleofitinerary,
+            'descriptionofitinerary': travel.descriptionofitinerary,
+            'latitude': float(travel.latitude) if travel.latitude else None,
+            'longitude': float(travel.longitude) if travel.longitude else None
+        })
+
+    return jsonify(travel_list)
+

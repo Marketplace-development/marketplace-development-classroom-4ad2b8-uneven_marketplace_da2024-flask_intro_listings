@@ -148,10 +148,6 @@
             margin: 0 0 10px;
         }
 
-        .travel-item p {
-            margin: 5px 0;
-        }
-
         .edit-form,
         .delete-form {
             margin-top: 15px;
@@ -223,7 +219,86 @@
         .add-button:hover {
             background-color: #3c764b;
         }
+
+        #map {
+            width: 100%;
+            height: 400px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .info-bubble-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* Rechts uitlijnen */
+            margin: 20px auto 10px;
+            padding-right: 20px;
+        }
+        
+        .info-bubble {
+            background-color: #24452e;
+            color: #ffffff;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            font-size: 16px;
+            font-weight: bold;
+            max-width: 300px;
+            margin-left: 10px;
+        }
+        
+        .info-bubble::after {
+            content: '';
+            position: absolute;
+            left: -15px; /* Pijltje aan de linkerkant */
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent #24452e transparent transparent;
+        }
+        
+        .smiley {
+            width: 50px;
+            height: 50px;
+            background-color: #24452e;
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .smiley .eye {
+            position: absolute;
+            top: 20px;
+            width: 5px;
+            height: 5px;
+            background-color: white;
+            border-radius: 50%;
+        }
+        
+        .smiley .eye.left {
+            left: 15px;
+        }
+        
+        .smiley .eye.right {
+            right: 15px;
+        }
+        
+        .smiley .smile {
+            position: absolute;
+            top: 30px;
+            left: 18px;
+            width: 14px;
+            height: 6px;
+            background-color: white;
+            border-radius: 10px 10px 0 0;
+            transform: rotate(180deg);
+        }
     </style>
+    <!-- Voeg Leaflet.js toe -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <header class="main-header">
@@ -253,36 +328,76 @@
 
         <main class="content">
             <h1>Mijn Geüploade Reizen</h1>
-        
+
+            <div class="info-bubble-container">
+                <div class="smiley">
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                    <div class="smile"></div>
+                </div>
+                <div class="info-bubble">
+                    Bekijk hier waar je al allemaal bent geweest
+                </div>
+            </div>
+
+            <!-- Kaart -->
+            <div id="map"></div>
+
+            <script>
+                // Initialiseer de kaart
+                var map = L.map('map').setView([0, 0], 2);
+
+                // Voeg OpenStreetMap-tegels toe
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: 'Kaartgegevens © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+
+                // Haal de reizen op via een API
+                fetch('/api/travels')
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(reis => {
+                            if (reis.latitude && reis.longitude) {
+                                // Voeg een marker toe aan de kaart
+                                L.marker([reis.latitude, reis.longitude])
+                                    .addTo(map)
+                                    .bindPopup(`<b>${reis.titleofitinerary}</b><br>${reis.descriptionofitinerary}`);
+                            }
+                        });
+                    })
+                    .catch(error => console.error('Error fetching travel data:', error));
+            </script>
+
             {% if geposte_reizen %}
             {% for reis in geposte_reizen %}
             <div class="travel-item">
                 <h2>{{ reis.titleofitinerary }}</h2>
                 <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
                 <p><strong>Prijs (€):</strong> {{ reis.price }}</p>
-        
+
                 <!-- Open PDF-knop -->
                 {% if reis.pdf_url %}
                 <a href="{{ url_for('main.download_pdf', goodid=reis.goodid) }}" target="_blank" class="add-button">
                     Open mijn reis (PDF)
                 </a>
                 {% endif %}
-        
+
                 <!-- Bewerken formulier -->
                 <form action="/gepost" method="POST" class="edit-form">
                     <input type="hidden" name="goodid" value="{{ reis.goodid }}">
                     <label for="titleofitinerary">Titel:</label>
                     <input type="text" name="titleofitinerary" value="{{ reis.titleofitinerary }}" required>
-        
+
                     <label for="descriptionofitinerary">Beschrijving:</label>
                     <textarea name="descriptionofitinerary" rows="3" required>{{ reis.descriptionofitinerary }}</textarea>
-        
+
                     <label for="price">Prijs (€):</label>
                     <input type="number" name="price" value="{{ reis.price }}" required>
-        
+
                     <button type="submit" class="save-button">Wijzig deze reis</button>
                 </form>
-        
+
                 <!-- Verwijder formulier -->
                 <form action="{{ url_for('main.verwijder_reis') }}" method="POST" class="delete-form">
                     <input type="hidden" name="goodid" value="{{ reis.goodid }}">
@@ -293,9 +408,10 @@
             {% else %}
             <p>Je hebt nog geen reizen gepost.</p>
             {% endif %}
-        
+
             <a href="{{ url_for('main.post') }}" class="add-button">Nog reizen toevoegen</a>
         </main>
     </div>
 </body>
 </html>
+

@@ -218,6 +218,9 @@
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <h2>{{ aankoop.good.titleofitinerary }}</h2>
+                        <p style="color: #666; margin-bottom: 15px;">
+                            Gepost door {{ aankoop.eigenaar.firstname }} {{ aankoop.eigenaar.lastname }} uit {{ aankoop.eigenaar.country }}
+                        </p>
                         <p><strong>Beschrijving:</strong> {{ aankoop.good.descriptionofitinerary }}</p>
                         <p><strong>Prijs (€):</strong> {{ aankoop.good.price }}</p>
                         <p><strong>Aangekocht op:</strong> {{ aankoop.createdat.strftime('%d-%m-%Y') }}</p>

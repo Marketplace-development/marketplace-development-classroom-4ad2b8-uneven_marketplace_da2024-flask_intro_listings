@@ -290,16 +290,19 @@ def download_aankoop_pdf(gekochtid):
 @main.route('/gekocht', methods=['GET'])
 def gekocht():
     if 'userid' not in session:
-        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
+        return redirect(url_for('main.login'))
 
-    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
+    user = Users.query.get(session['userid'])
     if not user:
-        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+        return redirect(url_for('main.logout'))
 
     # Haal alle gekochte reizen van de gebruiker op
     gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
 
-    # Render de pagina met de gekochte reizen
+    # Voeg eigenaarinformatie toe aan elk gekocht object
+    for aankoop in gekochte_reizen:
+        aankoop.eigenaar = Users.query.get(aankoop.good.userid)
+
     return render_template('gekocht.html', user=user, gekochte_reizen=gekochte_reizen)
 
 
@@ -326,7 +329,12 @@ def favoriet():
     # Haal favorieten op voor de huidige gebruiker
     favorieten = Favoriet.query.filter_by(userid=user.userid).all()
 
+    # Voeg eigenaarinformatie toe aan elk favoriet object
+    for favoriet in favorieten:
+        favoriet.eigenaar = Users.query.get(favoriet.good.userid)
+
     return render_template('favoriet.html', user=user, favorieten=favorieten)
+
 
 @main.route('/search', methods=['GET'])
 def search():
@@ -343,6 +351,9 @@ def search():
     # Haal alle reizen uit de database
     reizen = DigitalGoods.query.all()
     for reis in reizen:
+        # Voeg de relatie tussen reis en gebruiker toe
+        reis.user = Users.query.filter_by(userid=reis.userid).first()
+
         try:
             reis.image_urls = json.loads(reis.image_urls) if reis.image_urls else []
         except json.JSONDecodeError:
@@ -352,8 +363,6 @@ def search():
     if zoekterm:
         reizen = [reis for reis in reizen if zoekterm.lower() in reis.titleofitinerary.lower()]
 
-    # Haal de afbeeldingen van de reis op
-    
     # Haal de favorieten van de gebruiker op
     favorieten = []
     if 'userid' in session:
@@ -367,6 +376,7 @@ def search():
         favorieten=favorieten,
         zoekterm=zoekterm,
     )
+
 
 @main.route('/reis/<goodid>', methods=['GET'])
 def reisdetail(goodid):
@@ -384,15 +394,17 @@ def reisdetail(goodid):
         flash('Reis niet gevonden.', 'error')
         return redirect(url_for('main.search'))
 
+    # Haal de eigenaar van de reis op
+    eigenaar = Users.query.filter_by(userid=reis.userid).first()
+
     # Controleer of deze reis een favoriet is van de gebruiker
     is_favoriet = Favoriet.query.filter_by(userid=user.userid, goodid=goodid).first() is not None
 
     # Haal alle reviews voor deze reis op
     reviews = Feedback.query.filter_by(targetgoodid=goodid).all()
 
-    # Render de template met reisgegevens, reviews en favorietstatus
-    return render_template('reisdetail.html', reis=reis, user=user, is_favoriet=is_favoriet, reviews=reviews)
-
+    # Render de template met reisgegevens, reviews, favorietstatus en eigenaar
+    return render_template('reisdetail.html', reis=reis, user=user, eigenaar=eigenaar, is_favoriet=is_favoriet, reviews=reviews)
 
 
 @main.route('/koop/<goodid>', methods=['POST'])

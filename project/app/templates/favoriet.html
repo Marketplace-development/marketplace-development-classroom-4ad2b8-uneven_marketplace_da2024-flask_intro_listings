@@ -229,7 +229,10 @@
                         <a href="{{ url_for('main.reisdetail', goodid=favoriet.good.goodid) }}">
                             <h2>{{ favoriet.good.titleofitinerary }}</h2>
                         </a>
-                        <p>{{ favoriet.good.descriptionofitinerary }}</p>
+                        <p style="color: #666; margin-bottom: 15px;">
+                            Gepost door {{ favoriet.eigenaar.firstname }} {{ favoriet.eigenaar.lastname }} uit {{ favoriet.eigenaar.country }}
+                        </p>
+                        <p><strong>Beschrijving:</strong> {{ favoriet.good.descriptionofitinerary }}</p>
                         <p><strong>Prijs:</strong> €{{ favoriet.good.price }}</p>
                     </div>
                     <form action="{{ url_for('main.toggle_favoriet') }}" method="POST">

@@ -197,6 +197,9 @@
 
     <div class="container">
         <h1>{{ reis.titleofitinerary }}</h1>
+        <p style="color: #666; margin-bottom: 15px;">
+            Gepost door {{ eigenaar.firstname }} {{ eigenaar.lastname }} uit {{ eigenaar.country }}
+        </p>
         <div class="details">
             <div class="description">
                 <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>

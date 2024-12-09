@@ -98,8 +98,10 @@ def post():
     if 'userid' not in session:
         return redirect(url_for('main.login'))
     
-    error_message = None  # Variabele om foutmeldingen op te slaan
-
+    user = Users.query.get(session['userid'])  
+    if not user:
+        return redirect(url_for('main.login'))
+    
     if request.method == 'POST':
 
         itinerary_name = request.form['titleofitinerary']  # Ophalen uit HTML
@@ -137,8 +139,9 @@ def post():
         else:
             # Foutmelding voor ongeldig bestandstype
             error_message = "Ongeldig bestandstype. Upload een PDF-bestand."
-
-    return render_template('post.html', error_message=error_message)
+            return render_template('post.html', user=user, error_message=error_message)
+        
+    return render_template('post.html', user = user)
 
 
 @main.route('/userpage', methods=['GET', 'POST'])

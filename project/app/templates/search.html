@@ -174,16 +174,16 @@
             <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
         </div>
         <nav class="nav-links">
-            {% if username %}
-            <h2>Hallo {{ username }}</h2>
+            {% if user %}
+                <h2>Hallo {{ user.firstname }}</h2>
+            {% else %}
+                <h2>Welkom, gast!</h2>
+            {% endif %}
             <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
             <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
             <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
-            {% else %}
-            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
-            <a href="{{ url_for('main.login') }}" class="nav-button">Login</a>
-            <a href="{{ url_for('main.register') }}" class="nav-button">Registreer</a>
-            {% endif %}
+            
+
         </nav>
     </header>
   

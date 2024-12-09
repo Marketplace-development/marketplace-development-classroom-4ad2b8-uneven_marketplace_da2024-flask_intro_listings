@@ -368,8 +368,12 @@ def reisdetail(goodid):
     # Controleer of deze reis een favoriet is van de gebruiker
     is_favoriet = Favoriet.query.filter_by(userid=user.userid, goodid=goodid).first() is not None
 
-    # Render de template met reisgegevens en favorietstatus
-    return render_template('reisdetail.html', reis=reis, user=user, is_favoriet=is_favoriet)
+    # Haal alle reviews voor deze reis op
+    reviews = Feedback.query.filter_by(targetgoodid=goodid).all()
+
+    # Render de template met reisgegevens, reviews en favorietstatus
+    return render_template('reisdetail.html', reis=reis, user=user, is_favoriet=is_favoriet, reviews=reviews)
+
 
 
 @main.route('/koop/<goodid>', methods=['POST'])
@@ -515,7 +519,6 @@ def toggle_favoriet():
 
 
 @main.route('/review/<goodid>', methods=['GET'])
-
 def review_page(goodid):
     # Haal de digitale goederen op die overeenkomen met het opgegeven goodid
     reis = DigitalGoods.query.filter_by(goodid=goodid).first()

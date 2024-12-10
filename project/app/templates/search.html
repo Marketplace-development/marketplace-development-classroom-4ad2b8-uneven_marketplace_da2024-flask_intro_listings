@@ -162,16 +162,17 @@
             font-size: 20px;
         }
 
-        .travel-item a {
-            color: #24452e;
+        .travel-item a.title-link {
+            text-decoration: none;
+        }
+
+        .travel-item a.title-link u {
+            text-decoration: underline;
         }
 
         .travel-item a.review-link {
             text-decoration: underline;
-        }
-
-        .travel-item a.title-link {
-            text-decoration: none;
+            color: #24452e;
         }
 
         .favorite-button {
@@ -210,25 +211,20 @@
   
     <div class="container">
         <h1>Zoek een Reis</h1>
-        <!-- Zoekbalk -->
         <div class="search-bar">
             <form action="{{ url_for('main.search') }}" method="get">
                 <input type="text" name="zoekterm" placeholder="Zoek op titel..." value="{{ zoekterm }}">
             </form>
         </div>
-
-        <!-- Prijsfilter -->
         <div class="filter-bar">
             <form action="{{ url_for('main.search') }}" method="get">
                 <label for="min_price">Prijs van:</label>
-                <input type="number" name="min_price" id="min_price" placeholder="Min" value="{{ request.args.get('min_price', '') }}" style="width: 80px;">
+                <input type="number" name="min_price" id="min_price" placeholder="€" value="{{ request.args.get('min_price', '') }}" style="width: 80px;">
                 <label for="max_price">tot:</label>
-                <input type="number" name="max_price" id="max_price" placeholder="Max" value="{{ request.args.get('max_price', '') }}" style="width: 80px;">
+                <input type="number" name="max_price" id="max_price" placeholder="€" value="{{ request.args.get('max_price', '') }}" style="width: 80px;">
                 <button type="submit">Filter</button>
             </form>
         </div>
-
-        <!-- Lijst van reizen -->
         <div class="travel-list">
             {% if reizen %}
                 {% for reis in reizen %}
@@ -236,10 +232,7 @@
                     <img src="{{ reis.image_urls[0] if reis.image_urls else '/static/default_image.jpg' }}" style="width: auto; height: 100px;">
                     <h2>
                         <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" class="title-link">
-                            {{ reis.titleofitinerary }}
-                        </a>
-                        <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" class="review-link">
-                            ({{ reis.review_count }} reviews)
+                            <u>{{ reis.titleofitinerary }}</u>
                         </a>
                     </h2>
                     <p style="color: #666; margin-bottom: 15px;">
@@ -249,11 +242,13 @@
                         </a> 
                         uit {{ reis.user.country }}
                     </p>
-                    
                     <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
                     <p><strong>Prijs:</strong> €{{ reis.price }}</p>
-
-                    <!-- Favoriet-knop rechts -->
+                    <p><strong>Beoordelingen:</strong> 
+                        <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" class="review-link">
+                            {{ reis.review_count }} reviews
+                        </a>
+                    </p>
                     <form action="{{ url_for('main.toggle_favoriet') }}" method="POST" style="display: flex; justify-content: flex-end;">
                         <input type="hidden" name="goodid" value="{{ reis.goodid }}">
                         <button type="submit" class="favorite-button" title="Favoriet">
@@ -270,8 +265,6 @@
                 <p>Geen reizen gevonden.</p>
             {% endif %}
         </div>        
-        
     </div>
 </body>
 </html>
-

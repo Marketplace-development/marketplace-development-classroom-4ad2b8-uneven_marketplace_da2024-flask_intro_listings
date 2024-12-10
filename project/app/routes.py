@@ -968,27 +968,49 @@ def verkochte_reizen():
     if not user:
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
-    # Haal alle reizen van de gebruiker op
+    totaal_verdiend = 0
+    totaal_uitgegeven = 0
+    geschiedenis = []
+
+    # Voeg verkopen toe aan de geschiedenis
     reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
-
-    totaal_verdiend = 0  # Variabele om totale verdiensten bij te houden
-
-    # Voeg het aantal keer verkocht toe aan elke reis en bereken totale verdiensten
     for reis in reizen:
-        reis.aantal_aankopen = Gekocht.query.filter_by(goodid=reis.goodid).count()
-        reis.verdiend = reis.aantal_aankopen * reis.price  # Bereken verdiensten voor de reis
-        totaal_verdiend += reis.verdiend  # Tel op bij totaal verdiend
+        aantal_aankopen = Gekocht.query.filter_by(goodid=reis.goodid).count()
+        verdiend = aantal_aankopen * reis.price
+        totaal_verdiend += verdiend
 
-    # Bereken het totaal uitgegeven bedrag door de gebruiker
+        if aantal_aankopen > 0:
+            for aankoop in Gekocht.query.filter_by(goodid=reis.goodid).all():
+                geschiedenis.append({
+                    'description': f'Verkoop: {reis.titleofitinerary}',
+                    'amount': reis.price,
+                    'date': aankoop.createdat  # Datum van aankoop
+                })
+
+    # Voeg aankopen toe aan de geschiedenis
     gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
-    totaal_uitgegeven = sum([DigitalGoods.query.filter_by(goodid=aankoop.goodid).first().price for aankoop in gekochte_reizen])
+    for aankoop in gekochte_reizen:
+        reis = DigitalGoods.query.filter_by(goodid=aankoop.goodid).first()
+        if reis:
+            totaal_uitgegeven += reis.price
+            geschiedenis.append({
+                'description': f'Aankoop: {reis.titleofitinerary}',
+                'amount': -reis.price,
+                'date': aankoop.createdat  # Datum van aankoop
+            })
+
+    # Sorteer de geschiedenis op datum (nieuwste eerst)
+    geschiedenis.sort(key=lambda x: x['date'], reverse=True)
 
     return render_template(
         'reis_aankopen.html',
-        reizen=reizen,
         totaal_verdiend=totaal_verdiend,
         totaal_uitgegeven=totaal_uitgegeven,
+        beschikbaar_saldo=totaal_verdiend - totaal_uitgegeven,
+        geschiedenis=geschiedenis,
         user=user
     )
+
+
 
 

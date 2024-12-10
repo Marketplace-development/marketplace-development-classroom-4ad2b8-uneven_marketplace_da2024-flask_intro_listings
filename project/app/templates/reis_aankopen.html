@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verkochte Reizen</title>
+    <title>Mijn Portefeuille</title>
     <style>
         body {
             font-family: 'Georgia', serif;
@@ -107,38 +107,80 @@
         }
 
         .content h1 {
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 20px;
             color: #24452e;
             text-align: center;
         }
 
-        .section {
+        .portfolio {
+            background: linear-gradient(135deg, #f9f9f9, #e4e4e4);
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        .portfolio h2 {
+            font-size: 24px;
+            color: #24452e;
+            margin-bottom: 15px;
+        }
+
+        .portfolio p {
+            font-size: 20px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .history {
+            margin-top: 30px;
+        }
+
+        .transaction {
+            display: flex;
+            justify-content: space-between;
             background: #f9f9f9;
             padding: 15px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .section h2 {
-            color: #24452e;
-            font-size: 20px;
             margin-bottom: 10px;
-        }
-
-        .section p {
-            margin: 5px 0;
             font-size: 16px;
+            color: #24452e;
         }
 
-        .total {
-            text-align: center;
-            font-size: 18px;
+        .transaction .description {
             font-weight: bold;
-            color: #24452e;
-            margin-top: 20px;
         }
+
+        .transaction .amount {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .transaction .amount.positive {
+            color: #28a745;
+        }
+
+        .transaction .amount.negative {
+            color: #dc3545;
+        }
+        .transaction-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .transaction .date {
+            text-align: right;
+            font-size: 14px;
+            color: #666;
+        }        
     </style>
 </head>
 <body>
@@ -166,24 +208,35 @@
         </aside>
 
         <main class="content">
-            <h1>Verkochte Reizen</h1>
-            {% if reizen %}
-                {% for reis in reizen %}
-                    <div class="section">
-                        <h2>{{ reis.titleofitinerary }}</h2>
-                        <p>Aantal keer verkocht: {{ reis.aantal_aankopen }}</p>
-                        <p>Prijs per stuk: €{{ reis.price }}</p>
-                        <p><strong>Totaal verdiend voor deze reis: €{{ reis.verdiend }}</strong></p>
+            <h1>Mijn Portefeuille</h1>
+            <div class="portfolio">
+                <h2>Overzicht</h2>
+                <p><strong>Inkomsten:</strong> €{{ totaal_verdiend }}</p>
+                <p><strong>Uitgaven:</strong> €{{ totaal_uitgegeven }}</p>
+                <p><strong>Beschikbaar saldo:</strong> €{{ totaal_verdiend - totaal_uitgegeven }}</p>
+            </div>
+
+            <div class="history">
+                <h2>Geschiedenis</h2>
+                {% if geschiedenis %}
+                    <div class="transaction-header">
+                        <div class="description">Omschrijving</div>
+                        <div class="amount">Bedrag</div>
+                        <div class="date">Datum</div>
                     </div>
-                {% endfor %}
-                <div class="total">
-                    <p>Totaal verdiend met alle reizen: €{{ totaal_verdiend }}</p>
-                    <p>Totaal uitgegeven door jou: €{{ totaal_uitgegeven }}</p>
-                    <p>Saldo: €{{ totaal_verdiend - totaal_uitgegeven }}</p>
-                </div>
-            {% else %}
-                <p>Je hebt nog geen verkochte reizen.</p>
-            {% endif %}
+                    {% for transaction in geschiedenis %}
+                        <div class="transaction">
+                            <div class="description">{{ transaction.description }}</div>
+                            <div class="amount {% if transaction.amount > 0 %}positive{% else %}negative{% endif %}">
+                                €{{ "%.2f"|format(transaction.amount) }}
+                            </div>
+                            <div class="date">{{ transaction.date.strftime('%d-%m-%Y %H:%M') }}</div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Er zijn nog geen transacties.</p>
+                {% endif %}
+            </div>                                    
         </main>
     </div>
 </body>

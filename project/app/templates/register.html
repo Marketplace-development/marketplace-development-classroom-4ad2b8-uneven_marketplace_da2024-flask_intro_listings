@@ -184,10 +184,10 @@
 
     <div class="container">
         <h1>Registreren bij Travel Tales</h1>
-        <form id="registration-form" method="POST" action="/register">
+        <form id="registration-form" method="POST" action="/register" enctype="multipart/form-data">
             <input type="text" id="firstName" name="firstname" placeholder="Voornaam" required>
             <input type="text" id="lastName" name="lastname" placeholder="Achternaam" required>
-            <input type="text" id="address" name="address" placeholder="Adres">
+            <input type="text" id="address" name="address" placeholder="Straatnaam en huisnummer">
             <input type="text" id="city" name="city" placeholder="Stad">
             <input type="text" id="postalCode" name="postalcode" placeholder="Postcode">
             <input type="text" id="country" name="country" placeholder="Land" required>
@@ -195,16 +195,8 @@
             <input type="password" id="password" name="password" placeholder="Wachtwoord" required>
             <input type="text" id="phone" name="phone" placeholder="Telefoonnummer">
             <input type="text" id="nationality" name="nationality" placeholder="Nationaliteit">
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="isProvider" name="isProvider">
-                <label for="isProvider">Ik ben een aanbieder</label>
-            </div>
-
-            <div class="checkbox-group">
-                <input type="checkbox" id="isSearcher" name="isSearcher">
-                <label for="isSearcher">Ik ben een zoeker</label>
-            </div>
+            <label for="profilePicture">Upload een profielfoto:</label>
+            <input type="file" id="profilePicture" name="profilePicture" accept=".jpg, .jpeg, .png, .gif">
 
             <div class="form-group">
                 <button type="submit" class="submit-button">Registreren</button>

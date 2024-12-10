@@ -35,10 +35,25 @@ def register():
         country = request.form.get('country')
         phone = request.form.get('phone')
         nationality = request.form.get('nationality')
+        profpic_file = request.files.get('profilePicture')
+
 
         # Controleer of de gebruiker al bestaat op basis van email of username
         if Users.query.filter((Users.email == email)).first():
             return "Email or Username already registered", 400
+
+        # Verwerk en upload profielfoto
+        profile_picture_url = None
+        if profpic_file and profpic_file.filename != '':
+            if profpic_file.filename.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
+                image_filename = secure_filename(profpic_file.filename)
+                unique_image_filename = f"{uuid.uuid4()}_{image_filename}"
+                image_data = profpic_file.read()
+                supabase.storage.from_("profile_pictures").upload(f"profile_pictures/{unique_image_filename}", image_data)
+                profile_picture_url = supabase.storage.from_("profile_pictures").get_public_url(f"profile_pictures/{unique_image_filename}")
+            else:
+                return "Ongeldig bestandstype. Upload een afbeelding.", 400
+
 
         # Maak een nieuwe gebruiker aan
         new_user = Users(
@@ -52,7 +67,8 @@ def register():
             postalcode=postal_code,
             country=country,
             phone=phone,
-            nationality=nationality
+            nationality=nationality,
+            profilepicture=profile_picture_url
         )
 
         # Voeg de gebruiker toe aan de database

@@ -508,6 +508,12 @@ def reisdetail(goodid):
     # Haal alle reviews voor deze reis op
     reviews = Feedback.query.filter_by(targetgoodid=goodid).all()
 
+    # Bereken het gemiddelde van de reviews
+    if reviews:
+        gemiddelde_rating = int(sum(review.rating for review in reviews) / len(reviews))
+    else:
+        gemiddelde_rating = 0
+
     # Voeg het aantal reviews toe
     review_count = len(reviews)
 
@@ -519,7 +525,8 @@ def reisdetail(goodid):
         eigenaar=eigenaar,
         is_favoriet=is_favoriet,
         reviews=reviews,
-        review_count=review_count
+        review_count=review_count,
+        gemiddelde_rating=gemiddelde_rating
     )
 
 

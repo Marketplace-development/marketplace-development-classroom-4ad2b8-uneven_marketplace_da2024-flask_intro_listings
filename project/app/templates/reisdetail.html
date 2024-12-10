@@ -240,21 +240,32 @@
         <div class="reviews">
             <h2>Reviews</h2>
             {% if reviews %}
-            {% for review in reviews %}
-            <div class="review-item">
-                <h3>{{ review.user.firstname }} {{ review.user.lastname }}</h3>
-                <p class="rating">
-                    {% for _ in range(review.rating) %}
-                        ⭐
-                    {% endfor %}
+                <p><strong>Gemiddelde beoordeling:</strong>
+                    <span style="color: #ffa500;">
+                        {% for _ in range(gemiddelde_rating|round(0, 'floor')|int) %}
+                            ⭐
+                        {% endfor %}
+
+                    </span>
+                    ({{ gemiddelde_rating|round(1) }} van 5)
                 </p>
-                <p><em>"{{ review.comment }}"</em></p>
-            </div>
-            {% endfor %}
+                {% for review in reviews %}
+                <div class="review-item">
+                    <h3>{{ review.user.firstname }} {{ review.user.lastname }}</h3>
+                    <p class="rating">
+                        {% for _ in range(review.rating) %}
+                            ⭐
+                        {% endfor %}
+                    </p>
+                    <p><em>"{{ review.comment }}"</em></p>
+                </div>
+                {% endfor %}
             {% else %}
-            <p>Er zijn nog geen reviews voor deze reis.</p>
+                <p>Er zijn nog geen reviews voor deze reis.</p>
             {% endif %}
         </div>
     </div>
 </body>
 </html>
+
+

@@ -38,7 +38,6 @@
             width: 50px;
             height: 50px;
             background-color: #24452e; /* Donkergroene achtergrond */
-            border-radius: 50%; /* Maakt het rond */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -164,24 +163,90 @@
         .chat-btn:hover {
             background-color: #3c764b;
         }
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .profile-trigger {
+            display: flex;
+            align-items: center; /* Zorgt dat de afbeelding en het pijltje op één lijn staan */
+            gap: 5px; /* Ruimte tussen de profielfoto en het pijltje */
+        }
+        
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #ddd; /* Optionele rand */
+        }
+        
+        .dropdown-arrow {
+            font-size: 16px;
+            transition: transform 0.3s ease; /* Voor een draai-effect */
+        }
+        
+        .dropdown-arrow.open {
+            transform: rotate(180deg); /* Draai het pijltje */
+        }
+        
+        .dropdown-menu {
+            display: none; /* Verberg menu standaard */
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            min-width: 200px;
+            padding: 10px 0;
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            color: #333;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+        
+        .dropdown-menu a:hover {
+            background-color: #f4f4f4;
+        }
+        
     </style>
 </head>
 <body>
     <header class="main-header">
         <div class="logo-container">
             <div class="globe">
-                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
+                <img src="{{ '/static/logo_TT.png' }}" alt="Wereldbol" style="width: 60px; height: 60px">
             </div>
             <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
         </div>
         <nav class="nav-links">
             {% if username %}
             <h2>Hallo {{ username }}</h2>
-            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
-            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
-            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+            <div class="profile-dropdown">
+                <div class="profile-trigger" onclick="toggleDropdown()">
+                    <img src="{{ user.profilepicture if user.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" class="profile-img">
+                    <span class="dropdown-arrow" id="dropdownArrow">&#9660;</span> <!-- Pijltje -->
+                </div>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="{{ url_for('main.userpage') }}">Mijn profiel</a>
+                    <a href="{{ url_for('main.userpage') }}">Profielgegevens</a>
+                    <a href="{{ url_for('main.gekocht') }}">Mijn aangekochte reizen</a>
+                    <a href="{{ url_for('main.gepost') }}">Mijn geüploade reizen</a>
+                    <a href="{{ url_for('main.favoriet') }}">Mijn favorieten</a>
+                    <a href="{{ url_for('main.verkochte_reizen') }}">Mijn portefeuille</a>
+                    <a href="{{ url_for('main.logout') }}">Uitloggen</a>
+                </div>
+            </div>
             {% else %}
-            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
             <a href="{{ url_for('main.login') }}" class="nav-button">Login</a>
             <a href="{{ url_for('main.register') }}" class="nav-button">Registreer</a>
             {% endif %}
@@ -219,6 +284,31 @@
     s1.setAttribute('crossorigin','*');
     s0.parentNode.insertBefore(s1,s0);
     })();
+
+    function toggleDropdown() {
+        const dropdown = document.getElementById('dropdownMenu');
+        const arrow = document.getElementById('dropdownArrow');
+
+        if (dropdown.style.display === 'block') {
+            dropdown.style.display = 'none';
+            arrow.classList.remove('open');
+        } else {
+            dropdown.style.display = 'block';
+            arrow.classList.add('open');
+        }
+    }
+
+    // Sluit het menu als je ergens anders klikt
+    window.onclick = function(event) {
+        if (!event.target.closest('.profile-dropdown')) {
+            const dropdown = document.getElementById('dropdownMenu');
+            const arrow = document.getElementById('dropdownArrow');
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+                arrow.classList.remove('open');
+            }
+        }
+    };
     </script>
 </body>
 </html>

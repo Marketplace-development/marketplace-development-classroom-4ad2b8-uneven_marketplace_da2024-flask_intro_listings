@@ -707,11 +707,38 @@ def boost_reis():
     reis = DigitalGoods.query.filter_by(goodid=goodid, userid=session['userid']).first()
 
     if reis:
-        reis.createdat = datetime.datetime.utcnow()  # Update de timestamp
-        db.session.commit()
-        flash(f'Reis "{reis.titleofitinerary}" is succesvol geboost!', 'success')
+        # Redirect naar de betaalpagina voor het boosten
+        return redirect(url_for('main.boost_payment', goodid=goodid))
     else:
         flash('Reis niet gevonden of u heeft geen rechten om deze reis te boosten.', 'error')
+        return redirect(url_for('main.gepost'))
 
-    return redirect(url_for('main.gepost'))
+@main.route('/boost_payment/<goodid>', methods=['GET', 'POST'])
+def boost_payment(goodid):
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    reis = DigitalGoods.query.filter_by(goodid=goodid, userid=session['userid']).first()
+
+    if not reis:
+        flash('Reis niet gevonden of u heeft geen rechten om deze reis te boosten.', 'error')
+        return redirect(url_for('main.gepost'))
+
+    if request.method == 'POST':
+        # Simuleer een succesvolle betaling (voeg hier een echte betaalprovider-integratie toe)
+        payment_success = True
+
+        if payment_success:
+            # Update de timestamp om de reis als geboost te markeren
+            reis.createdat = datetime.datetime.utcnow()
+            db.session.commit()
+            flash(f'Reis "{reis.titleofitinerary}" is succesvol geboost!', 'success')
+            return redirect(url_for('main.gepost'))
+        else:
+            flash('Betaling mislukt. Probeer het opnieuw.', 'error')
+            return redirect(url_for('main.boost_payment', goodid=goodid))
+
+    # Render de betaalpagina
+    return render_template('boost_payment.html', reis=reis)
+
 

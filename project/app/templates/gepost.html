@@ -143,6 +143,7 @@
         }
 
         .travel-item {
+            position: relative;
             border: 1px solid #ddd;
             padding: 20px;
             border-radius: 8px;
@@ -154,11 +155,47 @@
             font-size: 20px;
             color: #24452e;
             margin: 0 0 10px;
+            display: inline-block;
+        }
+
+        .boost-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 12px;
+            font-size: 14px;
+            background-color: #2e5f3d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .boost-button:hover {
+            background-color: #4f8a61;
+        }
+
+        .add-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #24452e;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            transition: background 0.3s ease;
+        }
+
+        .add-button:hover {
+            background-color: #3c764b;
         }
 
         .edit-form,
-        .delete-form,
-        .boost-form {
+        .delete-form {
             margin-top: 15px;
         }
 
@@ -179,8 +216,7 @@
         }
 
         .save-button,
-        .delete-button,
-        .boost-button {
+        .delete-button {
             padding: 10px 15px;
             border: none;
             border-radius: 5px;
@@ -207,32 +243,6 @@
 
         .delete-button:hover {
             background-color: #a9a9a9;
-        }
-
-        .boost-button {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .boost-button:hover {
-            background-color: #218838;
-        }
-
-        .add-button {
-            display: inline-block;
-            padding: 12px 25px;
-            background-color: #24452e;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .add-button:hover {
-            background-color: #3c764b;
         }
     </style>
     <!-- Voeg Leaflet.js toe -->
@@ -301,6 +311,10 @@
             {% for reis in geposte_reizen %}
             <div class="travel-item">
                 <h2>{{ reis.titleofitinerary }}</h2>
+                <!-- Boost-reis knop rechtsboven -->
+                <form action="{{ url_for('main.boost_payment', goodid=reis.goodid) }}" method="GET" class="boost-form">
+                    <button type="submit" class="boost-button">Reis Boosten</button>
+                </form>
                 <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
                 <p><strong>Prijs (€):</strong> {{ reis.price }}</p>
 
@@ -328,20 +342,15 @@
                     <input type="hidden" name="goodid" value="{{ reis.goodid }}">
                     <button type="submit" class="delete-button">Verwijder deze reis</button>
                 </form>
-
-                <form action="{{ url_for('main.boost_reis') }}" method="POST" class="boost-form">
-                    <input type="hidden" name="goodid" value="{{ reis.goodid }}">
-                    <button type="submit" class="boost-button">Reis Boosten</button>
-                </form>
             </div>
             {% endfor %}
             {% else %}
             <p>Je hebt nog geen reizen gepost.</p>
             {% endif %}
-
-            <a href="{{ url_for('main.post') }}" class="add-button">Nog reizen toevoegen</a>
         </main>
     </div>
 </body>
 </html>
+
+
 

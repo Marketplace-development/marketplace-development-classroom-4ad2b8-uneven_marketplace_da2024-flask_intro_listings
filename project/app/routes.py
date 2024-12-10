@@ -3,7 +3,7 @@ import datetime
 import uuid
 import json
 from flask import Blueprint, request, redirect, url_for, render_template, session
-from .models import db, Users, DigitalGoods, Gekocht, Favoriet, Feedback, Connections
+from .models import db, Users, DigitalGoods, Gekocht, Favoriet, Feedback, Connections, Category, digitalgoods_categories
 from flask import flash
 from werkzeug.utils import secure_filename
 from .config import supabase
@@ -125,7 +125,9 @@ def post():
             pdf_file = request.files['file']
             stad = request.form['start_city']
             image_files = request.files.getlist('images[]')
-
+            selected_categories = request.form.getlist('category_id')
+            if not selected_categories:
+                raise ValueError("Selecteer minstens één categorie.")
             # Valideer en upload PDF
             if pdf_file and pdf_file.filename.endswith('.pdf'):
                 filename = secure_filename(pdf_file.filename)
@@ -184,6 +186,11 @@ def post():
                 latitude=latitude,
                 longitude=longitude
             )
+            for category_id in selected_categories:
+                category = Category.query.get(category_id)
+                if category:
+                    new_itinerary.categories.append(category)
+
             db.session.add(new_itinerary)
             db.session.commit()
 
@@ -195,8 +202,8 @@ def post():
             print(f"Error: {e}")
             db.session.rollback()
             error_message = "Er ging iets mis bij het opslaan van de reis."
-
-    return render_template('post.html', error_message=error_message, user = user)
+    categories = Category.query.all()
+    return render_template('post.html', error_message=error_message, user = user, categories = categories)
 
 @main.route('/userpage', methods=['GET', 'POST'])
 def userpage():
@@ -433,13 +440,14 @@ def search():
     min_price = request.args.get('min_price', type=float)
     max_price = request.args.get('max_price', type=float)
     city = request.args.get('city', '').strip().lower()
+    selected_categories = request.args.getlist('category_id')
 
     available_cities = sorted(set(
         result.start_city.lower() for result in 
         DigitalGoods.query.with_entities(DigitalGoods.start_city).distinct()
         if result.start_city
     ))
-
+    categories = Category.query.all()
     query = DigitalGoods.query.order_by(DigitalGoods.createdat.desc())
 
     if zoekterm:
@@ -450,6 +458,10 @@ def search():
         query = query.filter(DigitalGoods.price <= max_price)
     if city:
         query = query.filter(DigitalGoods.start_city.ilike(city))
+    if selected_categories:
+        query = query.join(digitalgoods_categories).join(Category).filter(
+            Category.categoryid.in_(selected_categories)
+        )
 
     reizen = query.all()
 
@@ -479,7 +491,9 @@ def search():
         min_price=min_price,
         max_price=max_price,
         city=city,
-        available_cities=available_cities
+        available_cities=available_cities,
+        categories=categories,  # Alle categorieën voor de filters
+        selected_categories=selected_categories  # Geselecteerde categorieën om de checkboxes vooringevuld te houden
     )
 
 

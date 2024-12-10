@@ -4,7 +4,6 @@ import json
 from . import db
 
 
-    
 class Users(db.Model):
     __tablename__ = 'users'
     # Primary key
@@ -31,9 +30,9 @@ class Users(db.Model):
     # Metadata
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 
-     # Relationships
+    # Relationships
     digitalgoods = db.relationship('DigitalGoods', backref='user', lazy=True)
-    
+
     def check_password(self, password):
         return self.password == password
 
@@ -43,12 +42,20 @@ class Users(db.Model):
     def __repr__(self):
         return f'<User {self.email}>'
 
+
+digitalgoods_categories = db.Table(
+    'digitalgoods_categories',
+    db.Column('goodid', db.String, db.ForeignKey('digitalgoods.goodid'), primary_key=True),
+    db.Column('categoryid', db.Integer, db.ForeignKey('categories.categoryid'), primary_key=True)
+)
+
+
 class DigitalGoods(db.Model):
     __tablename__ = 'digitalgoods'
-    
+
     # Primaire sleutel
     goodid = db.Column(db.String, primary_key=True)
-    
+
     # Eigenschappen van digitale goederen
     titleofitinerary = db.Column(db.String, nullable=False)
     descriptionofitinerary = db.Column(db.TEXT)
@@ -59,15 +66,15 @@ class DigitalGoods(db.Model):
     image_urls = db.Column(db.Text, nullable=True)  # Gebruik Text om JSON-lijsten op te slaan
     latitude = db.Column(db.String, nullable=True)
     longitude = db.Column(db.String, nullable=True)
-    
+
     # Nieuwe variabele voor de startstad
     start_city = db.Column(db.String, nullable=True)  # Maak het optioneel
-
-
+    categories = db.relationship('Category', secondary=digitalgoods_categories, back_populates='digital_goods')
 
     def __repr__(self):
-        return f'<DigitalGoods {self.titleofitinerary} - ${self.price}>' 
-    
+        return f'<DigitalGoods {self.titleofitinerary} - ${self.price}>'
+
+
 class Gekocht(db.Model):
     __tablename__ = 'gekocht'
 
@@ -82,16 +89,18 @@ class Gekocht(db.Model):
 
     def __repr__(self):
         return f'<Gekocht {self.gekochtid} door {self.userid} - {self.goodid}>'
-    
+
+
 class Favoriet(db.Model):
     __tablename__ = 'favorieten'
 
     # Primaire sleutel
-    favorietid = db.Column(db.String, primary_key=True) 
+    favorietid = db.Column(db.String, primary_key=True)
 
     # Foreign keys
     userid = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)  # Verwijst naar Users.userid
-    goodid = db.Column(db.String, db.ForeignKey('digitalgoods.goodid'), nullable=False)  # Verwijst naar DigitalGoods.goodid
+    goodid = db.Column(db.String, db.ForeignKey('digitalgoods.goodid'),
+                       nullable=False)  # Verwijst naar DigitalGoods.goodid
 
     # Metadata
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)  # Datum van favoriet maken
@@ -103,22 +112,23 @@ class Favoriet(db.Model):
     def __repr__(self):
         return f'<Favoriet {self.favorietid} door {self.userid} - {self.goodid}>'
 
+
 class Feedback(db.Model):
     __tablename__ = 'feedback'
 
     feedbackid = db.Column(db.String, primary_key=True)  # Unieke ID voor feedback
     userid = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)  # Gebruiker die feedback geeft
-    targetgoodid = db.Column(db.String, db.ForeignKey('digitalgoods.goodid'), nullable=False)  # Reispakket waarop de feedback gericht is
+    targetgoodid = db.Column(db.String, db.ForeignKey('digitalgoods.goodid'),
+                             nullable=False)  # Reispakket waarop de feedback gericht is
     rating = db.Column(db.Integer, nullable=False)  # Beoordeling van 1 tot 5
     comment = db.Column(db.Text)  # Optioneel commentaar
-    createdat = db.Column(db.TIMESTAMP, default=datetime.datetime.utcnow)  
+    createdat = db.Column(db.TIMESTAMP, default=datetime.datetime.utcnow)
 
     user = db.relationship('Users', backref='feedbacks_given', lazy=True)  # Feedbacks gegeven door gebruiker
     digitalgood = db.relationship('DigitalGoods', backref='feedbacks_received', lazy=True)
 
     def __repr__(self):
         return f'<Feedback {self.feedbackid} - User: {self.userid}, Good: {self.targetgoodid}>'
-
 
 
 class Connections(db.Model):
@@ -129,3 +139,16 @@ class Connections(db.Model):
 
     # Metadata
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+
+class Category(db.Model):
+    __tablename__ = 'categories'
+    categoryid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)
+
+    # Relatie met DigitalGood
+    digital_goods = db.relationship('DigitalGoods', secondary=digitalgoods_categories, back_populates='categories')
+
+    def __repr__(self):
+        return f"<Category {self.name}>"
+

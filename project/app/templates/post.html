@@ -114,7 +114,47 @@
             display: block;
             color: #24452e;
         }
+        .search-bar, .filter-bar {
+            width: calc(100% - 80px);
+            margin: 0 auto;
+            margin-bottom: 20px;
+        }
+        
+        .search-bar input, .filter-bar input, .filter-bar select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            font-family: 'Georgia', serif;
+            background: #fff;
+            color: #24452e;
+        }
 
+        .filter-bar form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-bar label {
+            font-size: 16px;
+        }
+
+        .filter-bar button {
+            padding: 5px 15px;
+            border: none;
+            border-radius: 5px;
+            background: #2e5f3d;
+            color: white;
+            cursor: pointer;
+        }
+        .filter-categories {
+            display: flex;
+            flex-direction: column; /* Zorgt ervoor dat de elementen verticaal worden uitgelijnd */
+            gap: 10px; /* Voeg ruimte toe tussen de categorieën */
+            margin-top: 10px;
+        }
         form input,
         form textarea {
             width: calc(100% - 80px); /* Korter dan de container */
@@ -149,6 +189,52 @@
         form button:hover {
             background: #3c764b;
         }
+
+        #category-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* Ruimte tussen de categorieën */
+            margin-bottom: 15px;
+        }
+
+        .category-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            color: #24452e;
+            cursor: pointer;
+        }
+
+        .category-option input {
+            width: 25px; /* Maak het vierkantje groter */
+            height: 25px;
+            margin: 0;
+            cursor: pointer;
+            appearance: none; /* Verberg de standaard checkbox-styling */
+            border: 2px solid #ccc;
+            border-radius: 3px; /* Vierkantje */
+            display: inline-block;
+            position: relative;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .category-option input:checked {
+            background: #24452e; /* Donkergroen bij selectie */
+            border-color: #24452e;
+        }
+
+        .category-option input:checked::before {
+            content: "✔";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centreer het vinkje */
+            color: #fff;
+            font-size: 18px; /* Maak het vinkje groter */
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -160,86 +246,60 @@
             <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
         </div>
         <nav class="nav-links">
-            {% if user %}
-                <h2>Hallo {{ user.firstname }}</h2>
-            {% else %}
-                <h2>Welkom, gast!</h2>
-            {% endif %}
+            {% if username %}
+            <h2>Hallo {{ username }}</h2>
             <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
             <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
             <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
-        
+            {% else %}
+            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
+            <a href="{{ url_for('main.login') }}" class="nav-button">Login</a>
+            <a href="{{ url_for('main.register') }}" class="nav-button">Registreer</a>
+            {% endif %}
         </nav>
     </header>
-  
+    
     <div class="container">
         <h1>Post een Reis</h1>
         <form action="/post" method="POST" enctype="multipart/form-data" id="uploadForm">
             <label for="titleofitinerary">Titel van de Reis</label>
             <input type="text" id="titleofitinerary" name="titleofitinerary" placeholder="Voer de titel in" required>
-        
+
             <label for="descriptionofitinerary">Beschrijving</label>
             <textarea id="descriptionofitinerary" name="descriptionofitinerary" placeholder="Voer een beschrijving in" rows="5" required></textarea>
 
             <label for="start_city">Stad</label>
             <input type="text" id="start_city" name="start_city" placeholder="Voer de stad in waar de reis begint" required>
-        
+
             <label for="price">Prijs (€)</label>
             <input type="number" id="price" name="price" placeholder="Voer de prijs in" min="0" required>
-        
+
+            <label for="category">Categorie</label>
+            <div id="category-container">
+                {% for category in categories %}
+                <label class="category-option">
+                    <input type="checkbox" name="category_id" value="{{ category.categoryid }}">
+                    <span>{{ category.name }}</span>
+                </label>
+                {% endfor %}
+            </div>
+
             <label for="file">Upload een PDF</label>
             <input type="file" id="file" name="file" accept=".pdf" required>
-            <small id="fileError" style="color: red; display: none; margin-top: 10px; margin-bottom: 20px;">
-                Ongeldig bestandstype. Upload een PDF-bestand.
-            </small>
+            <small id="fileError" style="color: red; display: none; margin-top: 10px; margin-bottom: 20px;">Ongeldig bestandstype. Upload een PDF-bestand.</small>
 
             <label for="images">Upload foto('s)</label>
             <input type="file" id="images" name="images[]" accept=".jpg, .jpeg, .png, .gif" multiple>
-            <small id="imageError" style="color: red; display: none; margin-top: 10px; margin-bottom: 20px;">
-                Upload alleen geldige afbeeldingsbestanden (JPG, JPEG, PNG, GIF).
-            </small>     
-        
+            <small id="imageError" style="color: red; display: none; margin-top: 10px; margin-bottom: 20px;">Upload alleen geldige afbeeldingsbestanden (JPG, JPEG, PNG, GIF).</small>
+
             {% if error_message %}
             <div style="color: red; margin-bottom: 20px;">
                 {{ error_message }}
             </div>
             {% endif %}
-        
+
             <button type="submit">Post Reis</button>
         </form>
-        
-        <script>
-            document.getElementById("uploadForm").addEventListener("submit", function(event) {
-                const fileInput = document.getElementById("file");
-                const fileError = document.getElementById("fileError");
-                const imagesInput = document.getElementById("images");
-        
-                if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    if (file.type !== "application/pdf") {
-                        event.preventDefault();
-                        fileError.style.display = "block";
-                        return false;
-                    }
-                }
-
-                if (imagesInput.files.length > 0) {
-                    const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
-                    for (let i = 0; i < imagesInput.files.length; i++) {
-                        const image = imagesInput.files[i];
-                        if (!validImageTypes.includes(image.type)) {
-                            isValid = false;
-                            imageError.style.display = "block";
-                            break;
-                        } else {
-                            imageError.style.display = "none";
-                        }
-                    }
-                }
-                fileError.style.display = "none";
-                return true;
-            });
-        </script>
     </div>
 </body>
 </html>

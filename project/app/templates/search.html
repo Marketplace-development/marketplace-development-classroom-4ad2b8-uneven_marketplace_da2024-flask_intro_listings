@@ -194,6 +194,52 @@
             font-size: 16px;
             margin-left: 10px;
         }
+        .filter-categories {
+            display: flex;
+            flex-wrap: wrap; /* Zorgt ervoor dat de categorieën horizontaal staan en naar de volgende regel gaan indien nodig */
+            gap: 10px; /* Ruimte tussen de categorieën */
+            margin-bottom: 15px;
+        }
+        
+        .category-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            color: #24452e;
+            cursor: pointer;
+        }
+        
+        .category-option input {
+            width: 25px; /* Maak het selectievak groter */
+            height: 25px;
+            margin: 0;
+            cursor: pointer;
+            appearance: none; /* Verberg de standaard checkbox-styling */
+            border: 2px solid #ccc;
+            border-radius: 3px; /* Vierkant selectievakje */
+            display: inline-block;
+            position: relative;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .category-option input:checked {
+            background: #24452e; /* Donkergroen bij selectie */
+            border-color: #24452e;
+        }
+        
+        .category-option input:checked::before {
+            content: "✔";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centreer het vinkje */
+            color: #fff;
+            font-size: 18px; /* Maak het vinkje groter */
+            font-weight: bold;
+        }
+        
     </style>
 </head>
 <body>
@@ -241,6 +287,19 @@
                 <button type="submit">Filter</button>
             </form>
         </div>
+        <div class="filter-categories">
+            <h3>Filter op Categorieën:</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                {% for category in categories %}
+                <label style="display: flex; align-items: center; gap: 5px;">
+                    <input type="checkbox" name="category_id" value="{{ category.categoryid }}"
+                        {% if category.categoryid|string in selected_categories %}checked{% endif %}>
+                    {{ category.name }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        
         <div class="travel-list">
             {% if reizen %}
                 {% for reis in reizen %}
@@ -291,5 +350,3 @@
     </div>
 </body>
 </html>
-
-

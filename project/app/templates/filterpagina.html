@@ -127,16 +127,41 @@
 
         .categories {
             margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .categories label {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 5px;
             font-size: 16px;
-            margin-bottom: 10px;
+            color: #24452e;
+            cursor: pointer;
         }
 
         .categories input {
-            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            border: 2px solid #ccc;
+            border-radius: 3px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .categories input:checked {
+            background: #24452e;
+            border-color: #24452e;
+        }
+
+        .categories input:checked::before {
+            content: "✔";
+            color: #fff;
+            font-size: 14px;
+            display: inline-block;
+            text-align: center;
+            line-height: 18px;
         }
     </style>
 </head>
@@ -185,7 +210,8 @@
                 <h3>Categorieën:</h3>
                 {% for category in categories %}
                     <label>
-                        <input type="checkbox" name="category_id" value="{{ category.categoryid }}">
+                        <input type="checkbox" name="category_id" value="{{ category.categoryid }}" 
+                            {% if category.categoryid|string in selected_categories %}checked{% endif %}>
                         {{ category.name }}
                     </label>
                 {% endfor %}
@@ -196,3 +222,4 @@
     </div>
 </body>
 </html>
+

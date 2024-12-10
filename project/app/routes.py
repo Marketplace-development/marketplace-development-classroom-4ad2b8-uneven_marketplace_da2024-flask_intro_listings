@@ -322,6 +322,10 @@ def gepost():
     # Geposte reizen van de ingelogde gebruiker ophalen, gesorteerd op nieuwste eerst
     geposte_reizen = DigitalGoods.query.filter_by(userid=user.userid).order_by(DigitalGoods.createdat.desc()).all()
 
+    # Voeg het aantal aankopen toe aan elke reis
+    for reis in geposte_reizen:
+        reis.aantal_aankopen = Gekocht.query.filter_by(goodid=reis.goodid).count()
+
     if request.method == 'POST':
         # Update een specifieke reis
         goodid = request.form.get('goodid')  # ID van het item dat wordt bewerkt
@@ -338,6 +342,7 @@ def gepost():
             return redirect(url_for('main.gepost'))
 
     return render_template('gepost.html', user=user, geposte_reizen=geposte_reizen)
+
 
 @main.route('/download_aankoop_pdf/<gekochtid>', methods=['GET'])
 def download_aankoop_pdf(gekochtid):
@@ -938,5 +943,15 @@ def toggle_follow():
     # Standaard terugvaloptie
     return redirect(url_for('main.index'))
 
+@main.route('/reis_aankopen/<goodid>', methods=['GET'])
+def reis_aankopen(goodid):
+    # Controleer of de reis bestaat
+    reis = DigitalGoods.query.filter_by(goodid=goodid).first()
+    if not reis:
+        flash('Reis niet gevonden.', 'error')
+        return redirect(url_for('main.gepost'))
 
+    # Tel het aantal aankopen
+    aantal_aankopen = Gekocht.query.filter_by(goodid=goodid).count()
 
+    return render_template('reis_aankopen.html', reis=reis, aantal_aankopen=aantal_aankopen)

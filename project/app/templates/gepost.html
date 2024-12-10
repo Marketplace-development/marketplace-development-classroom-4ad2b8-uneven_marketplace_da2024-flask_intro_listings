@@ -158,6 +158,10 @@
             display: inline-block;
         }
 
+        .travel-item p {
+            margin: 5px 0;
+        }
+
         .boost-button {
             position: absolute;
             top: 20px;
@@ -185,64 +189,13 @@
             border-radius: 5px;
             font-size: 16px;
             font-weight: bold;
-            margin-top: 20px;
+            margin-top: 10px;
             text-align: center;
             transition: background 0.3s ease;
         }
 
         .add-button:hover {
             background-color: #3c764b;
-        }
-
-        .edit-form,
-        .delete-form {
-            margin-top: 15px;
-        }
-
-        .edit-form label {
-            font-size: 16px;
-            font-weight: bold;
-            display: block;
-            margin: 10px 0 5px;
-        }
-
-        .edit-form input,
-        .edit-form textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .save-button,
-        .delete-button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            text-align: center;
-            margin-top: 15px;
-            width: 100%;
-        }
-
-        .save-button {
-            background-color: #24452e;
-            color: white;
-        }
-
-        .save-button:hover {
-            background-color: #3c764b;
-        }
-
-        .delete-button {
-            background-color: #d3d3d3;
-            color: black;
-        }
-
-        .delete-button:hover {
-            background-color: #a9a9a9;
         }
     </style>
     <!-- Voeg Leaflet.js toe -->
@@ -309,33 +262,16 @@
                 {% for reis in geposte_reizen %}
                     <div class="travel-item">
                         <h2>{{ reis.titleofitinerary }}</h2>
-                        <form action="{{ url_for('main.boost_payment', goodid=reis.goodid) }}" method="GET" class="boost-form">
-                            <button type="submit" class="boost-button">Reis Boosten</button>
-                        </form>
                         <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
                         <p><strong>Prijs (€):</strong> {{ reis.price }}</p>
+                        <p><strong>Aantal keren gekocht:</strong> {{ reis.aantal_aankopen }}</p>
                         {% if reis.pdf_url %}
                             <a href="{{ url_for('main.download_pdf', goodid=reis.goodid) }}" target="_blank" class="add-button">
                                 Open mijn reis (PDF)
                             </a>
                         {% endif %}
-                        <form action="/gepost" method="POST" class="edit-form">
-                            <input type="hidden" name="goodid" value="{{ reis.goodid }}">
-                            <label for="titleofitinerary">Titel:</label>
-                            <input type="text" name="titleofitinerary" value="{{ reis.titleofitinerary }}" required>
-
-                            <label for="descriptionofitinerary">Beschrijving:</label>
-                            <textarea name="descriptionofitinerary" rows="3" required>{{ reis.descriptionofitinerary }}</textarea>
-
-                            <label for="price">Prijs (€):</label>
-                            <input type="number" name="price" value="{{ reis.price }}" required>
-
-                            <button type="submit" class="save-button">Wijzig deze reis</button>
-                        </form>
-
-                        <form action="{{ url_for('main.verwijder_reis') }}" method="POST" class="delete-form">
-                            <input type="hidden" name="goodid" value="{{ reis.goodid }}">
-                            <button type="submit" class="delete-button">Verwijder deze reis</button>
+                        <form action="{{ url_for('main.boost_payment', goodid=reis.goodid) }}" method="GET" class="boost-form">
+                            <button type="submit" class="boost-button">Reis Boosten</button>
                         </form>
                     </div>
                 {% endfor %}
@@ -346,6 +282,3 @@
     </div>
 </body>
 </html>
-
-
-

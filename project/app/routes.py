@@ -968,9 +968,16 @@ def verkochte_reizen():
     if not user:
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
-    totaal_verdiend = 0
+    totaal_verdiend = 15  # Start met het welkomstcadeau
     totaal_uitgegeven = 0
     geschiedenis = []
+
+    # Voeg het welkomstcadeau toe aan de geschiedenis
+    geschiedenis.append({
+        'description': 'Welkomscadeau',
+        'amount': 15.0,
+        'date': user.createdat or datetime.datetime.utcnow()  # Gebruik de aanmaakdatum van de gebruiker
+    })
 
     # Voeg verkopen toe aan de geschiedenis
     reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
@@ -982,7 +989,7 @@ def verkochte_reizen():
         if aantal_aankopen > 0:
             for aankoop in Gekocht.query.filter_by(goodid=reis.goodid).all():
                 geschiedenis.append({
-                    'description': f'Verkoop: {reis.titleofitinerary}',
+                    'description': reis.titleofitinerary,
                     'amount': reis.price,
                     'date': aankoop.createdat  # Datum van aankoop
                 })
@@ -994,7 +1001,7 @@ def verkochte_reizen():
         if reis:
             totaal_uitgegeven += reis.price
             geschiedenis.append({
-                'description': f'Aankoop: {reis.titleofitinerary}',
+                'description': reis.titleofitinerary,
                 'amount': -reis.price,
                 'date': aankoop.createdat  # Datum van aankoop
             })
@@ -1010,6 +1017,7 @@ def verkochte_reizen():
         geschiedenis=geschiedenis,
         user=user
     )
+
 
 
 

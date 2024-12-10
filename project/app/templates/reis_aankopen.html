@@ -260,14 +260,14 @@
                         <div class="date">Datum</div>
                     </div>
                     {% for transaction in geschiedenis %}
-                        <div class="transaction">
-                            <div class="description">{{ transaction.description.replace('Verkoop: ', '').replace('Aankoop: ', '') }}</div>
-                            <div class="amount {% if transaction.amount > 0 %}positive{% else %}negative{% endif %}">
-                                €{{ "%.2f"|format(transaction.amount) }}
-                            </div>
-                            <div class="date">{{ transaction.date.strftime('%d-%m-%Y %H:%M') }}</div>
+                    <div class="transaction">
+                        <div class="description">{{ transaction.description }}</div>
+                        <div class="amount {% if transaction.amount > 0 %}positive{% else %}negative{% endif %}">
+                            €{{ "%.2f"|format(transaction.amount) }}
                         </div>
-                    {% endfor %}
+                        <div class="date">{{ transaction.date.strftime('%d-%m-%Y %H:%M') }}</div>
+                    </div>
+                {% endfor %}
                 {% else %}
                     <p>Er zijn nog geen transacties.</p>
                 {% endif %}

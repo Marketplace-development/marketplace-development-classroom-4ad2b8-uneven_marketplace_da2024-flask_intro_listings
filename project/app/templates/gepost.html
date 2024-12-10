@@ -363,8 +363,12 @@
                 <li><a href="{{ url_for('main.gekocht') }}">Mijn aangekochte reizen</a></li>
                 <li><a href="{{ url_for('main.gepost') }}">Mijn geüploade reizen</a></li>
                 <li><a href="{{ url_for('main.favoriet') }}">Mijn favorieten</a></li>
+                <!-- Toegevoegde knoppen -->
+                <li><a href="{{ url_for('main.connecties') }}">Mijn connecties</a></li>
+                <li><a href="{{ url_for('main.zoekconnecties') }}">Zoek connecties</a></li>
             </ul>
         </aside>
+        
 
         <main class="content">
             <h1>Mijn Geüploade Reizen</h1>
@@ -412,15 +416,14 @@
             {% if geposte_reizen %}
             {% for reis in geposte_reizen %}
             <div class="travel-item">
-                <!-- Boost-knop -->
                 <a href="{{ url_for('main.boost_payment', goodid=reis.goodid) }}" class="boost-button">
                     Reis Boosten
                 </a>
-                
                 <h2>{{ reis.titleofitinerary }}</h2>
                 <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
                 <p><strong>Prijs (€):</strong> {{ reis.price }}</p>
-            
+                <p><strong>Aantal keer verkocht:</strong> {{ reis.aantal_aankopen }}</p>
+                       
                 <!-- Open PDF-knop -->
                 {% if reis.pdf_url %}
                 <a href="{{ url_for('main.download_pdf', goodid=reis.goodid) }}" target="_blank" class="add-button">

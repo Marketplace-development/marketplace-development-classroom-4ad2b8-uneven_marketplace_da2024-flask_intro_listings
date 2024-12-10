@@ -344,6 +344,7 @@ def gepost():
     return render_template('gepost.html', user=user, geposte_reizen=geposte_reizen)
 
 
+
 @main.route('/download_aankoop_pdf/<gekochtid>', methods=['GET'])
 def download_aankoop_pdf(gekochtid):
     # Haal de aankoop op uit de database

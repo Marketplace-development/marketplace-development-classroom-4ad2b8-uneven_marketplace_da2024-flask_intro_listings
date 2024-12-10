@@ -133,6 +133,7 @@
             padding: 15px;
             border: 1px solid #ddd;
             border-radius: 8px;
+            margin-right: 20px;
         }
 
         .section div {
@@ -184,6 +185,28 @@
         button.ontvolg:hover {
             background-color: #808080; /* Donkergrijs */
         }
+        
+        .profile-header {
+            display: flex;
+            align-items: center; /* Zorgt dat de afbeelding en tekst op dezelfde lijn staan */
+            gap: 20px; /* Vergroot de ruimte tussen de foto en de naam */
+            margin-bottom: 20px; /* Optionele extra marge onder de header */
+        }
+        
+        .profile-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd; /* Optionele rand om de afbeelding */
+        }
+        
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f3d2b; /* Tekstkleur aanpassen indien nodig */
+        }
+        
     </style>
 </head>
 <body>
@@ -214,7 +237,8 @@
             <input type="text" id="search-bar" placeholder="Zoek op voornaam of achternaam...">
             <div class="section" id="user-list">
                 {% for user in users %}
-                <div>
+                <div class="profile-header">
+                    <img src="{{ user.profilepicture if user.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                     <a href="{{ url_for('main.user_profile', userid=user.userid) }}">
                         {{ user.firstname }} {{ user.lastname }}
                     </a>

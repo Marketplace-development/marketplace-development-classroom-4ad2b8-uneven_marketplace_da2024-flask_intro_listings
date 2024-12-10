@@ -228,6 +228,7 @@
                     {% if followers %}
                         {% for follower in followers %}
                         <div class="connection-item">
+                            <img src="{{ follower.profilepicture if follower.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                             <p>{{ follower.firstname }} {{ follower.lastname }}</p>
                             <form method="POST" action="{{ url_for('main.toggle_follow') }}">
                                 <input type="hidden" name="followed_id" value="{{ follower.userid }}">
@@ -251,6 +252,7 @@
                     {% if following %}
                         {% for followed in following %}
                         <div class="connection-item">
+                            <img src="{{ followed.profilepicture if followed.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                             <p>{{ followed.firstname }} {{ followed.lastname }}</p>
                             <form method="POST" action="{{ url_for('main.toggle_follow') }}">
                                 <input type="hidden" name="followed_id" value="{{ followed.userid }}">

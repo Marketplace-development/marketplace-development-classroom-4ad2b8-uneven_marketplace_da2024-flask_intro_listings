@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoek Connecties</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            color: #1f3d2b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            background: #24452e;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-button {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 12px 20px;
+            background: #2e5f3d;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .nav-button:hover {
+            background: #3c764b;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            background-color: #24452e; /* Groene achtergrond */
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #2e5f3d;
+            padding: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin: 15px 0;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 16px;
+            display: block;
+            padding: 10px;
+            background: #3c764b;
+            border-radius: 5px;
+        }
+
+        .sidebar a:hover {
+            background: #4f8a61;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px 30px;
+            background: #ffffff;
+            border-radius: 10px 10px 0 0; /* Maak de bovenhoeken afgerond */
+        }
+
+        .content h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #24452e;
+            text-align: center;
+        }
+
+        /* Zoekbalk */
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        /* Gebruikerslijst */
+        .section {
+            background: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .section div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .section div:last-child {
+            border-bottom: none;
+        }
+
+        .section a {
+            font-size: 16px;
+            color: #333;
+            text-decoration: none;
+            margin-right: auto; /* Zorgt dat de namen naar rechts worden uitgelijnd */
+        }
+
+        .section a:hover {
+            color: #24452e;
+        }
+
+        /* Knoppen voor Volgen/Ontvolgen */
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+            min-width: 100px; /* Zorgt dat knoppen dezelfde breedte hebben */
+            text-align: center;
+        }
+
+        button.volg {
+            background-color: #24452e; /* Donkergroen */
+        }
+
+        button.volg:hover {
+            background-color: #3c764b; /* Lichter groen */
+        }
+
+        button.ontvolg {
+            background-color: #a9a9a9; /* Grijs */
+        }
+
+        button.ontvolg:hover {
+            background-color: #808080; /* Donkergrijs */
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        <nav class="nav-links">
+            <h2 class="user-greeting">Hallo {{ user.firstname }}</h2>
+            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
+            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
+            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <ul>
+                <li><a href="{{ url_for('main.userpage') }}">Profielgegevens</a></li>
+                <li><a href="{{ url_for('main.gekocht') }}">Mijn aangekochte reizen</a></li>
+                <li><a href="{{ url_for('main.gepost') }}">Mijn geüploade reizen</a></li>
+                <li><a href="{{ url_for('main.favoriet') }}">Mijn favorieten</a></li>
+                <li><a href="{{ url_for('main.connecties') }}">Mijn connecties</a></li>
+                <li><a href="{{ url_for('main.zoekconnecties') }}">Zoek connecties</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <h1>Zoek Connecties</h1>
+
+            <!-- Zoekbalk -->
+            <input type="text" id="search-bar" placeholder="Zoek op voornaam of achternaam...">
+
+            <!-- Gebruikerslijst -->
+            <div class="section" id="user-list">
+                {% for user in users %}
+                <div>
+                    <a href="{{ url_for('main.user_profile', userid=user.userid) }}">
+                        {{ user.firstname }} {{ user.lastname }}
+                    </a>
+                    <form method="POST" action="{{ url_for('main.toggle_follow') }}">
+                        <input type="hidden" name="followed_id" value="{{ user.userid }}">
+                        <input type="hidden" name="referer_page" value="zoekconnecties">
+                        {% if user.is_followed %}
+                            <button type="submit" class="ontvolg">Ontvolgen</button>
+                        {% else %}
+                            <button type="submit" class="volg">Volgen</button>
+                        {% endif %}
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const searchBar = document.getElementById('search-bar');
+        const userList = document.getElementById('user-list');
+
+        searchBar.addEventListener('input', () => {
+            const query = searchBar.value.toLowerCase();
+            const users = userList.querySelectorAll('div');
+            users.forEach(user => {
+                const name = user.querySelector('a').innerText.toLowerCase();
+                user.style.display = name.includes(query) ? 'flex' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -118,3 +118,14 @@ class Feedback(db.Model):
 
     def __repr__(self):
         return f'<Feedback {self.feedbackid} - User: {self.userid}, Good: {self.targetgoodid}>'
+
+
+
+class Connections(db.Model):
+    __tablename__ = 'connections'
+    id = db.Column(db.Integer, primary_key=True)
+    follower_id = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)
+    followed_id = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)
+
+    # Metadata
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)

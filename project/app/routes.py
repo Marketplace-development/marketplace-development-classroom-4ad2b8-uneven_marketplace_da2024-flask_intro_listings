@@ -3,7 +3,7 @@ import datetime
 import uuid
 import json
 from flask import Blueprint, request, redirect, url_for, render_template, session
-from .models import db, Users, DigitalGoods, Gekocht, Favoriet, Feedback
+from .models import db, Users, DigitalGoods, Gekocht, Favoriet, Feedback, Connections
 from flask import flash
 from werkzeug.utils import secure_filename
 from .config import supabase
@@ -701,7 +701,6 @@ def profile():
     # Render de profielpagina met de gebruiker en reizen
     return render_template('profile.html', user=user, reizen=reizen)
 
-
 @main.route('/user/<userid>', methods=['GET'])
 def user_profile(userid):
     # Zoek de gebruiker op basis van de opgegeven userid
@@ -715,6 +714,7 @@ def user_profile(userid):
 
     # Render de profielpagina met de gegevens van de gebruiker en zijn/haar reizen
     return render_template('profile.html', user=user, reizen=reizen)
+
 
 @main.route('/boost_reis', methods=['POST'])
 def boost_reis():
@@ -758,5 +758,90 @@ def boost_payment(goodid):
 
     # Render de betaalpagina
     return render_template('boost_payment.html', reis=reis)
+
+@main.route('/connecties', methods=['GET', 'POST'])
+def connecties():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    user = Users.query.get(session['userid'])
+
+    if not user:
+        return redirect(url_for('main.logout'))
+
+    # Volgers ophalen
+    followers = Users.query.join(Connections, Connections.follower_id == Users.userid).filter(Connections.followed_id == user.userid).all()
+
+    # Gevolgden ophalen
+    following = Users.query.join(Connections, Connections.followed_id == Users.userid).filter(Connections.follower_id == user.userid).all()
+
+    return render_template('connecties.html', user=user, followers=followers, following=following)
+
+@main.route('/zoekconnecties', methods=['GET'])
+def zoekconnecties():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    search_term = request.args.get('search', '').strip()
+    current_user_id = session['userid']
+
+    # Zoek gebruikers, sluit de ingelogde gebruiker uit
+    query = Users.query.filter(Users.userid != current_user_id)
+    if search_term:
+        query = query.filter(
+            (Users.firstname.ilike(f"%{search_term}%")) |
+            (Users.lastname.ilike(f"%{search_term}%"))
+        )
+
+    # Haal gebruikers op
+    users = query.all()
+
+    # Markeer welke gebruikers gevolgd worden door de huidige gebruiker
+    following_ids = {conn.followed_id for conn in Connections.query.filter_by(follower_id=current_user_id).all()}
+    for user in users:
+        user.is_followed = user.userid in following_ids
+
+    return render_template('zoekconnecties.html', user=Users.query.get(current_user_id), users=users)
+
+@main.route('/toggle_follow', methods=['POST'])
+def toggle_follow():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    follower_id = session['userid']
+    followed_id = request.form.get('followed_id')
+
+    if not followed_id or follower_id == followed_id:
+        flash("Ongeldige actie.", "danger")
+        return redirect(url_for('main.index'))
+
+    # Zoek naar bestaande verbinding
+    connection = Connections.query.filter_by(follower_id=follower_id, followed_id=followed_id).first()
+
+    if connection:
+        # Ontvolgen
+        db.session.delete(connection)
+        db.session.commit()
+        flash("Je hebt de gebruiker ontvolgd.", "success")
+    else:
+        # Volgen
+        new_connection = Connections(follower_id=follower_id, followed_id=followed_id)
+        db.session.add(new_connection)
+        db.session.commit()
+        flash("Je volgt de gebruiker nu.", "success")
+
+    # Bepaal de referer-pagina en leid de gebruiker daarheen terug
+    referer = request.headers.get('Referer')
+    if referer:
+        if 'zoekconnecties' in referer:
+            return redirect(url_for('main.zoekconnecties'))
+        elif 'user' in referer:
+            return redirect(url_for('main.user_profile', userid=followed_id))
+        elif 'connecties' in referer:
+            return redirect(url_for('main.connecties'))
+        # Voeg hier extra checks toe voor andere pagina's indien nodig
+
+    # Standaard terugvaloptie
+    return redirect(url_for('main.index'))
 
 

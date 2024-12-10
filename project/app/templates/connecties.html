@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profiel Instellingen</title>
+    <title>Connecties</title>
     <style>
         body {
             font-family: 'Georgia', serif;
@@ -117,45 +117,81 @@
             border-radius: 8px;
         }
 
-        .section h2 {
-            font-size: 18px; /* Sectietitel kleiner dan hoofdtitel */
+        
+        .connections-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-top: 20px;
         }
-
-        .section label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 16px;
-            color: #1f3d2b;
-        }
-
-        .section input,
-        .section select,
-        .section textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+    
+        .connections-list {
+            flex: 1;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            max-height: 500px;
+            overflow-y: auto; /* Scrollen als de lijst te lang is */
+        }
+    
+        .connections-list h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #24452e;
+        }
+    
+        .connection-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            font-size: 16px;
             color: #333;
         }
-
-        .save-button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background: #2e5f3d;
-            color: #ffffff;
+        
+        .connection-item p {
+            margin: 0;
+            text-align: right; /* Rechts uitlijnen van de namen */
+            flex: 1;
+        }
+        
+        .connection-item form {
+            margin-left: 20px;
+        }
+        
+        .connection-item button {
+            padding: 5px 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 14px;
+            color: white;
+            background-color: #24452e;
+        }
+        
+        .connection-item button.ontvolg {
+            background-color: #a9a9a9;
+        }
+        
+        .connection-item button:hover {
+            background-color: #3c764b;
+        }
+        
+    
+        .connections-container h1 {
             text-align: center;
+            color: #24452e;
         }
-
-        .save-button:hover {
-            background: #4f8a61;
+    
+        .connections-container p {
+            text-align: center;
+            color: #888;
         }
+      
+        
     </style>
 </head>
 <body>
@@ -184,81 +220,53 @@
 
         <!-- Hoofdgedeelte -->
         <main class="content">
-            <h1>Profielgegevens</h1>
-            <form class="section" method="POST">
-                <div class="form-row">
-                    <label for="firstname">Voornaam:</label>
-                    <input type="text" id="firstname" name="firstname" value="{{ user.firstname }}" required>
-                </div>
-                <div class="form-row">
-                    <label for="lastname">Achternaam:</label>
-                    <input type="text" id="lastname" name="lastname" value="{{ user.lastname }}" required>
-                </div>
-                <div class="form-row">
-                    <label for="email">E-mailadres:</label>
-                    <input type="email" id="email" name="email" value="{{ user.email }}" required>
-                </div>
-                <div class="form-row">
-                    <label for="phone">Telefoonnummer:</label>
-                    <input type="text" id="phone" name="phone" value="{{ user.phone or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="address">Straat en huisnummer:</label>
-                    <input type="text" id="address" name="address" value="{{ user.address or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="city">Stad:</label>
-                    <input type="text" id="city" name="city" value="{{ user.city or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="postalcode">Postcode:</label>
-                    <input type="text" id="postalcode" name="postalcode" value="{{ user.postalcode or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="country">Land:</label>
-                    <input type="text" id="country" name="country" value="{{ user.country or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="nationality">Nationaliteit:</label>
-                    <input type="text" id="nationality" name="nationality" value="{{ user.nationality or '' }}">
-                </div>
-                <div class="form-row">
-                    <button type="submit" class="save-button">Wijzigingen opslaan</button>
-                </div>
-                
-            </form>
-
-            <h1>Wachtwoord aanpassen</h1>
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        <div class="flashes">
-                        {% for category, message in messages %}
-                            <div class="alert {{ category }}">
-                                {{ message }}
-                            </div>
+            <h1>Connecties</h1>
+            <div class="connections-container">
+                <!-- Kolom voor volgers -->
+                <div class="connections-list">
+                    <h2>Volgers</h2>
+                    {% if followers %}
+                        {% for follower in followers %}
+                        <div class="connection-item">
+                            <p>{{ follower.firstname }} {{ follower.lastname }}</p>
+                            <form method="POST" action="{{ url_for('main.toggle_follow') }}">
+                                <input type="hidden" name="followed_id" value="{{ follower.userid }}">
+                                <input type="hidden" name="referer_page" value="connecties">
+                                {% if follower.is_followed %}
+                                <button type="submit" class="ontvolg">Ontvolgen</button>
+                                {% else %}
+                                <button type="submit" class="volg">Volgen</button>
+                                {% endif %}
+                            </form>
+                        </div>
                         {% endfor %}
-                        </div>
+                    {% else %}
+                        <p>Je hebt nog geen volgers.</p>
                     {% endif %}
-                {% endwith %}
-    
-                <div class="section">
-                    <form method="POST" action="/change_password">
-                        <div class="form-group">
-                            <label for="current_password">Huidig wachtwoord:</label>
-                            <input type="password" id="current_password" name="current_password" placeholder="Voer je huidige wachtwoord in" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="new_password">Nieuw wachtwoord:</label>
-                            <input type="password" id="new_password" name="new_password" placeholder="Voer een nieuw wachtwoord in" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="confirm_password">Bevestig nieuw wachtwoord:</label>
-                            <input type="password" id="confirm_password" name="confirm_password" placeholder="Bevestig je nieuwe wachtwoord" required>
-                        </div>
-                        <button type="submit" class="save-button">Wachtwoord opslaan</button>
-                    </form>
                 </div>
+            
+                <!-- Kolom voor gevolgd -->
+                <div class="connections-list">
+                    <h2>Volgend</h2>
+                    {% if following %}
+                        {% for followed in following %}
+                        <div class="connection-item">
+                            <p>{{ followed.firstname }} {{ followed.lastname }}</p>
+                            <form method="POST" action="{{ url_for('main.toggle_follow') }}">
+                                <input type="hidden" name="followed_id" value="{{ followed.userid }}">
+                                <input type="hidden" name="referer_page" value="connecties">
+                                <button type="submit" class="ontvolg">Ontvolgen</button>
+                            </form>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>Je volgt nog niemand.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
         </main>
+        
     </div>
 </body>
 </html>

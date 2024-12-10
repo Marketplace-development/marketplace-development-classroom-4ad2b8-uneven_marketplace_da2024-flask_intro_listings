@@ -22,7 +22,6 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            position: relative;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -91,6 +90,7 @@
             background: #f5f5f5;
             border: 1px solid #ddd;
             border-radius: 8px;
+            position: relative;
         }
 
         .profile-card {
@@ -152,6 +152,31 @@
         .back-button:hover {
             background: #4f8a61;
         }
+
+        /* Volgen/Ontvolgen-knop */
+        .follow-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .follow-toggle button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+            background-color: #24452e;
+        }
+
+        .follow-toggle button.ontvolg {
+            background-color: #a9a9a9;
+        }
+
+        .follow-toggle button:hover {
+            background-color: #3c764b;
+        }
     </style>
 </head>
 <body>
@@ -171,6 +196,20 @@
 
     <main class="content">
         <div class="section">
+            <!-- Volgen/Ontvolgen-knop -->
+            <div class="follow-toggle">
+                <form method="POST" action="{{ url_for('main.toggle_follow') }}">
+                    <input type="hidden" name="followed_id" value="{{ user.userid }}">
+                    <input type="hidden" name="referer_page" value="user_profile">
+                    {% if user.is_followed %}
+                        <button type="submit" class="ontvolg">Ontvolgen</button>
+                    {% else %}
+                        <button type="submit" class="volg">Volgen</button>
+                    {% endif %}
+                </form>
+            </div>
+            
+
             <h1>Profiel van {{ user.firstname }} {{ user.lastname }}</h1>
 
             <div class="profile-card">

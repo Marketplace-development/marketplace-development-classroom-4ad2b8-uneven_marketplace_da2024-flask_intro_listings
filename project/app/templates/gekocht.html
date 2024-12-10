@@ -181,6 +181,15 @@
         .delete-button:hover {
             background-color: #c9302c;
         }
+
+        a {
+            color: #24452e;
+            text-decoration: underline;
+        }
+
+        a:hover {
+            color: #3c764b;
+        }
     </style>
 </head>
 <body>
@@ -219,7 +228,11 @@
                     <div>
                         <h2>{{ aankoop.good.titleofitinerary }}</h2>
                         <p style="color: #666; margin-bottom: 15px;">
-                            Gepost door {{ aankoop.eigenaar.firstname }} {{ aankoop.eigenaar.lastname }} uit {{ aankoop.eigenaar.country }}
+                            Gepost door 
+                            <a href="{{ url_for('main.user_profile', userid=aankoop.eigenaar.userid) }}">
+                                {{ aankoop.eigenaar.firstname }} {{ aankoop.eigenaar.lastname }}
+                            </a>
+                            uit {{ aankoop.eigenaar.country }}
                         </p>
                         <p><strong>Beschrijving:</strong> {{ aankoop.good.descriptionofitinerary }}</p>
                         <p><strong>Prijs (€):</strong> {{ aankoop.good.price }}</p>

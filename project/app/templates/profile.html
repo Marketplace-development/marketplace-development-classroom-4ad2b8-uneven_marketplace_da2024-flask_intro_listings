@@ -201,6 +201,30 @@
             background-color: #3c764b;
             transform: translateY(-2px);
         }
+
+        .profile-container {
+            display: flex;
+            align-items: center; /* Zorgt dat afbeelding en tekst op dezelfde hoogte zijn */
+            justify-content: space-between; /* Plaatst tekst en afbeelding aan beide kanten */
+            gap: 20px; /* Ruimte tussen tekst en afbeelding */
+        }
+        
+        .profile-text {
+            flex: 1; /* Tekst neemt de resterende ruimte in */
+        }
+        
+        .profile-picture {
+            flex-shrink: 0; /* Zorgt dat de afbeelding niet verkleind wordt */
+        }
+        
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd; /* Optionele rand om de afbeelding */
+        }
+        
     </style>
 </head>
 <body>
@@ -223,25 +247,34 @@
             <h1>Profiel van {{ user.firstname }} {{ user.lastname }}</h1>
 
             <div class="profile-card">
-                <div class="profile-row">
-                    <span class="icon">📧</span>
-                    <p><strong>Email:</strong> {{ user.email }}</p>
-                </div>
-                <div class="profile-row">
-                    <span class="icon">📞</span>
-                    <p><strong>Telefoonnummer:</strong> {{ user.phone or 'Niet opgegeven' }}</p>
-                </div>
-                <div class="profile-row">
-                    <span class="icon">🆔</span>
-                    <p><strong>Nationaliteit:</strong> {{ user.nationality or 'Niet opgegeven' }}</p>
-                </div>
-                <div class="profile-row">
-                    <span class="icon">🏙️</span>
-                    <p><strong>Stad:</strong> {{ user.city or 'Niet opgegeven' }}</p>
-                </div>
-                <div class="profile-row">
-                    <span class="icon">🌍</span>
-                    <p><strong>Land:</strong> {{ user.country or 'Niet opgegeven' }}</p>
+                <div class="profile-container">
+                    <div class="profile-picture">
+                        {% if user.profilepicture %}
+                            <img src="{{ user.profilepicture }}" alt="Profielfoto" class="profile-img" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
+                        {% endif %}
+                    </div>
+                    <div class="profile-text">
+                        <div class="profile-row">
+                            <span class="icon">📧</span>
+                            <p><strong>Email:</strong> {{ user.email }}</p>
+                        </div>
+                        <div class="profile-row">
+                            <span class="icon">📞</span>
+                            <p><strong>Telefoonnummer:</strong> {{ user.phone or 'Niet opgegeven' }}</p>
+                        </div>
+                        <div class="profile-row">
+                            <span class="icon">🆔</span>
+                            <p><strong>Nationaliteit:</strong> {{ user.nationality or 'Niet opgegeven' }}</p>
+                        </div>
+                        <div class="profile-row">
+                            <span class="icon">🏙️</span>
+                            <p><strong>Stad:</strong> {{ user.city or 'Niet opgegeven' }}</p>
+                        </div>
+                        <div class="profile-row">
+                            <span class="icon">🌍</span>
+                            <p><strong>Land:</strong> {{ user.country or 'Niet opgegeven' }}</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="action-buttons">

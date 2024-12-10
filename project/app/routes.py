@@ -831,13 +831,27 @@ def boost_payment(goodid):
             reis.createdat = datetime.datetime.utcnow()
             db.session.commit()
             flash(f'Reis "{reis.titleofitinerary}" is succesvol geboost!', 'success')
-            return redirect(url_for('main.gepost'))
+            return redirect(url_for('main.boost_confirm', goodid=goodid))
         else:
             flash('Betaling mislukt. Probeer het opnieuw.', 'error')
             return redirect(url_for('main.boost_payment', goodid=goodid))
 
     # Render de betaalpagina
     return render_template('boost_payment.html', reis=reis)
+
+@main.route('/boost_confirm/<goodid>', methods=['GET'])
+def boost_confirm(goodid):
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    reis = DigitalGoods.query.filter_by(goodid=goodid, userid=session['userid']).first()
+
+    if not reis:
+        flash('Reis niet gevonden.', 'error')
+        return redirect(url_for('main.gepost'))
+
+    return render_template('boost_confirm.html', reis=reis)
+
 
 @main.route('/connecties', methods=['GET', 'POST'])
 def connecties():

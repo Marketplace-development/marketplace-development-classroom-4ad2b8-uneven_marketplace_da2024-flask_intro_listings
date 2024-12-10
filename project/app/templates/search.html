@@ -114,7 +114,7 @@
             margin-bottom: 20px;
         }
 
-        .search-bar input, .filter-bar input {
+        .search-bar input, .filter-bar input, .filter-bar select {
             width: 100%;
             padding: 10px;
             border-radius: 5px;
@@ -219,9 +219,21 @@
         <div class="filter-bar">
             <form action="{{ url_for('main.search') }}" method="get">
                 <label for="min_price">Prijs van:</label>
-                <input type="number" name="min_price" id="min_price" placeholder="€" value="{{ request.args.get('min_price', '') }}" style="width: 80px;">
+                <input type="number" name="min_price" id="min_price" placeholder="€" value="{{ min_price }}" style="width: 80px;">
                 <label for="max_price">tot:</label>
-                <input type="number" name="max_price" id="max_price" placeholder="€" value="{{ request.args.get('max_price', '') }}" style="width: 80px;">
+                <input type="number" name="max_price" id="max_price" placeholder="€" value="{{ max_price }}" style="width: 80px;">
+                
+                <<label for="city">Stad:</label>
+                <select name="city" id="city">
+                    <option value="">Alle steden</option>
+                    {% for city in available_cities %}
+                        <option value="{{ city }}" {% if city == city %}selected{% endif %}>
+                            {{ city | capitalize }}
+                        </option>
+                    {% endfor %}
+                </select>
+                
+                
                 <button type="submit">Filter</button>
             </form>
         </div>
@@ -267,4 +279,3 @@
         </div>        
     </div>
 </body>
-</html>

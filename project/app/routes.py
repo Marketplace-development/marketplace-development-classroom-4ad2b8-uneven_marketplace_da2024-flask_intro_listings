@@ -390,9 +390,33 @@ def search():
     zoekterm = request.args.get('zoekterm', '').strip()
     min_price = request.args.get('min_price', type=float)
     max_price = request.args.get('max_price', type=float)
+    city = request.args.get('city', '').strip().lower()  # Normaliseer naar kleine letters
 
-    # Haal reizen op en sorteer op createdat (nieuwste eerst)
-    reizen = DigitalGoods.query.order_by(DigitalGoods.createdat.desc()).all()
+    # Haal unieke steden op en converteer naar kleine letters voor consistentie
+    available_cities = sorted(set(
+        result.start_city.lower() for result in 
+        DigitalGoods.query.with_entities(DigitalGoods.start_city).distinct()
+        if result.start_city  # Controleer of de stad niet leeg is
+    ))
+
+    # Begin met een query
+    query = DigitalGoods.query.order_by(DigitalGoods.createdat.desc())
+
+    # Filter op zoekterm
+    if zoekterm:
+        query = query.filter(DigitalGoods.titleofitinerary.ilike(f'%{zoekterm}%'))
+
+    # Filter op prijs
+    if min_price is not None:
+        query = query.filter(DigitalGoods.price >= min_price)
+    if max_price is not None:
+        query = query.filter(DigitalGoods.price <= max_price)
+
+    # Filter op stad, hoofdletterongevoelig
+    if city:
+        query = query.filter(DigitalGoods.start_city.ilike(city))
+
+    reizen = query.all()
 
     for reis in reizen:
         reis.user = Users.query.filter_by(userid=reis.userid).first()
@@ -400,22 +424,10 @@ def search():
             reis.image_urls = json.loads(reis.image_urls) if reis.image_urls else []
         except json.JSONDecodeError:
             reis.image_urls = []
-        
         reis.review_count = Feedback.query.filter_by(targetgoodid=reis.goodid).count()
-
-    # Filter op zoekterm en prijs
-    if zoekterm:
-        reizen = [reis for reis in reizen if zoekterm.lower() in reis.titleofitinerary.lower()]
-
-    # Filter op prijs
-    if min_price is not None:
-        reizen = [reis for reis in reizen if reis.price >= min_price]
-    if max_price is not None:
-        reizen = [reis for reis in reizen if reis.price <= max_price]
 
     favorieten = [favoriet.goodid for favoriet in Favoriet.query.filter_by(userid=session['userid']).all()]
 
-    # Render de template en stuur de reizen en filters naar de frontend
     return render_template(
         'search.html',
         user=user,
@@ -423,8 +435,12 @@ def search():
         favorieten=favorieten,
         zoekterm=zoekterm,
         min_price=min_price,
-        max_price=max_price
+        max_price=max_price,
+        city=city,
+        available_cities=available_cities
     )
+
+
 
 
 

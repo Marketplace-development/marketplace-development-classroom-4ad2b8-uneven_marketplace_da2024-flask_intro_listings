@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Tales - Zoek een Reis</title>
+    <title>Mijn Geüploade Reizen</title>
     <style>
+        /* Algemene stijlen */
         body {
             font-family: 'Georgia', serif;
             margin: 0;
             padding: 0;
-            background: #1f3d2b;
-            color: #ffffff;
+            background: #ffffff;
+            color: #1f3d2b;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -22,9 +23,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            position: relative;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -89,105 +88,166 @@
             color: #e6ffe6;
         }
 
-        .container {
-            padding: 20px 40px;
-            width: 80%;
-            max-width: 2000px;
-            margin: 20px auto;
-            background: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            font-family: 'Georgia', serif;
-            color: #24452e;
+        .main-container {
+            display: flex;
+            flex: 1;
         }
 
-        .container h1 {
+        .sidebar {
+            width: 250px;
+            background: #2e5f3d;
+            padding: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin: 15px 0;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 16px;
+            display: block;
+            padding: 10px;
+            background: #3c764b;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background: #4f8a61;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px 30px;
+            background: #ffffff;
+        }
+
+        h1 {
             font-size: 24px;
             margin-bottom: 20px;
-            font-weight: bold;
-            text-align: center;
         }
 
-        .search-bar, .filter-bar {
-            width: calc(100% - 80px);
-            margin: 0 auto;
-            margin-bottom: 20px;
-        }
-
-        .search-bar input, .filter-bar input, .filter-bar select {
+        #map {
             width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            font-family: 'Georgia', serif;
-            background: #fff;
-            color: #24452e;
-        }
-
-        .filter-bar form {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .filter-bar label {
-            font-size: 16px;
-        }
-
-        .filter-bar button {
-            padding: 5px 15px;
-            border: none;
-            border-radius: 5px;
-            background: #2e5f3d;
-            color: white;
-            cursor: pointer;
-        }
-
-        .travel-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            height: 400px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
         }
 
         .travel-item {
-            background: #e9f5e9;
+            position: relative;
+            border: 1px solid #ddd;
             padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
         }
 
         .travel-item h2 {
-            margin: 0 0 10px;
             font-size: 20px;
-        }
-
-        .travel-item a.title-link {
-            text-decoration: none;
-        }
-
-        .travel-item a.title-link u {
-            text-decoration: underline;
-        }
-
-        .travel-item a.review-link {
-            text-decoration: underline;
             color: #24452e;
+            margin: 0 0 10px;
+            display: inline-block;
         }
 
-        .favorite-button {
-            background: none;
+        .boost-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 12px;
+            font-size: 14px;
+            background-color: #2e5f3d;
+            color: white;
             border: none;
-            color: red;
-            font-size: 24px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: color 0.3s ease;
+            transition: background 0.3s ease;
         }
 
-        .favorite-button:hover {
-            color: darkred;
+        .boost-button:hover {
+            background-color: #4f8a61;
+        }
+
+        .add-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #24452e;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            transition: background 0.3s ease;
+        }
+
+        .add-button:hover {
+            background-color: #3c764b;
+        }
+
+        .edit-form,
+        .delete-form {
+            margin-top: 15px;
+        }
+
+        .edit-form label {
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        .edit-form input,
+        .edit-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .save-button,
+        .delete-button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .save-button {
+            background-color: #24452e;
+            color: white;
+        }
+
+        .save-button:hover {
+            background-color: #3c764b;
+        }
+
+        .delete-button {
+            background-color: #d3d3d3;
+            color: black;
+        }
+
+        .delete-button:hover {
+            background-color: #a9a9a9;
         }
     </style>
+    <!-- Voeg Leaflet.js toe -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <header class="main-header">
@@ -198,82 +258,94 @@
             <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
         </div>
         <nav class="nav-links">
-            {% if user %}
-                <h2>Hallo {{ user.firstname }}</h2>
-            {% else %}
-                <h2>Welkom, gast!</h2>
-            {% endif %}
+            <h2>Hallo {{ user.firstname }}</h2>
             <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
             <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
             <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
         </nav>
     </header>
-  
-    <div class="container">
-        <h1>Zoek een Reis</h1>
-        <div class="search-bar">
-            <form action="{{ url_for('main.search') }}" method="get">
-                <input type="text" name="zoekterm" placeholder="Zoek op titel..." value="{{ zoekterm }}">
-            </form>
-        </div>
-        <div class="filter-bar">
-            <form action="{{ url_for('main.search') }}" method="get">
-                <label for="min_price">Prijs van:</label>
-                <input type="number" name="min_price" id="min_price" placeholder="€" value="{{ min_price }}" style="width: 80px;">
-                <label for="max_price">tot:</label>
-                <input type="number" name="max_price" id="max_price" placeholder="€" value="{{ max_price }}" style="width: 80px;">
-                
-                <label for="city">Stad:</label>
-                <select name="city" id="city">
-                    <option value="">Alle steden</option>
-                    {% for city in available_cities %}
-                        <option value="{{ city }}" {% if city == city %}selected{% endif %}>{{ city }}</option>
-                    {% endfor %}
-                </select>
-                
-                <button type="submit">Filter</button>
-            </form>
-        </div>
-        <div class="travel-list">
-            {% if reizen %}
-                {% for reis in reizen %}
-                <div class="travel-item">
-                    <img src="{{ reis.image_urls[0] if reis.image_urls else '/static/default_image.jpg' }}" style="width: auto; height: 100px;">
-                    <h2>
-                        <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" class="title-link">
-                            <u>{{ reis.titleofitinerary }}</u>
-                        </a>
-                    </h2>
-                    <p style="color: #666; margin-bottom: 15px;">
-                        Gepost door 
-                        <a href="{{ url_for('main.user_profile', userid=reis.user.userid) }}" style="color: #24452e; text-decoration: underline;">
-                            {{ reis.user.firstname }} {{ reis.user.lastname }}
-                        </a> 
-                        uit {{ reis.user.country }}
-                    </p>
-                    <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
-                    <p><strong>Prijs:</strong> €{{ reis.price }}</p>
-                    <p><strong>Beoordelingen:</strong> 
-                        <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" class="review-link">
-                            {{ reis.review_count }} reviews
-                        </a>
-                    </p>
-                    <form action="{{ url_for('main.toggle_favoriet') }}" method="POST" style="display: flex; justify-content: flex-end;">
-                        <input type="hidden" name="goodid" value="{{ reis.goodid }}">
-                        <button type="submit" class="favorite-button" title="Favoriet">
-                            {% if reis.goodid in favorieten %}
-                            ❤️
-                            {% else %}
-                            🤍
-                            {% endif %}
-                        </button>
-                    </form>
-                </div>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <ul>
+                <li><a href="{{ url_for('main.userpage') }}">Profielgegevens</a></li>
+                <li><a href="{{ url_for('main.gekocht') }}">Mijn aangekochte reizen</a></li>
+                <li><a href="{{ url_for('main.gepost') }}">Mijn geüploade reizen</a></li>
+                <li><a href="{{ url_for('main.favoriet') }}">Mijn favorieten</a></li>
+                <li><a href="{{ url_for('main.connecties') }}">Mijn connecties</a></li>
+                <li><a href="{{ url_for('main.zoekconnecties') }}">Zoek connecties</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <h1>Mijn Geüploade Reizen</h1>
+
+            <!-- Kaart -->
+            <div id="map"></div>
+
+            <script>
+                var map = L.map('map').setView([0, 0], 2);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: 'Kaartgegevens © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+
+                fetch('/api/travels')
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(reis => {
+                            if (reis.latitude && reis.longitude) {
+                                L.marker([reis.latitude, reis.longitude])
+                                    .addTo(map)
+                                    .bindPopup(`<b>${reis.titleofitinerary}</b><br>${reis.descriptionofitinerary}`);
+                            }
+                        });
+                    })
+                    .catch(error => console.error('Error fetching travel data:', error));
+            </script>
+
+            {% if geposte_reizen %}
+                {% for reis in geposte_reizen %}
+                    <div class="travel-item">
+                        <h2>{{ reis.titleofitinerary }}</h2>
+                        <form action="{{ url_for('main.boost_payment', goodid=reis.goodid) }}" method="GET" class="boost-form">
+                            <button type="submit" class="boost-button">Reis Boosten</button>
+                        </form>
+                        <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
+                        <p><strong>Prijs (€):</strong> {{ reis.price }}</p>
+                        {% if reis.pdf_url %}
+                            <a href="{{ url_for('main.download_pdf', goodid=reis.goodid) }}" target="_blank" class="add-button">
+                                Open mijn reis (PDF)
+                            </a>
+                        {% endif %}
+                        <form action="/gepost" method="POST" class="edit-form">
+                            <input type="hidden" name="goodid" value="{{ reis.goodid }}">
+                            <label for="titleofitinerary">Titel:</label>
+                            <input type="text" name="titleofitinerary" value="{{ reis.titleofitinerary }}" required>
+
+                            <label for="descriptionofitinerary">Beschrijving:</label>
+                            <textarea name="descriptionofitinerary" rows="3" required>{{ reis.descriptionofitinerary }}</textarea>
+
+                            <label for="price">Prijs (€):</label>
+                            <input type="number" name="price" value="{{ reis.price }}" required>
+
+                            <button type="submit" class="save-button">Wijzig deze reis</button>
+                        </form>
+
+                        <form action="{{ url_for('main.verwijder_reis') }}" method="POST" class="delete-form">
+                            <input type="hidden" name="goodid" value="{{ reis.goodid }}">
+                            <button type="submit" class="delete-button">Verwijder deze reis</button>
+                        </form>
+                    </div>
                 {% endfor %}
             {% else %}
-                <p>Geen reizen gevonden.</p>
+                <p>Je hebt nog geen reizen gepost.</p>
             {% endif %}
-        </div>        
+        </main>
     </div>
 </body>
 </html>
+
+
+

@@ -37,7 +37,6 @@ def register():
         nationality = request.form.get('nationality')
         profpic_file = request.files.get('profilePicture')
 
-
         # Controleer of de gebruiker al bestaat op basis van email of username
         if Users.query.filter((Users.email == email)).first():
             return "Email or Username already registered", 400
@@ -53,7 +52,6 @@ def register():
                 profile_picture_url = supabase.storage.from_("profile_pictures").get_public_url(f"profile_pictures/{unique_image_filename}")
             else:
                 return "Ongeldig bestandstype. Upload een afbeelding.", 400
-
 
         # Maak een nieuwe gebruiker aan
         new_user = Users(
@@ -221,7 +219,6 @@ def userpage():
         user.country = request.form.get('country')
         
         print(f"Aanwezig in request.files: {list(request.files.keys())}")
-
 
         profpic_file = request.files.get('profilePicture')
         if profpic_file:
@@ -429,29 +426,22 @@ def search():
     zoekterm = request.args.get('zoekterm', '').strip()
     min_price = request.args.get('min_price', type=float)
     max_price = request.args.get('max_price', type=float)
-    city = request.args.get('city', '').strip().lower()  # Normaliseer naar kleine letters
+    city = request.args.get('city', '').strip().lower()
 
-    # Haal unieke steden op en converteer naar kleine letters voor consistentie
     available_cities = sorted(set(
         result.start_city.lower() for result in 
         DigitalGoods.query.with_entities(DigitalGoods.start_city).distinct()
-        if result.start_city  # Controleer of de stad niet leeg is
+        if result.start_city
     ))
 
-    # Begin met een query
     query = DigitalGoods.query.order_by(DigitalGoods.createdat.desc())
 
-    # Filter op zoekterm
     if zoekterm:
         query = query.filter(DigitalGoods.titleofitinerary.ilike(f'%{zoekterm}%'))
-
-    # Filter op prijs
     if min_price is not None:
         query = query.filter(DigitalGoods.price >= min_price)
     if max_price is not None:
         query = query.filter(DigitalGoods.price <= max_price)
-
-    # Filter op stad, hoofdletterongevoelig
     if city:
         query = query.filter(DigitalGoods.start_city.ilike(city))
 
@@ -464,6 +454,13 @@ def search():
         except json.JSONDecodeError:
             reis.image_urls = []
         reis.review_count = Feedback.query.filter_by(targetgoodid=reis.goodid).count()
+
+        # Bereken het gemiddelde aantal sterren
+        reviews = Feedback.query.filter_by(targetgoodid=reis.goodid).all()
+        if reviews:
+            reis.gemiddelde_rating = sum(review.rating for review in reviews) / len(reviews)
+        else:
+            reis.gemiddelde_rating = 0
 
     favorieten = [favoriet.goodid for favoriet in Favoriet.query.filter_by(userid=session['userid']).all()]
 
@@ -478,8 +475,6 @@ def search():
         city=city,
         available_cities=available_cities
     )
-
-
 
 
 
@@ -530,7 +525,6 @@ def reisdetail(goodid):
     )
 
 
-
 @main.route('/koop/<goodid>', methods=['POST'])
 def koop(goodid):
     if 'userid' not in session:
@@ -564,7 +558,6 @@ def koop(goodid):
 
     return redirect(url_for('main.koopbevestiging'))
 
-
 @main.route('/koopbevestiging', methods=['GET'])
 def koopbevestiging():
     if 'userid' not in session:
@@ -575,7 +568,6 @@ def koopbevestiging():
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
     return render_template('koopbevestiging.html', user=user)
-
 
 @main.route('/verwijder_reis', methods=['POST'])
 def verwijder_reis():
@@ -594,11 +586,9 @@ def verwijder_reis():
     return redirect(url_for('main.gepost'))
 
 
-
 @main.route('/reisverwijderd', methods=['GET'])
 def reisverwijderd():
     return render_template('reisverwijderd.html')
-
 
 @main.route('/reistoegevoegd', methods=['GET'])
 def reistoegevoegd():
@@ -631,7 +621,6 @@ def verwijder_aankoop():
         flash('Er is iets misgegaan bij het verwijderen.', 'error')
 
     return render_template('aankoopverwijderd.html')
-
 
 @main.route('/toggle_favoriet', methods=['POST'])
 def toggle_favoriet():
@@ -674,7 +663,6 @@ def toggle_favoriet():
         return redirect(url_for('main.favoriet'))
     else:
         return redirect(url_for('main.search'))  # Fallback naar search
-
 
 @main.route('/review/<goodid>', methods=['GET'])
 def review_page(goodid):
@@ -741,7 +729,6 @@ def submit_review():
 def review_bedanking():
     return render_template('reviewbedanking.html')
 
-
 @main.route('/api/travels', methods=['GET'])
 def get_user_travels():
     if 'userid' not in session:
@@ -760,7 +747,6 @@ def get_user_travels():
             'longitude': t.longitude,
         } for t in travels
     ])
-
 
 
 @main.route('/profile', methods=['GET'])
@@ -809,7 +795,6 @@ def user_profile(userid):
         reizen=reizen, 
         is_following=is_following
     )
-
 
 @main.route('/boost_reis', methods=['POST'])
 def boost_reis():
@@ -938,5 +923,6 @@ def toggle_follow():
 
     # Standaard terugvaloptie
     return redirect(url_for('main.index'))
+
 
 

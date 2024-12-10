@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Tales - Zoek een Reis</title>
-    <style>
-        body {
-            font-family: 'Georgia', serif;
-            margin: 0;
-            padding: 0;
-            background: #1f3d2b;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Travel Tales - Zoek een Reis</title>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Georgia', serif;
+                margin: 0;
+                padding: 0;
+                background: #1f3d2b;
+                color: #ffffff;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+    
         .main-header {
             background: #24452e;
             padding: 20px 30px;
@@ -187,6 +188,12 @@
         .favorite-button:hover {
             color: darkred;
         }
+
+        .star-rating {
+            color: #ffa500;
+            font-size: 16px;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -222,8 +229,7 @@
                 <input type="number" name="min_price" id="min_price" placeholder="€" value="{{ min_price }}" style="width: 80px;">
                 <label for="max_price">tot:</label>
                 <input type="number" name="max_price" id="max_price" placeholder="€" value="{{ max_price }}" style="width: 80px;">
-                
-                <<label for="city">Stad:</label>
+                <label for="city">Stad:</label>
                 <select name="city" id="city">
                     <option value="">Alle steden</option>
                     {% for city in available_cities %}
@@ -232,8 +238,6 @@
                         </option>
                     {% endfor %}
                 </select>
-                
-                
                 <button type="submit">Filter</button>
             </form>
         </div>
@@ -242,11 +246,18 @@
                 {% for reis in reizen %}
                 <div class="travel-item">
                     <img src="{{ reis.image_urls[0] if reis.image_urls else '/static/default_image.jpg' }}" style="width: auto; height: 100px;">
-                    <h2>
-                        <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" class="title-link">
+                    <h2 style="color: #24452e;"> <!-- Donkergroen toegevoegd -->
+                        <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" class="title-link" style="color: #24452e; text-decoration: none;">
                             <u>{{ reis.titleofitinerary }}</u>
                         </a>
-                    </h2>
+                        {% if reis.review_count > 0 %}
+                            <span class="star-rating">
+                                {% for _ in range(reis.gemiddelde_rating|round(0, 'floor')|int) %}
+                                    ⭐
+                                {% endfor %}
+                            </span>
+                        {% endif %}
+                    </h2>                                        
                     <p style="color: #666; margin-bottom: 15px;">
                         Gepost door 
                         <a href="{{ url_for('main.user_profile', userid=reis.user.userid) }}" style="color: #24452e; text-decoration: underline;">
@@ -279,3 +290,6 @@
         </div>        
     </div>
 </body>
+</html>
+
+

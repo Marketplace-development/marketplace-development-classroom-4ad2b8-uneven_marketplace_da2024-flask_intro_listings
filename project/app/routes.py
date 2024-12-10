@@ -979,5 +979,16 @@ def verkochte_reizen():
         reis.verdiend = reis.aantal_aankopen * reis.price  # Bereken verdiensten voor de reis
         totaal_verdiend += reis.verdiend  # Tel op bij totaal verdiend
 
-    return render_template('reis_aankopen.html', reizen=reizen, totaal_verdiend=totaal_verdiend, user=user)
+    # Bereken het totaal uitgegeven bedrag door de gebruiker
+    gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
+    totaal_uitgegeven = sum([DigitalGoods.query.filter_by(goodid=aankoop.goodid).first().price for aankoop in gekochte_reizen])
+
+    return render_template(
+        'reis_aankopen.html',
+        reizen=reizen,
+        totaal_verdiend=totaal_verdiend,
+        totaal_uitgegeven=totaal_uitgegeven,
+        user=user
+    )
+
 

@@ -177,7 +177,9 @@
                     </div>
                 {% endfor %}
                 <div class="total">
-                    Totaal verdiend met alle reizen: €{{ totaal_verdiend }}
+                    <p>Totaal verdiend met alle reizen: €{{ totaal_verdiend }}</p>
+                    <p>Totaal uitgegeven door jou: €{{ totaal_uitgegeven }}</p>
+                    <p>Saldo: €{{ totaal_verdiend - totaal_uitgegeven }}</p>
                 </div>
             {% else %}
                 <p>Je hebt nog geen verkochte reizen.</p>

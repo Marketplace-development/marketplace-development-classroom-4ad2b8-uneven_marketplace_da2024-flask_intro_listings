@@ -32,3 +32,12 @@ class Rating(db.Model):
     rating = db.Column(db.Integer, nullable=False)
     review = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+class Favorite(db.Model):
+    __tablename__ = 'favorites'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'), nullable=False)
+
+    user = db.relationship('Customer', backref='favorites', lazy=True)
+    recipe = db.relationship('Recipe', backref='favorites', lazy=True)

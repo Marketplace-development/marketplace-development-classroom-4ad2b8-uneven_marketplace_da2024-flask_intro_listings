@@ -17,11 +17,12 @@
         }
 
         .main-header {
-            background: #24452e;
+            background: #24452e; /* Donkergroene achtergrond */
             padding: 20px 30px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -30,26 +31,41 @@
             font-weight: bold;
             color: #ffffff;
             text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
         .nav-links {
             display: flex;
             align-items: center;
             gap: 15px;
+            margin-left: auto; /* Zorgt ervoor dat de knoppen naar rechts verschuiven */
+        }
+
+        .nav-links h2.user-greeting {
+            color: #f0f0f0; /* Lichtgrijze tekst */
+            font-size: 18px;
+            margin: 0;
+            margin-right: 20px; /* Ruimte tussen de tekst en de knoppen */
+            font-weight: bold;
         }
 
         .nav-button {
             color: #ffffff;
             text-decoration: none;
             font-size: 16px;
-            padding: 12px 20px;
-            background: #2e5f3d;
+            padding: 12px 20px; /* Vergroot de breedte door de padding */
+            background: #2e5f3d; /* Groene achtergrond */
             border-radius: 5px;
-            text-align: center;
+            transition: background 0.3s ease, color 0.3s ease;
+            min-width: 120px; /* Minimale breedte voor knoppen */
+            text-align: center; /* Zorg ervoor dat de tekst gecentreerd blijft */
         }
 
         .nav-button:hover {
-            background: #3c764b;
+            background: #3c764b; /* Hover-kleur voor knoppen */
+            color: #e6ffe6; /* Lichtere tekstkleur tijdens hover */
         }
 
         .main-container {
@@ -102,7 +118,6 @@
             text-align: center;
         }
 
-        /* Zoekbalk */
         input[type="text"] {
             width: 100%;
             padding: 10px;
@@ -113,7 +128,6 @@
             box-sizing: border-box;
         }
 
-        /* Gebruikerslijst */
         .section {
             background: #f9f9f9;
             padding: 15px;
@@ -144,7 +158,6 @@
             color: #24452e;
         }
 
-        /* Knoppen voor Volgen/Ontvolgen */
         button {
             padding: 10px 20px;
             border: none;
@@ -198,11 +211,7 @@
 
         <main class="content">
             <h1>Zoek Connecties</h1>
-
-            <!-- Zoekbalk -->
             <input type="text" id="search-bar" placeholder="Zoek op voornaam of achternaam...">
-
-            <!-- Gebruikerslijst -->
             <div class="section" id="user-list">
                 {% for user in users %}
                 <div>

@@ -185,7 +185,19 @@
         <!-- Hoofdgedeelte -->
         <main class="content">
             <h1>Profielgegevens</h1>
-            <form class="section" method="POST">
+            <form class="section" id="profile-form" method="POST" action="/userpage" enctype="multipart/form-data">
+                <!-- Huidige profielfoto -->
+                <div class="profile-picture">
+                    <h3>Profielfoto:</h3>
+                    {% if user.profilepicture %}
+                        <img src="{{ user.profilepicture }}" alt="Profielfoto" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        <p>Geen profielfoto beschikbaar.</p>
+                    {% endif %}
+                    <label for="profilePicture">Nieuwe profielfoto uploaden:</label>
+                    <input type="file" id="profilePicture" name="profilePicture" accept=".jpg, .jpeg, .png, .gif">
+                </div>
+
                 <div class="form-row">
                     <label for="firstname">Voornaam:</label>
                     <input type="text" id="firstname" name="firstname" value="{{ user.firstname }}" required>
@@ -222,11 +234,21 @@
                     <label for="nationality">Nationaliteit:</label>
                     <input type="text" id="nationality" name="nationality" value="{{ user.nationality or '' }}">
                 </div>
+
                 <div class="form-row">
                     <button type="submit" class="save-button">Wijzigingen opslaan</button>
                 </div>
                 
             </form>
+            <script>
+                document.getElementById('profile-form').onsubmit = function(e) {
+                    const fileInput = document.getElementById('profilePicture');
+                    if (!fileInput.files || fileInput.files.length === 0) {
+                        alert("Selecteer een bestand voordat je verdergaat!");
+                        e.preventDefault(); // Voorkom verzending van het formulier
+                    }
+                };
+            </script>
 
             <h1>Wachtwoord aanpassen</h1>
                 {% with messages = get_flashed_messages(with_categories=true) %}

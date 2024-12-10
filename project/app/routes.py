@@ -219,6 +219,45 @@ def userpage():
         user.city = request.form.get('city')
         user.postalcode = request.form.get('postalcode')
         user.country = request.form.get('country')
+        
+        print(f"Aanwezig in request.files: {list(request.files.keys())}")
+
+
+        profpic_file = request.files.get('profilePicture')
+        if profpic_file:
+            if profpic_file.filename != '':
+                if profpic_file.filename.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
+                    try:
+                        # Upload nieuwe profielfoto naar Supabase
+                        image_filename = secure_filename(profpic_file.filename)
+                        unique_filename = f"{uuid.uuid4()}_{image_filename}"
+                        image_data = profpic_file.read()
+                        
+                        # Supabase upload
+                        supabase.storage.from_("profile_pictures").upload(f"profile_pictures/{unique_filename}", image_data)
+                        profile_picture_url = supabase.storage.from_("profile_pictures").get_public_url(f"profile_pictures/{unique_filename}")
+                        
+                        # Update database
+                        user.profilepicture = profile_picture_url
+                        print(f"Profielfoto geüpload: {profile_picture_url}")
+                    except Exception as e:
+                        print(f"Fout bij uploaden profielfoto: {e}")
+                        flash("Fout bij het bijwerken van de profielfoto.", "error")
+                else:
+                    print("Ongeldig bestandstype.")
+                    flash("Ongeldig bestandstype. Alleen JPG, PNG of GIF toegestaan.", "error")
+            else:
+                print("Leeg bestand ontvangen.")
+        else:
+            print("Geen bestand ontvangen in 'profilePicture'.")
+
+        # Sla wijzigingen op in de database
+        try:
+            db.session.commit()
+            print("Profiel succesvol opgeslagen.")
+        except Exception as e:
+            print(f"Fout bij opslaan in database: {e}")
+            flash("Fout bij het opslaan van wijzigingen.", "error")
 
         # Sla wijzigingen op in de database
         db.session.commit()

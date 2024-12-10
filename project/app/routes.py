@@ -390,6 +390,8 @@ def search():
     # Filter op zoekterm en prijs
     if zoekterm:
         reizen = [reis for reis in reizen if zoekterm.lower() in reis.titleofitinerary.lower()]
+
+    # Filter op prijs
     if min_price is not None:
         reizen = [reis for reis in reizen if reis.price >= min_price]
     if max_price is not None:
@@ -397,6 +399,7 @@ def search():
 
     favorieten = [favoriet.goodid for favoriet in Favoriet.query.filter_by(userid=session['userid']).all()]
 
+    # Render de template en stuur de reizen en filters naar de frontend
     return render_template(
         'search.html',
         user=user,
@@ -406,6 +409,7 @@ def search():
         min_price=min_price,
         max_price=max_price
     )
+
 
 
 @main.route('/reis/<goodid>', methods=['GET'])
@@ -448,6 +452,7 @@ def reisdetail(goodid):
     )
 
 
+
 @main.route('/koop/<goodid>', methods=['POST'])
 def koop(goodid):
     if 'userid' not in session:
@@ -481,6 +486,7 @@ def koop(goodid):
 
     return redirect(url_for('main.koopbevestiging'))
 
+
 @main.route('/koopbevestiging', methods=['GET'])
 def koopbevestiging():
     if 'userid' not in session:
@@ -491,6 +497,7 @@ def koopbevestiging():
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
     return render_template('koopbevestiging.html', user=user)
+
 
 @main.route('/verwijder_reis', methods=['POST'])
 def verwijder_reis():
@@ -509,9 +516,11 @@ def verwijder_reis():
     return redirect(url_for('main.gepost'))
 
 
+
 @main.route('/reisverwijderd', methods=['GET'])
 def reisverwijderd():
     return render_template('reisverwijderd.html')
+
 
 @main.route('/reistoegevoegd', methods=['GET'])
 def reistoegevoegd():
@@ -544,6 +553,7 @@ def verwijder_aankoop():
         flash('Er is iets misgegaan bij het verwijderen.', 'error')
 
     return render_template('aankoopverwijderd.html')
+
 
 @main.route('/toggle_favoriet', methods=['POST'])
 def toggle_favoriet():
@@ -586,6 +596,7 @@ def toggle_favoriet():
         return redirect(url_for('main.favoriet'))
     else:
         return redirect(url_for('main.search'))  # Fallback naar search
+
 
 @main.route('/review/<goodid>', methods=['GET'])
 def review_page(goodid):
@@ -652,21 +663,27 @@ def submit_review():
 def review_bedanking():
     return render_template('reviewbedanking.html')
 
+
 @main.route('/api/travels', methods=['GET'])
-def get_travels():
-    travels = DigitalGoods.query.all()  # Haal alle reizen op
-    travel_list = []
+def get_user_travels():
+    if 'userid' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
 
-    for travel in travels:
-        travel_list.append({
-            'id': travel.goodid,
-            'titleofitinerary': travel.titleofitinerary,
-            'descriptionofitinerary': travel.descriptionofitinerary,
-            'latitude': float(travel.latitude) if travel.latitude else None,
-            'longitude': float(travel.longitude) if travel.longitude else None
-        })
+    user = Users.query.get(session['userid'])
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
 
-    return jsonify(travel_list)
+    travels = DigitalGoods.query.filter_by(userid=user.userid).all()
+    return jsonify([
+        {
+            'titleofitinerary': t.titleofitinerary,
+            'descriptionofitinerary': t.descriptionofitinerary,
+            'latitude': t.latitude,
+            'longitude': t.longitude,
+        } for t in travels
+    ])
+
+
 
 @main.route('/profile', methods=['GET'])
 def profile():
@@ -683,6 +700,7 @@ def profile():
 
     # Render de profielpagina met de gebruiker en reizen
     return render_template('profile.html', user=user, reizen=reizen)
+
 
 @main.route('/user/<userid>', methods=['GET'])
 def user_profile(userid):

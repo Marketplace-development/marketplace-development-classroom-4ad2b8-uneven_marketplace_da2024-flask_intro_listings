@@ -1018,7 +1018,57 @@ def verkochte_reizen():
         user=user
     )
 
+@main.route('/filterpagina', methods=['GET', 'POST'])
+def filterpagina():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
 
+    user = Users.query.get(session['userid'])
+    if not user:
+        return redirect(url_for('main.logout'))
 
+    categories = Category.query.all()  # Haal alle beschikbare categorieën op
+    available_cities = sorted(set(
+        result.start_city.lower() for result in 
+        DigitalGoods.query.with_entities(DigitalGoods.start_city).distinct()
+        if result.start_city
+    ))
 
+    if request.method == 'POST':
+        # Haal filters op uit het formulier
+        zoekterm = request.form.get('zoekterm', '').strip()
+        min_price = request.form.get('min_price', type=float)
+        max_price = request.form.get('max_price', type=float)
+        city = request.form.get('city', '').strip().lower()
+        selected_categories = request.form.getlist('category_id')
 
+        # Bouw query voor gefilterde resultaten
+        query = DigitalGoods.query.order_by(DigitalGoods.createdat.desc())
+
+        if zoekterm:
+            query = query.filter(DigitalGoods.titleofitinerary.ilike(f'%{zoekterm}%'))
+        if min_price is not None:
+            query = query.filter(DigitalGoods.price >= min_price)
+        if max_price is not None:
+            query = query.filter(DigitalGoods.price <= max_price)
+        if city:
+            query = query.filter(DigitalGoods.start_city.ilike(city))
+        if selected_categories:
+            query = query.join(digitalgoods_categories).join(Category).filter(
+                Category.categoryid.in_(selected_categories)
+            )
+
+        gefilterde_reizen = query.all()
+
+        return render_template(
+            'filter_resultaten.html',  # Maak een aparte template voor de resultaten
+            user=user,
+            reizen=gefilterde_reizen
+        )
+
+    return render_template(
+        'filterpagina.html',  # Template voor het tonen van filters
+        user=user,
+        categories=categories,
+        available_cities=available_cities
+    )

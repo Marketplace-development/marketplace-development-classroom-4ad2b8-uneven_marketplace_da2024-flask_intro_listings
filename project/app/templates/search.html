@@ -264,42 +264,11 @@
   
     <div class="container">
         <h1>Zoek een Reis</h1>
-        <div class="search-bar">
-            <form action="{{ url_for('main.search') }}" method="get">
-                <input type="text" name="zoekterm" placeholder="Zoek op titel..." value="{{ zoekterm }}">
-            </form>
-        </div>
         <div class="filter-bar">
-            <form action="{{ url_for('main.search') }}" method="get">
-                <label for="min_price">Prijs van:</label>
-                <input type="number" name="min_price" id="min_price" placeholder="€" value="{{ min_price }}" style="width: 80px;">
-                <label for="max_price">tot:</label>
-                <input type="number" name="max_price" id="max_price" placeholder="€" value="{{ max_price }}" style="width: 80px;">
-                <label for="city">Stad:</label>
-                <select name="city" id="city">
-                    <option value="">Alle steden</option>
-                    {% for city in available_cities %}
-                        <option value="{{ city }}" {% if city == city %}selected{% endif %}>
-                            {{ city | capitalize }}
-                        </option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Filter</button>
-            </form>
+            <form action="{{ url_for('main.filterpagina') }}" method="get">
+                <button type="submit" class="nav-button">Filteren</button>
+            </form>        
         </div>
-        <div class="filter-categories">
-            <h3>Filter op Categorieën:</h3>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                {% for category in categories %}
-                <label style="display: flex; align-items: center; gap: 5px;">
-                    <input type="checkbox" name="category_id" value="{{ category.categoryid }}"
-                        {% if category.categoryid|string in selected_categories %}checked{% endif %}>
-                    {{ category.name }}
-                </label>
-                {% endfor %}
-            </div>
-        </div>
-        
         <div class="travel-list">
             {% if reizen %}
                 {% for reis in reizen %}

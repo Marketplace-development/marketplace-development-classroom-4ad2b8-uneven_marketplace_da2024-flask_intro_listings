@@ -22,6 +22,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -90,7 +91,6 @@
             background: #f5f5f5;
             border: 1px solid #ddd;
             border-radius: 8px;
-            position: relative;
         }
 
         .profile-card {
@@ -139,43 +139,67 @@
             margin: 0;
         }
 
-        .back-button {
+        .action-buttons {
+            display: flex;
+            gap: 10px; /* Ruimte tussen de knoppen */
+            margin-top: 20px;
+        }
+        
+        button.follow-btn {
             display: inline-block;
             padding: 10px 20px;
-            background: #2e5f3d;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
             color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s ease;
-        }
-
-        .back-button:hover {
-            background: #4f8a61;
-        }
-
-        /* Volgen/Ontvolgen-knop */
-        .follow-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-
-        .follow-toggle button {
-            padding: 10px 20px;
+            background-color: #2e5f3d; /* Donkergroen */
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
-            color: white;
-            background-color: #24452e;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
-
-        .follow-toggle button.ontvolg {
-            background-color: #a9a9a9;
-        }
-
-        .follow-toggle button:hover {
+        
+        button.follow-btn:hover {
             background-color: #3c764b;
+            transform: translateY(-2px);
+        }
+        
+        button.unfollow-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            color: #ffffff;
+            background-color: #cccccc; /* Lichtgrijs */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        
+        button.unfollow-btn:hover {
+            background-color: #bbbbbb;
+            transform: translateY(-2px);
+        }
+        
+        .connect-btn, .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            color: #ffffff;
+            background-color: #2e5f3d; /* Donkergroen */
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        
+        .connect-btn:hover, .back-button:hover {
+            background-color: #3c764b;
+            transform: translateY(-2px);
         }
     </style>
 </head>
@@ -196,20 +220,6 @@
 
     <main class="content">
         <div class="section">
-            <!-- Volgen/Ontvolgen-knop -->
-            <div class="follow-toggle">
-                <form method="POST" action="{{ url_for('main.toggle_follow') }}">
-                    <input type="hidden" name="followed_id" value="{{ user.userid }}">
-                    <input type="hidden" name="referer_page" value="user_profile">
-                    {% if user.is_followed %}
-                        <button type="submit" class="ontvolg">Ontvolgen</button>
-                    {% else %}
-                        <button type="submit" class="volg">Volgen</button>
-                    {% endif %}
-                </form>
-            </div>
-            
-
             <h1>Profiel van {{ user.firstname }} {{ user.lastname }}</h1>
 
             <div class="profile-card">
@@ -232,6 +242,19 @@
                 <div class="profile-row">
                     <span class="icon">🌍</span>
                     <p><strong>Land:</strong> {{ user.country or 'Niet opgegeven' }}</p>
+                </div>
+
+                <div class="action-buttons">
+                    <form action="{{ url_for('main.toggle_follow') }}" method="POST" style="display:inline;">
+                        <input type="hidden" name="followed_id" value="{{ user.userid }}">
+                        <input type="hidden" name="referer" value="{{ request.path }}"> <!-- Verwijzing naar huidige pagina -->
+                        {% if is_following %}
+                            <button type="submit" class="unfollow-btn">Ontvolgen</button>
+                        {% else %}
+                            <button type="submit" class="follow-btn">Volgen</button>
+                        {% endif %}
+                    </form>
+                    <a href="{{ url_for('main.zoekconnecties') }}" class="connect-btn">Connecties Zoeken</a>
                 </div>
             </div>
             <h2>Geüploade Reizen:</h2>

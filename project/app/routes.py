@@ -709,11 +709,28 @@ def user_profile(userid):
         flash("Gebruiker niet gevonden.", "error")
         return redirect(url_for('main.index'))
 
+    # Haal de huidige ingelogde gebruiker op
+    current_user_id = session.get('userid')
+    if not current_user_id:
+        flash("Je moet ingelogd zijn om een profiel te bekijken.", "error")
+        return redirect(url_for('main.login'))
+
+    # Controleer of de ingelogde gebruiker deze gebruiker volgt
+    is_following = Connections.query.filter_by(
+        follower_id=current_user_id, 
+        followed_id=user.userid
+    ).first() is not None
+
     # Haal de geüploade reizen van deze gebruiker op
     reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
 
-    # Render de profielpagina met de gegevens van de gebruiker en zijn/haar reizen
-    return render_template('profile.html', user=user, reizen=reizen)
+    # Render de profielpagina met de gegevens van de gebruiker, reizen en volgstatus
+    return render_template(
+        'profile.html', 
+        user=user, 
+        reizen=reizen, 
+        is_following=is_following
+    )
 
 
 @main.route('/boost_reis', methods=['POST'])

@@ -958,15 +958,26 @@ def toggle_follow():
     # Standaard terugvaloptie
     return redirect(url_for('main.index'))
 
-@main.route('/reis_aankopen/<goodid>', methods=['GET'])
-def reis_aankopen(goodid):
-    # Controleer of de reis bestaat
-    reis = DigitalGoods.query.filter_by(goodid=goodid).first()
-    if not reis:
-        flash('Reis niet gevonden.', 'error')
-        return redirect(url_for('main.gepost'))
 
-    # Tel het aantal aankopen
-    aantal_aankopen = Gekocht.query.filter_by(goodid=goodid).count()
+@main.route('/verkochte_reizen', methods=['GET'])
+def verkochte_reizen():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
 
-    return render_template('reis_aankopen.html', reis=reis, aantal_aankopen=aantal_aankopen)
+    user = Users.query.get(session['userid'])  # Haal de huidige gebruiker op
+    if not user:
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+
+    # Haal alle reizen van de gebruiker op
+    reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
+
+    totaal_verdiend = 0  # Variabele om totale verdiensten bij te houden
+
+    # Voeg het aantal keer verkocht toe aan elke reis en bereken totale verdiensten
+    for reis in reizen:
+        reis.aantal_aankopen = Gekocht.query.filter_by(goodid=reis.goodid).count()
+        reis.verdiend = reis.aantal_aankopen * reis.price  # Bereken verdiensten voor de reis
+        totaal_verdiend += reis.verdiend  # Tel op bij totaal verdiend
+
+    return render_template('reis_aankopen.html', reizen=reizen, totaal_verdiend=totaal_verdiend, user=user)
+

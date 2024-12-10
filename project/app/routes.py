@@ -12,7 +12,6 @@ from flask import Response
 import requests
 from flask import jsonify
 
-
 main = Blueprint('main', __name__)
 
 @main.route('/')
@@ -68,7 +67,6 @@ def register():
     # Bij een GET-verzoek toon het registratieformulier
     return render_template('register.html')
 
-
 @main.route('/login', methods=['POST','GET'])
 def login():
     if request.method == 'POST':
@@ -89,12 +87,10 @@ def login():
     
     return render_template('login.html')
 
-
 @main.route('/logout', methods=['POST', 'GET'])
 def logout():
     session.pop('userid', None)
     return redirect(url_for('main.index'))
-
 
 @main.route('/post', methods=['GET', 'POST'])
 def post():
@@ -188,7 +184,6 @@ def post():
 
     return render_template('post.html', error_message=error_message, user = user)
 
-
 @main.route('/userpage', methods=['GET', 'POST'])
 def userpage():
     if 'userid' not in session:
@@ -263,7 +258,6 @@ def download_pdf(goodid):
     else:
         return "Reis niet gevonden.", 404
 
-
 @main.route('/gepost', methods=['GET', 'POST'])
 def gepost():
     if 'userid' not in session:
@@ -273,8 +267,8 @@ def gepost():
     if not user:
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
-    # Geposte reizen van de ingelogde gebruiker ophalen
-    geposte_reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
+    # Geposte reizen van de ingelogde gebruiker ophalen, gesorteerd op nieuwste eerst
+    geposte_reizen = DigitalGoods.query.filter_by(userid=user.userid).order_by(DigitalGoods.createdat.desc()).all()
 
     if request.method == 'POST':
         # Update een specifieke reis
@@ -321,7 +315,6 @@ def download_aankoop_pdf(gekochtid):
     else:
         return "Aankoop niet gevonden.", 404
 
-
 @main.route('/gekocht', methods=['GET'])
 def gekocht():
     if 'userid' not in session:
@@ -339,7 +332,6 @@ def gekocht():
         aankoop.eigenaar = Users.query.get(aankoop.good.userid)
 
     return render_template('gekocht.html', user=user, gekochte_reizen=gekochte_reizen)
-
 
 @main.route('/algekocht')
 def algekocht():
@@ -370,48 +362,41 @@ def favoriet():
 
     return render_template('favoriet.html', user=user, favorieten=favorieten)
 
-
 @main.route('/search', methods=['GET'])
 def search():
     if 'userid' not in session:
-        return redirect(url_for('main.login'))  # Verwijzen naar login als gebruiker niet is ingelogd
+        return redirect(url_for('main.login'))
 
-    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
+    user = Users.query.get(session['userid'])
     if not user:
-        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+        return redirect(url_for('main.logout'))
 
-    # Zoekterm en prijsfilter ophalen uit de querystring
     zoekterm = request.args.get('zoekterm', '').strip()
     min_price = request.args.get('min_price', type=float)
     max_price = request.args.get('max_price', type=float)
 
-    # Haal alle reizen uit de database
-    reizen = DigitalGoods.query.all()
+    # Haal reizen op en sorteer op createdat (nieuwste eerst)
+    reizen = DigitalGoods.query.order_by(DigitalGoods.createdat.desc()).all()
+
     for reis in reizen:
         reis.user = Users.query.filter_by(userid=reis.userid).first()
         try:
             reis.image_urls = json.loads(reis.image_urls) if reis.image_urls else []
         except json.JSONDecodeError:
-            reis.image_urls = []  # Fallback voor foutieve JSON
-
+            reis.image_urls = []
+        
         reis.review_count = Feedback.query.filter_by(targetgoodid=reis.goodid).count()
 
-    # Filter op zoekterm
+    # Filter op zoekterm en prijs
     if zoekterm:
         reizen = [reis for reis in reizen if zoekterm.lower() in reis.titleofitinerary.lower()]
-
-    # Filter op prijs
     if min_price is not None:
         reizen = [reis for reis in reizen if reis.price >= min_price]
     if max_price is not None:
         reizen = [reis for reis in reizen if reis.price <= max_price]
 
-    # Haal de favorieten van de gebruiker op
-    favorieten = []
-    if 'userid' in session:
-        favorieten = [favoriet.goodid for favoriet in Favoriet.query.filter_by(userid=session['userid']).all()]
+    favorieten = [favoriet.goodid for favoriet in Favoriet.query.filter_by(userid=session['userid']).all()]
 
-    # Render de template en stuur de reizen en filters naar de frontend
     return render_template(
         'search.html',
         user=user,
@@ -421,7 +406,6 @@ def search():
         min_price=min_price,
         max_price=max_price
     )
-
 
 
 @main.route('/reis/<goodid>', methods=['GET'])
@@ -464,7 +448,6 @@ def reisdetail(goodid):
     )
 
 
-
 @main.route('/koop/<goodid>', methods=['POST'])
 def koop(goodid):
     if 'userid' not in session:
@@ -498,7 +481,6 @@ def koop(goodid):
 
     return redirect(url_for('main.koopbevestiging'))
 
-
 @main.route('/koopbevestiging', methods=['GET'])
 def koopbevestiging():
     if 'userid' not in session:
@@ -509,7 +491,6 @@ def koopbevestiging():
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
     return render_template('koopbevestiging.html', user=user)
-
 
 @main.route('/verwijder_reis', methods=['POST'])
 def verwijder_reis():
@@ -528,11 +509,9 @@ def verwijder_reis():
     return redirect(url_for('main.gepost'))
 
 
-
 @main.route('/reisverwijderd', methods=['GET'])
 def reisverwijderd():
     return render_template('reisverwijderd.html')
-
 
 @main.route('/reistoegevoegd', methods=['GET'])
 def reistoegevoegd():
@@ -565,7 +544,6 @@ def verwijder_aankoop():
         flash('Er is iets misgegaan bij het verwijderen.', 'error')
 
     return render_template('aankoopverwijderd.html')
-
 
 @main.route('/toggle_favoriet', methods=['POST'])
 def toggle_favoriet():
@@ -608,7 +586,6 @@ def toggle_favoriet():
         return redirect(url_for('main.favoriet'))
     else:
         return redirect(url_for('main.search'))  # Fallback naar search
-
 
 @main.route('/review/<goodid>', methods=['GET'])
 def review_page(goodid):
@@ -675,7 +652,6 @@ def submit_review():
 def review_bedanking():
     return render_template('reviewbedanking.html')
 
-
 @main.route('/api/travels', methods=['GET'])
 def get_travels():
     travels = DigitalGoods.query.all()  # Haal alle reizen op
@@ -708,7 +684,6 @@ def profile():
     # Render de profielpagina met de gebruiker en reizen
     return render_template('profile.html', user=user, reizen=reizen)
 
-
 @main.route('/user/<userid>', methods=['GET'])
 def user_profile(userid):
     # Zoek de gebruiker op basis van de opgegeven userid
@@ -722,4 +697,21 @@ def user_profile(userid):
 
     # Render de profielpagina met de gegevens van de gebruiker en zijn/haar reizen
     return render_template('profile.html', user=user, reizen=reizen)
+
+@main.route('/boost_reis', methods=['POST'])
+def boost_reis():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    goodid = request.form.get('goodid')
+    reis = DigitalGoods.query.filter_by(goodid=goodid, userid=session['userid']).first()
+
+    if reis:
+        reis.createdat = datetime.datetime.utcnow()  # Update de timestamp
+        db.session.commit()
+        flash(f'Reis "{reis.titleofitinerary}" is succesvol geboost!', 'success')
+    else:
+        flash('Reis niet gevonden of u heeft geen rechten om deze reis te boosten.', 'error')
+
+    return redirect(url_for('main.gepost'))
 

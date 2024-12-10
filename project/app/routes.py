@@ -391,6 +391,9 @@ def search():
         except json.JSONDecodeError:
             reis.image_urls = []  # Gebruik een lege lijst als fallback
 
+        # Voeg het aantal reviews toe aan het reisobject
+        reis.review_count = Feedback.query.filter_by(targetgoodid=reis.goodid).count()
+
     # Filter de reizen op basis van de zoekterm
     if zoekterm:
         reizen = [reis for reis in reizen if zoekterm.lower() in reis.titleofitinerary.lower()]
@@ -408,6 +411,7 @@ def search():
         favorieten=favorieten,
         zoekterm=zoekterm,
     )
+
 
 
 @main.route('/reis/<goodid>', methods=['GET'])
@@ -435,8 +439,20 @@ def reisdetail(goodid):
     # Haal alle reviews voor deze reis op
     reviews = Feedback.query.filter_by(targetgoodid=goodid).all()
 
+    # Voeg het aantal reviews toe
+    review_count = len(reviews)
+
     # Render de template met reisgegevens, reviews, favorietstatus en eigenaar
-    return render_template('reisdetail.html', reis=reis, user=user, eigenaar=eigenaar, is_favoriet=is_favoriet, reviews=reviews)
+    return render_template(
+        'reisdetail.html',
+        reis=reis,
+        user=user,
+        eigenaar=eigenaar,
+        is_favoriet=is_favoriet,
+        reviews=reviews,
+        review_count=review_count
+    )
+
 
 
 @main.route('/koop/<goodid>', methods=['POST'])

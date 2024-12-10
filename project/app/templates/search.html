@@ -36,12 +36,12 @@
         .logo-container .globe {
             width: 50px;
             height: 50px;
-            background-color: #24452e; /* Donkergroene achtergrond */
-            border-radius: 50%; /* Maakt het rond */
+            background-color: #24452e;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 10px; /* Ruimte tussen wereldbol en tekst */
+            margin-right: 10px;
             overflow: hidden;
         }
 
@@ -140,6 +140,7 @@
 
         .travel-item h2 {
             margin: 0 0 10px;
+            font-size: 20px;
         }
 
         .travel-item p {
@@ -148,7 +149,14 @@
 
         .travel-item a {
             color: #24452e;
+        }
+
+        .travel-item a.review-link {
             text-decoration: underline;
+        }
+
+        .travel-item a.title-link {
+            text-decoration: none;
         }
 
         .favorite-button {
@@ -159,7 +167,7 @@
             cursor: pointer;
             transition: color 0.3s ease;
         }
-    
+
         .favorite-button:hover {
             color: darkred;
         }
@@ -182,8 +190,6 @@
             <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
             <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
             <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
-            
-
         </nav>
     </header>
   
@@ -202,7 +208,14 @@
                 {% for reis in reizen %}
                 <div class="travel-item">
                     <img src="{{ reis.image_urls[0] if reis.image_urls else '/static/default_image.jpg' }}" style="width: auto; height: 100px;">
-                    <h2><a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}">{{ reis.titleofitinerary }}</a></h2>
+                    <h2>
+                        <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" class="title-link">
+                            {{ reis.titleofitinerary }}
+                        </a>
+                        <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" class="review-link">
+                            ({{ reis.review_count }} reviews)
+                        </a>
+                    </h2>
                     <p style="color: #666; margin-bottom: 15px;">
                         Gepost door 
                         <a href="{{ url_for('main.user_profile', userid=reis.user.userid) }}" style="color: #24452e; text-decoration: underline;">
@@ -213,7 +226,7 @@
                     
                     <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
                     <p><strong>Prijs:</strong> €{{ reis.price }}</p>
-                
+
                     <!-- Favoriet-knop rechts -->
                     <form action="{{ url_for('main.toggle_favoriet') }}" method="POST" style="display: flex; justify-content: flex-end;">
                         <input type="hidden" name="goodid" value="{{ reis.goodid }}">

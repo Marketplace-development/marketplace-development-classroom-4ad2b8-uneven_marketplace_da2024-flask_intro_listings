@@ -108,13 +108,13 @@
             text-align: center;
         }
 
-        .search-bar {
+        .search-bar, .filter-bar {
             width: calc(100% - 80px);
             margin: 0 auto;
             margin-bottom: 20px;
         }
 
-        .search-bar input {
+        .search-bar input, .filter-bar input {
             width: 100%;
             padding: 10px;
             border-radius: 5px;
@@ -123,6 +123,25 @@
             font-family: 'Georgia', serif;
             background: #fff;
             color: #24452e;
+        }
+
+        .filter-bar form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-bar label {
+            font-size: 16px;
+        }
+
+        .filter-bar button {
+            padding: 5px 15px;
+            border: none;
+            border-radius: 5px;
+            background: #2e5f3d;
+            color: white;
+            cursor: pointer;
         }
 
         .travel-list {
@@ -141,10 +160,6 @@
         .travel-item h2 {
             margin: 0 0 10px;
             font-size: 20px;
-        }
-
-        .travel-item p {
-            margin: 0 0 5px;
         }
 
         .travel-item a {
@@ -202,6 +217,17 @@
             </form>
         </div>
 
+        <!-- Prijsfilter -->
+        <div class="filter-bar">
+            <form action="{{ url_for('main.search') }}" method="get">
+                <label for="min_price">Prijs van:</label>
+                <input type="number" name="min_price" id="min_price" placeholder="Min" value="{{ request.args.get('min_price', '') }}" style="width: 80px;">
+                <label for="max_price">tot:</label>
+                <input type="number" name="max_price" id="max_price" placeholder="Max" value="{{ request.args.get('max_price', '') }}" style="width: 80px;">
+                <button type="submit">Filter</button>
+            </form>
+        </div>
+
         <!-- Lijst van reizen -->
         <div class="travel-list">
             {% if reizen %}
@@ -248,3 +274,4 @@
     </div>
 </body>
 </html>
+

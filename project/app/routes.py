@@ -377,39 +377,46 @@ def search():
     if not user:
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
-    # Zoekterm ophalen uit de querystring (GET-parameter)
+    # Zoekterm en prijsfilter ophalen uit de querystring
     zoekterm = request.args.get('zoekterm', '').strip()
+    min_price = request.args.get('min_price', type=float)
+    max_price = request.args.get('max_price', type=float)
 
     # Haal alle reizen uit de database
     reizen = DigitalGoods.query.all()
     for reis in reizen:
-        # Voeg de relatie tussen reis en gebruiker toe
         reis.user = Users.query.filter_by(userid=reis.userid).first()
-
         try:
             reis.image_urls = json.loads(reis.image_urls) if reis.image_urls else []
         except json.JSONDecodeError:
-            reis.image_urls = []  # Gebruik een lege lijst als fallback
+            reis.image_urls = []  # Fallback voor foutieve JSON
 
-        # Voeg het aantal reviews toe aan het reisobject
         reis.review_count = Feedback.query.filter_by(targetgoodid=reis.goodid).count()
 
-    # Filter de reizen op basis van de zoekterm
+    # Filter op zoekterm
     if zoekterm:
         reizen = [reis for reis in reizen if zoekterm.lower() in reis.titleofitinerary.lower()]
+
+    # Filter op prijs
+    if min_price is not None:
+        reizen = [reis for reis in reizen if reis.price >= min_price]
+    if max_price is not None:
+        reizen = [reis for reis in reizen if reis.price <= max_price]
 
     # Haal de favorieten van de gebruiker op
     favorieten = []
     if 'userid' in session:
         favorieten = [favoriet.goodid for favoriet in Favoriet.query.filter_by(userid=session['userid']).all()]
 
-    # Render de template en stuur de reizen en favorieten naar de frontend
+    # Render de template en stuur de reizen en filters naar de frontend
     return render_template(
         'search.html',
         user=user,
         reizen=reizen,
         favorieten=favorieten,
         zoekterm=zoekterm,
+        min_price=min_price,
+        max_price=max_price
     )
 
 

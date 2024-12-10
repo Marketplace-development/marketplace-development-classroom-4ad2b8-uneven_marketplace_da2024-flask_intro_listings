@@ -100,6 +100,9 @@ def logout():
 def post():
     if 'userid' not in session:
         return redirect(url_for('main.login'))
+    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
+    if not user:
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaa
     
     error_message = None
 
@@ -183,7 +186,7 @@ def post():
             db.session.rollback()
             error_message = "Er ging iets mis bij het opslaan van de reis."
 
-    return render_template('post.html', error_message=error_message)
+    return render_template('post.html', error_message=error_message, user = user)
 
 
 @main.route('/userpage', methods=['GET', 'POST'])

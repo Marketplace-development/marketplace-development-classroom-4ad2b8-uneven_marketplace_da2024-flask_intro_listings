@@ -666,3 +666,34 @@ def get_travels():
 
     return jsonify(travel_list)
 
+@main.route('/profile', methods=['GET'])
+def profile():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
+
+    # Haal de ingelogde gebruiker op
+    user = Users.query.get(session['userid'])
+    if not user:
+        return redirect(url_for('main.logout'))  # Log uit als de gebruiker niet bestaat
+
+    # Haal de geüploade reizen van de gebruiker op
+    reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
+
+    # Render de profielpagina met de gebruiker en reizen
+    return render_template('profile.html', user=user, reizen=reizen)
+
+
+@main.route('/user/<userid>', methods=['GET'])
+def user_profile(userid):
+    # Zoek de gebruiker op basis van de opgegeven userid
+    user = Users.query.get(userid)
+    if not user:
+        flash("Gebruiker niet gevonden.", "error")
+        return redirect(url_for('main.index'))
+
+    # Haal de geüploade reizen van deze gebruiker op
+    reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
+
+    # Render de profielpagina met de gegevens van de gebruiker en zijn/haar reizen
+    return render_template('profile.html', user=user, reizen=reizen)
+

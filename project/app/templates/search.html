@@ -203,7 +203,14 @@
                 <div class="travel-item">
                     <img src="{{ reis.image_urls[0] if reis.image_urls else '/static/default_image.jpg' }}" style="width: auto; height: 100px;">
                     <h2><a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}">{{ reis.titleofitinerary }}</a></h2>
-                    <p style="color: #666; margin-bottom: 15px;">Gepost door {{ reis.user.firstname }} {{ reis.user.lastname }} uit {{ reis.user.country }}</p>
+                    <p style="color: #666; margin-bottom: 15px;">
+                        Gepost door 
+                        <a href="{{ url_for('main.user_profile', userid=reis.user.userid) }}" style="color: #24452e; text-decoration: underline;">
+                            {{ reis.user.firstname }} {{ reis.user.lastname }}
+                        </a> 
+                        uit {{ reis.user.country }}
+                    </p>
+                    
                     <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
                     <p><strong>Prijs:</strong> €{{ reis.price }}</p>
                 

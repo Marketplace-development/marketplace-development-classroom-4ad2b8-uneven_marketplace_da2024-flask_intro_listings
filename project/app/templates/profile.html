@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profiel van {{ user.firstname }} {{ user.lastname }}</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            color: #1f3d2b;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-header {
+            background: #24452e;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container .globe {
+            width: 50px;
+            height: 50px;
+            background-color: #24452e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+
+        .logo-container .globe img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+
+        .main-header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-button {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 12px 20px;
+            background: #2e5f3d;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .nav-button:hover {
+            background: #3c764b;
+            color: #e6ffe6;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px 30px;
+            background: #ffffff;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            padding: 15px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .profile-card {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .icon {
+            font-size: 20px;
+            color: #2e5f3d;
+        }
+
+        .profile-row p {
+            margin: 0;
+            font-size: 16px;
+            color: #1f3d2b;
+        }
+
+        .profile-row strong {
+            color: #24452e;
+        }
+
+        .travel-list {
+            margin-top: 20px;
+        }
+
+        .travel-item {
+            background: #e9f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .travel-item h3 {
+            margin: 0;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #2e5f3d;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #4f8a61;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo-container">
+            <div class="globe">
+                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
+            </div>
+            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        </div>
+        <nav class="nav-links">
+            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
+            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
+            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+        </nav>
+    </header>
+
+    <main class="content">
+        <div class="section">
+            <h1>Profiel van {{ user.firstname }} {{ user.lastname }}</h1>
+
+            <div class="profile-card">
+                <div class="profile-row">
+                    <span class="icon">📧</span>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                </div>
+                <div class="profile-row">
+                    <span class="icon">📞</span>
+                    <p><strong>Telefoonnummer:</strong> {{ user.phone or 'Niet opgegeven' }}</p>
+                </div>
+                <div class="profile-row">
+                    <span class="icon">🆔</span>
+                    <p><strong>Nationaliteit:</strong> {{ user.nationality or 'Niet opgegeven' }}</p>
+                </div>
+                <div class="profile-row">
+                    <span class="icon">🏙️</span>
+                    <p><strong>Stad:</strong> {{ user.city or 'Niet opgegeven' }}</p>
+                </div>
+                <div class="profile-row">
+                    <span class="icon">🌍</span>
+                    <p><strong>Land:</strong> {{ user.country or 'Niet opgegeven' }}</p>
+                </div>
+            </div>
+            <h2>Geüploade Reizen:</h2>
+            <div class="travel-list">
+                {% if reizen %}
+                    {% for reis in reizen %}
+                        <div class="travel-item">
+                            <h3><a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}">{{ reis.titleofitinerary }}</a></h3>
+                            <p>{{ reis.descriptionofitinerary }}</p>
+                            <p><strong>Prijs:</strong> €{{ reis.price }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Geen reizen gevonden.</p>
+                {% endif %}
+            </div>            
+            <a href="{{ url_for('main.search') }}" class="back-button">Terug naar zoekpagina</a>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Recipe Page Content -->
+<section class="recipe-page">
+    <div class="container">
+        <!-- Recipe Title and Creator -->
+        <header class="recipe-header">
+            <h1>{{ recipe.title }}</h1>
+            <p class="creator">Created by: <strong>{{ creator.username }}</strong></p>
+        </header>
+
+        <!-- Recipe Content -->
+        <div class="recipe-content">
+            <!-- Recipe Image -->
+            <div class="recipe-image">
+                <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}">
+            </div>
+
+            <!-- Recipe Details -->
+            <div class="recipe-details">
+                <p><strong>Price:</strong> ${{ recipe.price }}</p>
+                <p><strong>Description:</strong> {{ recipe.description }}</p>
+                <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
+                <p><strong>Category:</strong> {{ recipe.category_id }}</p>
+
+                <!-- Add/Remove Favorite Button -->
+                {% if user %}
+                <form action="{{ url_for('routes.toggle_favorite', recipe_id=recipe.recipe_id) }}" method="POST">
+                    <button type="submit" class="btn-favorite">
+                        {% if is_favorite %}Remove from Favorites{% else %}Add to Favorites{% endif %}
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Recipe Reviews -->
+        <section class="recipe-reviews">
+            <h2>Reviews</h2>
+            {% if reviews %}
+            <ul>
+                {% for review in reviews %}
+                <li>
+                    <strong>{{ review.customer.username }}:</strong>
+                    <p>Rating: {{ review.rating }} / 5</p>
+                    <p>{{ review.review }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No reviews yet. Be the first to review this recipe!</p>
+            {% endif %}
+        </section>
+    </div>
+</section>
+{% endblock %}

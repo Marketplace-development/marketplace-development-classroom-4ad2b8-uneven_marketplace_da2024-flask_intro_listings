@@ -1208,78 +1208,74 @@
     object-fit: cover; /* Ensures the image fits and maintains aspect ratio */
 }
 
-.form-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.recipe-page .recipe-header {
     text-align: center;
+    margin-bottom: 1em;
 }
 
-.form-section h1 {
-    margin-bottom: 30px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
+.recipe-page .recipe-header h1 {
+    font-size: 2rem;
+    color: #264653;
 }
 
-form {
-    width: 100%;
-    max-width: 600px;
-    background: #fff;
-    padding: 20px;
+.recipe-page .recipe-header .creator {
+    font-size: 1rem;
+    color: #555;
+}
+
+.recipe-page .recipe-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2em;
+    justify-content: center;
+    margin-bottom: 2em;
+}
+
+.recipe-page .recipe-image img {
+    max-width: 100%;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-form p {
-    margin-bottom: 15px;
-    text-align: left;
+.recipe-page .recipe-details {
+    max-width: 400px;
+    line-height: 1.6;
 }
 
-form label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
+.recipe-page .recipe-details p {
+    margin: 0.5em 0;
 }
 
-form input, form textarea, form select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    margin-bottom: 15px;
-}
-
-.form-navigation {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.form-navigation a,
-form button {
-    text-decoration: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #007bff;
+.recipe-page .btn-favorite {
+    background-color: #2a9d8f;
+    color: white;
+    padding: 0.5em 1em;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
+    margin-top: 1em;
 }
 
-.form-navigation a:hover,
-form button:hover {
-    background-color: #0056b3;
+.recipe-page .btn-favorite:hover {
+    background-color: #21867a;
 }
 
-.form-navigation a {
-    background-color: #6c757d;
+.recipe-reviews ul {
+    list-style: none;
+    padding: 0;
 }
 
-.form-navigation a:hover {
-    background-color: #5a6268;
+.recipe-reviews li {
+    background: #f4f4f4;
+    margin: 1em 0;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-reviews h2 {
+    text-align: center;
+    color: #264653;
 }
 
 /* Confirmation Page */

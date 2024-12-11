@@ -1,4 +1,5 @@
 from app import db
+from . import db
 
 class Customer(db.Model):
     __tablename__ = 'customers'
@@ -23,6 +24,7 @@ class Recipe(db.Model):
     ingredients = db.Column(db.String)
     image_url = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    steps = db.Column(db.Text, nullable=False)
 
 class Rating(db.Model):
     __tablename__ = 'ratings'
@@ -32,3 +34,21 @@ class Rating(db.Model):
     rating = db.Column(db.Integer, nullable=False)
     review = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+class UserRecipe(db.Model):
+    __tablename__ = 'user_recipes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+
+    # Relatie naar ingrediënten
+    ingredients = db.relationship('Ingredient', backref='user_recipe', lazy=True)
+
+class Ingredient(db.Model):
+    __tablename__ = 'ingredients'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    quantity = db.Column(db.String(50), nullable=False)
+    user_recipe_id = db.Column(db.Integer, db.ForeignKey('user_recipes.id'), nullable=False)

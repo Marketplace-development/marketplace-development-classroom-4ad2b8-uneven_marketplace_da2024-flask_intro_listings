@@ -313,6 +313,26 @@ def add_recipe_confirmation():
     description = session.get('description')
     ingredients = session.get('ingredients')
     steps = session.get('steps')
+    price = session.get('price')
+    image_url = session.get('image_url')  # Dit moet worden ingesteld als de afbeelding wordt opgeslagen
+
+    return render_template(
+        'add_recipe/confirmation.html',
+        title=title,
+        description=description,
+        ingredients=ingredients,
+        steps=steps,
+        price=price,
+        image_url=image_url
+    )
+
+@bp.route('/add-recipe/price', methods=['GET', 'POST'])
+def add_recipe_price():
+    form = PriceForm()
+    if form.validate_on_submit():
+        session['price'] = form.price.data
+        return redirect(url_for('bp.add_recipe_confirmation'))
+    return render_template('add_recipe/price.html', form=form)
 
 
 

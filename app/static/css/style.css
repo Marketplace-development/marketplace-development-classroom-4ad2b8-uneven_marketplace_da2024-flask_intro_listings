@@ -1207,3 +1207,73 @@
     height: 100%;
     object-fit: cover; /* Ensures the image fits and maintains aspect ratio */
 }
+
+.recipe-page .recipe-header {
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.recipe-page .recipe-header h1 {
+    font-size: 2rem;
+    color: #264653;
+}
+
+.recipe-page .recipe-header .creator {
+    font-size: 1rem;
+    color: #555;
+}
+
+.recipe-page .recipe-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2em;
+    justify-content: center;
+    margin-bottom: 2em;
+}
+
+.recipe-page .recipe-image img {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-page .recipe-details {
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+.recipe-page .recipe-details p {
+    margin: 0.5em 0;
+}
+
+.recipe-page .btn-favorite {
+    background-color: #2a9d8f;
+    color: white;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1em;
+}
+
+.recipe-page .btn-favorite:hover {
+    background-color: #21867a;
+}
+
+.recipe-reviews ul {
+    list-style: none;
+    padding: 0;
+}
+
+.recipe-reviews li {
+    background: #f4f4f4;
+    margin: 1em 0;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-reviews h2 {
+    text-align: center;
+    color: #264653;
+}

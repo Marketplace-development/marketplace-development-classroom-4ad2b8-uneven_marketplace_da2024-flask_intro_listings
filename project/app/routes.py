@@ -1089,3 +1089,7 @@ def inject_user():
     user = Users.query.get(user_id) if user_id else None
     return dict(username=user.firstname if user else None, user=user)
 
+@main.route('/over_ons',methods=['GET'])
+def overons():
+    return render_template('over_ons.html')
+

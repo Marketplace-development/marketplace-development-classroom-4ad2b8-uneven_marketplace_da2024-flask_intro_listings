@@ -119,6 +119,28 @@
         a:hover {
             color: #3c764b;
         }
+
+        .categories {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        
+        .categories ul {
+            list-style-type: none;
+            padding-left: 0;
+            display: flex;  /* Zet de lijst in een rij */
+            flex-wrap: wrap;  /* Laat de items naar een nieuwe regel gaan als er niet genoeg ruimte is */
+            gap: 10px;  /* Voeg ruimte toe tussen de items */
+        }
+        
+        .categories li {
+            background: #e9f5e9;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 0;  /* Verwijder de marge voor een betere uitlijning */
+        }
+        
     </style>
 </head>
 <body>
@@ -151,6 +173,16 @@
             </form>
         </div>
 
+        <!-- Categorieën sectie -->
+        <div class="categories">
+            <strong>Categorieën:</strong>
+            <ul>
+                {% for category in reis.categories %}
+                    <li>{{ category.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
         <div class="button-container">
             <form action="{{ url_for('main.koop', goodid=reis.goodid) }}" method="POST">
                 <button type="submit" class="koop-knop">Koop Reis</button>
@@ -165,7 +197,6 @@
                         {% for _ in range(gemiddelde_rating|round(0, 'floor')|int) %}
                             ⭐
                         {% endfor %}
-
                     </span>
                     ({{ gemiddelde_rating|round(1) }} van 5)
                 </p>
@@ -187,5 +218,3 @@
     </div>
 </body>
 </html>
-
-

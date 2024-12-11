@@ -6,11 +6,11 @@
         <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
     </div>
     <nav class="nav-links">
-        {% if username %}
+        {% if userx %}
         <h2>Hallo {{ username }}</h2>
         <div class="profile-dropdown">
             <div class="profile-trigger" onclick="toggleDropdown()">
-                <img src="{{ user.profilepicture if user.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" class="profile-img">
+                <img src="{{ userx.profilepicture if userx.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" class="profile-img">
                 <span class="dropdown-arrow" id="dropdownArrow">&#9660;</span> <!-- Pijltje -->
             </div>
             <div class="dropdown-menu" id="dropdownMenu">

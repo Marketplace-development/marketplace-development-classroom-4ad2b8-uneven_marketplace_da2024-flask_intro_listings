@@ -1106,8 +1106,8 @@ def filterpagina():
 @main.context_processor
 def inject_user():
     user_id = session.get('userid')
-    user = Users.query.get(user_id) if user_id else None
-    return dict(username=user.firstname if user else None, user=user)
+    userx = Users.query.get(user_id) if user_id else None
+    return dict(username=userx.firstname if userx else None, userx=userx)
 
 @main.route('/over_ons',methods=['GET'])
 def overons():

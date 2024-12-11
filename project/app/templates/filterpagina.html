@@ -223,7 +223,7 @@
                 <h3>Categorieën:</h3>
                 {% for category in categories %}
                     <label>
-                        <input type="checkbox" name="category_id" value="{{ category.categoryid }}" 
+                        <input type="checkbox" name="category_id" value="{{ category.categoryid }}"
                             {% if category.categoryid|string in selected_categories %}checked{% endif %}>
                         {{ category.name }}
                     </label>

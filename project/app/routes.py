@@ -441,7 +441,7 @@ def search():
     max_price = request.args.get('max_price', type=float)
     city = request.args.get('city', '').strip().lower()
     selected_categories = request.args.getlist('category_id')
-    min_rating = request.args.get('min_rating', type=int)  # Voeg min_rating toe
+    min_rating = request.args.get('min_rating', type=int)
 
     available_cities = sorted(set(
         result.start_city.lower() for result in 
@@ -449,6 +449,10 @@ def search():
         if result.start_city
     ))
     categories = Category.query.all()
+    selected_category_names = [
+        category.name for category in categories if str(category.categoryid) in selected_categories
+    ]
+
     query = DigitalGoods.query.order_by(DigitalGoods.createdat.desc())
 
     if zoekterm:
@@ -463,7 +467,7 @@ def search():
         query = query.join(digitalgoods_categories).join(Category).filter(
             Category.categoryid.in_(selected_categories)
         )
-    if min_rating is not None:  # Filter op minimum beoordeling
+    if min_rating is not None:
         query = query.filter(
             (db.session.query(db.func.avg(Feedback.rating))
              .filter(Feedback.targetgoodid == DigitalGoods.goodid)
@@ -481,7 +485,6 @@ def search():
             reis.image_urls = []
         reis.review_count = Feedback.query.filter_by(targetgoodid=reis.goodid).count()
 
-        # Bereken het gemiddelde aantal sterren
         reviews = Feedback.query.filter_by(targetgoodid=reis.goodid).all()
         if reviews:
             reis.gemiddelde_rating = sum(review.rating for review in reviews) / len(reviews)
@@ -500,11 +503,11 @@ def search():
         max_price=max_price,
         city=city,
         available_cities=available_cities,
-        categories=categories,  # Alle categorieën voor de filters
-        selected_categories=selected_categories,  # Geselecteerde categorieën
-        min_rating=min_rating  # Stuur de geselecteerde minimale beoordeling naar de template
+        categories=categories,
+        selected_categories=selected_categories,
+        selected_category_names=selected_category_names,
+        min_rating=min_rating
     )
-
 
 
 
@@ -1037,6 +1040,12 @@ def filterpagina():
     if not user:
         return redirect(url_for('main.logout'))
 
+    # Haal filters op uit de sessie
+    if 'active_filters' not in session:
+        session['active_filters'] = {}
+
+    active_filters = session['active_filters']
+
     categories = Category.query.all()  # Haal alle beschikbare categorieën op
     available_cities = sorted(set(
         result.start_city.lower() for result in 
@@ -1052,36 +1061,47 @@ def filterpagina():
         city = request.form.get('city', '').strip().lower()
         selected_categories = request.form.getlist('category_id')
 
-        # Bouw query voor gefilterde resultaten
-        query = DigitalGoods.query.order_by(DigitalGoods.createdat.desc())
-
+        # Sla de filters op in de sessie
         if zoekterm:
-            query = query.filter(DigitalGoods.titleofitinerary.ilike(f'%{zoekterm}%'))
+            active_filters['zoekterm'] = zoekterm
         if min_price is not None:
-            query = query.filter(DigitalGoods.price >= min_price)
+            active_filters['min_price'] = min_price
         if max_price is not None:
-            query = query.filter(DigitalGoods.price <= max_price)
+            active_filters['max_price'] = max_price
         if city:
-            query = query.filter(DigitalGoods.start_city.ilike(city))
+            active_filters['city'] = city
         if selected_categories:
-            query = query.join(digitalgoods_categories).join(Category).filter(
-                Category.categoryid.in_(selected_categories)
-            )
+            active_filters['selected_categories'] = selected_categories
 
-        gefilterde_reizen = query.all()
+        session.modified = True
 
-        return render_template(
-            'filter_resultaten.html',  # Maak een aparte template voor de resultaten
-            user=user,
-            reizen=gefilterde_reizen
+    # Bouw query voor gefilterde resultaten
+    query = DigitalGoods.query.order_by(DigitalGoods.createdat.desc())
+
+    if 'zoekterm' in active_filters:
+        query = query.filter(DigitalGoods.titleofitinerary.ilike(f"%{active_filters['zoekterm']}%"))
+    if 'min_price' in active_filters:
+        query = query.filter(DigitalGoods.price >= active_filters['min_price'])
+    if 'max_price' in active_filters:
+        query = query.filter(DigitalGoods.price <= active_filters['max_price'])
+    if 'city' in active_filters:
+        query = query.filter(DigitalGoods.start_city.ilike(active_filters['city']))
+    if 'selected_categories' in active_filters:
+        query = query.join(digitalgoods_categories).join(Category).filter(
+            Category.categoryid.in_(active_filters['selected_categories'])
         )
 
+    gefilterde_reizen = query.all()
+
     return render_template(
-        'filterpagina.html',  # Template voor het tonen van filters
+        'filterpagina.html',
         user=user,
         categories=categories,
-        available_cities=available_cities
+        available_cities=available_cities,
+        reizen=gefilterde_reizen,
+        active_filters=active_filters
     )
+
 
 @main.context_processor
 def inject_user():
@@ -1092,4 +1112,20 @@ def inject_user():
 @main.route('/over_ons',methods=['GET'])
 def overons():
     return render_template('over_ons.html')
+
+@main.route('/verwijder_filter', methods=['GET'])
+def verwijder_filter():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    # Haal de te verwijderen filter op uit de querystring
+    filter_key = request.args.get('filter_key')
+
+    # Maak een kopie van de huidige queryparameters
+    query_params = request.args.to_dict()
+    query_params.pop('filter_key', None)  # Verwijder het 'filter_key' argument
+    query_params.pop(filter_key, None)  # Verwijder de specifieke filter
+
+    # Leid de gebruiker terug naar de searchpagina met bijgewerkte filters
+    return redirect(url_for('main.search', **query_params))
 

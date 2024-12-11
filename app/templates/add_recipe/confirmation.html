@@ -1,13 +1,31 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Recipe Confirmation</title>
-</head>
-<body>
-    <h1>Recipe Summary</h1>
-    <p><strong>Title:</strong> {{ title }}</p>
-    <p><strong>Description:</strong> {{ description }}</p>
-    <p><strong>Ingredients:</strong> {{ ingredients }}</p>
-    <p><strong>Steps:</strong> {{ steps }}</p>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+Recipe Confirmation
+{% endblock %}
+
+{% block content %}
+<main>
+    <section class="confirmation-section">
+        <h1>Recipe Confirmation</h1>
+        <div class="confirmation-container">
+            <div class="confirmation-details">
+                <h2>{{ title }}</h2>
+                <p>{{ description }}</p>
+                <h3>Ingredients:</h3>
+                <p>{{ ingredients }}</p>
+                <h3>Steps:</h3>
+                <p>{{ steps }}</p>
+                <h3>Price:</h3>
+                <p>€{{ price }}</p>
+            </div>
+            <div class="confirmation-image">
+                <img src="{{ url_for('static', filename='uploads/' + image_url) }}" alt="Recipe Image">
+            </div>
+        </div>
+        <form method="POST" action="{{ url_for('routes.submit_recipe') }}">
+            <button type="submit" class="btn btn-primary">Submit Recipe</button>
+        </form>
+    </section>
+</main>
+{% endblock %}

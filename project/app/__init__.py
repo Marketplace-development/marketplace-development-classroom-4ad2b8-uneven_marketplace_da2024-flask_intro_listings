@@ -28,7 +28,8 @@ def create_app():
         default_categories = [
             "Luxereis", "Budgetreis", "Backpacken", "Wandelreis",
             "Skireis", "Familiereis", "Strandvakantie", "Citytrip",
-            "Cultuurreis", "Kampeertrip", "Roadtrip"
+            "Cultuurreis", "Kampeertrip", "Roadtrip", "Natuur", "Avontuurlijk", "Culinair",
+            "Fietsvakantie", "Cruise", "Andere"
         ]
         for category_name in default_categories:
             if not Category.query.filter_by(name=category_name).first():

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <title>Recept Beschrijving</title>
+</head>
+<body>
+    <h1>Stap 2: Voeg een korte beschrijving toe</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.description.label }}<br>
+            {{ form.description(rows=5) }}<br>
+            {% for error in form.description.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            <a href="{{ url_for('routes.add_recipe_title') }}">Vorige</a>
+            <input type="submit" value="Volgende">
+        </p>
+

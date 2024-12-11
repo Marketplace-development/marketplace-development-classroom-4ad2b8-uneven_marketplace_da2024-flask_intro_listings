@@ -1,14 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add Recipe - Steps</title>
-</head>
-<body>
-    <h1>Step 4: Add Preparation Steps</h1>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <p>{{ form.steps.label }} {{ form.steps(rows=5, cols=50) }}</p>
-        <button type="submit">Submit</button>
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+Add Recipe Steps
+{% endblock %}
+
+{% block content %}
+<main>
+    <section class="form-section">
+        <h1>Add Your Recipe - Steps</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.steps.label }}
+                {{ form.steps(rows=5, cols=50) }}
+                {% for error in form.steps.errors %}
+                    <span class="form-error">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <div class="form-navigation">
+                <a href="{{ url_for('routes.add_recipe_ingredients') }}" class="btn btn-secondary">Previous</a>
+                <button type="submit" class="btn btn-primary">Next</button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}

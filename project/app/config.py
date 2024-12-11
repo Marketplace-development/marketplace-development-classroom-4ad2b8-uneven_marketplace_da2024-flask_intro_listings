@@ -3,7 +3,7 @@ from supabase import create_client, Client
 
 class Config:
     SECRET_KEY = "a_really_long_and_random_string_1234567890!@#$%^&*()"
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres.pukfiejqjaztcjjekaty:Programmerensuckt1234@aws-0-eu-central-1.pooler.supabase.com:6543/postgres'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres.pukfiejqjaztcjjekaty:Groep21dataalgo@aws-0-eu-central-1.pooler.supabase.com:6543/postgres'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     SUPABASE_URL = 'https://pukfiejqjaztcjjekaty.supabase.co'  # Vervang door je Supabase URL

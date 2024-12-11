@@ -1,7 +1,9 @@
 # app/routes.py
-from flask import Blueprint, request, redirect, url_for, render_template, session
-from .models import db, Customer
+from flask import Blueprint, request, redirect, url_for, render_template, session, flash
+from .models import db, Customer, Recipe, UserRecipe, Ingredient
 from app.models import Customer, Recipe
+from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm
+from flask import render_template, redirect, url_for, session, request
 
 main = Blueprint('main', __name__)
 
@@ -42,10 +44,10 @@ def logout():
     return redirect(url_for('main.index'))
 
 
-
 # creates a route for the homepage
 # We import Blueprint system for route management
-bp = Blueprint("routes", __name__)
+from flask import Blueprint
+bp = Blueprint("routes", __name__, template_folder='templates')
 
 @bp.route("/")
 def home():
@@ -193,30 +195,6 @@ def subscribe():
         print(f"New subscriber: {email}")
     return redirect("/")  # Redirect back to the homepage
 
-@bp.route("/add-recipe", methods=["GET", "POST"])
-def add_recipe():
-    if request.method == "POST":
-        title = request.form.get("title")
-        description = request.form.get("description")
-        ingredients = request.form.get("ingredients")
-        steps = request.form.get("steps")
-        image = request.files.get("image")  # Optional image upload
-
-        # For now, just print the recipe data to the console
-        print(f"Title: {title}")
-        print(f"Description: {description}")
-        print(f"Ingredients: {ingredients}")
-        print(f"Steps: {steps}")
-
-        # Save the image if uploaded
-        if image:
-            image.save(f"static/uploads/{image.filename}")
-            print(f"Image saved as static/uploads/{image.filename}")
-
-        return render_template("thank_you.html", title=title)
-
-    return render_template("add-recipe.html")
-
 @bp.route('/contact')
 def contact():
     return render_template('contactpage.html')
@@ -249,3 +227,70 @@ def submitted_recipes():
 @bp.route("/favorites")
 def favorites():
     return "Favorites Page"  # Placeholder
+
+from flask import render_template, redirect, url_for, session, request
+
+@bp.route('/add-recipe/title', methods=['GET', 'POST'])
+def add_recipe_title():
+    form = TitleForm()
+    if form.validate_on_submit():
+        session['title'] = form.title.data
+        # Verwerk de foto indien aanwezig
+        if form.photo.data:
+            photo = form.photo.data
+            # Sla de foto op op de gewenste locatie
+        return redirect(url_for('routes.add_recipe_description'))
+    return render_template('add_recipe/title.html', form=form)
+
+@bp.route('/add-recipe/description', methods=['GET', 'POST'])
+def add_recipe_description():
+    form = DescriptionForm()
+    if form.validate_on_submit():
+        session['description'] = form.description.data
+        return redirect(url_for('routes.add_recipe_ingredients'))
+    
+    # Debug: Print foutmeldingen van validatie
+    if form.errors:
+        print("Form validation errors:", form.errors)
+    
+    return render_template('add_recipe/description.html', form=form)
+
+@bp.route('/add-recipe/ingredients', methods=['GET', 'POST'])
+def add_recipe_ingredients():
+    form = IngredientsForm()
+    if form.validate_on_submit():
+        session['ingredients'] = form.ingredients.data
+        return redirect(url_for('routes.add_recipe_steps'))
+    return render_template('add_recipe/ingredients.html', form=form)
+
+@bp.route('/add-recipe/steps', methods=['GET', 'POST'])
+def add_recipe_steps():
+    form = StepsForm()
+    if form.validate_on_submit():
+        session['steps'] = form.steps.data
+
+        # Opslaan in de database
+        new_recipe = Recipe(
+            title=session.get('title'),
+            description=session.get('description'),
+            ingredients=session.get('ingredients'),
+            steps=session.get('steps')
+        )
+        db.session.add(new_recipe)
+        db.session.commit()
+
+        # Doorsturen naar de bevestigingspagina
+        return redirect(url_for('routes.add_recipe_confirmation'))
+
+    # Als het formulier niet gevalideerd is, blijf op de pagina
+    return render_template('add_recipe/steps.html', form=form)
+
+@bp.route('/add-recipe/confirmation')
+def add_recipe_confirmation():
+    # Haal de gegevens op uit de sessie om te bevestigen
+    title = session.get('title')
+    description = session.get('description')
+    ingredients = session.get('ingredients')
+    steps = session.get('steps')
+    return render_template('add_recipe/confirmation.html', title=title, description=description, ingredients=ingredients, steps=steps)
+

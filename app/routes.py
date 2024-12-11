@@ -6,6 +6,8 @@ from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm, Price
 from flask import render_template, redirect, url_for, session, request
 from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify
 from .models import db, Customer
+from flask import current_app
+
 
 main = Blueprint('main', __name__)
 
@@ -252,6 +254,9 @@ def favorites():
 
     return render_template('favorites.html', favorites=favorite_recipes, user=user)
 
+import os
+from werkzeug.utils import secure_filename
+
 @bp.route('/add-recipe/title', methods=['GET', 'POST'])
 def add_recipe_title():
     form = TitleForm()
@@ -259,8 +264,13 @@ def add_recipe_title():
         session['title'] = form.title.data
         # Verwerk de foto indien aanwezig
         if form.photo.data:
-            photo = form.photo.data
+            filename = secure_filename(form.photo.data.filename)
+            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            form.photo.data.save(filepath)
+            session['image_url'] = filename
             # Sla de foto op op de gewenste locatie
+        else:
+            session['image_url'] = None  # Stel expliciet in als None
         return redirect(url_for('routes.add_recipe_description'))
     return render_template('add_recipe/title.html', form=form)
 
@@ -307,6 +317,14 @@ def add_recipe_steps():
     # Als het formulier niet gevalideerd is, blijf op de pagina
     return render_template('add_recipe/steps.html', form=form)
 
+@bp.route('/add-recipe/price', methods=['GET', 'POST'])
+def add_recipe_price():
+    form = PriceForm()
+    if form.validate_on_submit():
+        session['price'] = form.price.data
+        return redirect(url_for('routes.add_recipe_confirmation'))
+    return render_template('add_recipe/price.html', form=form)
+
 @bp.route('/add-recipe/confirmation')
 def add_recipe_confirmation():
     title = session.get('title')
@@ -324,15 +342,6 @@ def add_recipe_confirmation():
         steps=steps,
         price=price,
         image_url=image_url
-    )
-
-@bp.route('/add-recipe/price', methods=['GET', 'POST'])
-def add_recipe_price():
-    form = PriceForm()
-    if form.validate_on_submit():
-        session['price'] = form.price.data
-        return redirect(url_for('bp.add_recipe_confirmation'))
-    return render_template('add_recipe/price.html', form=form)
-
+        )
 
 

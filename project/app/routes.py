@@ -33,7 +33,6 @@ def register():
         city = request.form.get('city')
         postal_code = request.form.get('postalcode')
         country = request.form.get('country')
-        phone = request.form.get('phone')
         nationality = request.form.get('nationality')
         profpic_file = request.files.get('profilePicture')
 
@@ -64,7 +63,6 @@ def register():
             city=city,
             postalcode=postal_code,
             country=country,
-            phone=phone,
             nationality=nationality,
             profilepicture=profile_picture_url
         )
@@ -219,7 +217,6 @@ def userpage():
         user.firstname = request.form.get('firstname')
         user.lastname = request.form.get('lastname')
         user.email = request.form.get('email')
-        user.phone = request.form.get('phone')
         user.address = request.form.get('address')
         user.city = request.form.get('city')
         user.postalcode = request.form.get('postalcode')

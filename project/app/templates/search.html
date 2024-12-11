@@ -130,6 +130,42 @@
             gap: 10px; /* Ruimte tussen de categorieën */
             margin-bottom: 15px;
         }
+        .filters-applied {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .filter-block {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: transparent; /* Geen achtergrondkleur */
+            border: 2px solid #2e5f3d; /* Donkergroene rand */
+            color: #2e5f3d; /* Donkergroene tekstkleur */
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .filter-block strong {
+            margin-right: 5px;
+            color: #2e5f3d; /* Donkergroene tekstkleur */
+        }
+        
+        .filter-block a {
+            text-decoration: none;
+            color: #ff4d4d; /* Rode kleur voor het vuilbakicoon */
+            font-weight: bold;
+            padding: 0 5px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .filter-block a:hover {
+            color: #d41c1c; /* Donkerrode kleur bij hover */
+        }
         
         .category-option {
             display: flex;
@@ -182,64 +218,55 @@
                 <button type="submit" class="nav-button">Filteren</button>
             </form>
             <div class="filters-applied">
-                <strong>Actieve filters:</strong>
-                <ul>
-                    {% if zoekterm %}
-                        <li>
-                            <strong>Zoekterm:</strong> {{ zoekterm }}
-                            <a href="{{ url_for('main.verwijder_filter', filter_key='zoekterm', **request.args.to_dict(flat=True)) | replace('zoekterm=' ~ zoekterm, '') }}" 
-                               style="text-decoration: none; color: red;">
-                               🗑️
-                            </a>
-                        </li>
-                    {% endif %}
-                    {% if min_price %}
-                        <li>
-                            <strong>Minimum prijs:</strong> €{{ min_price }}
-                            <a href="{{ url_for('main.verwijder_filter', filter_key='min_price', **request.args.to_dict(flat=True)) | replace('min_price=' ~ min_price|string, '') }}" 
-                               style="text-decoration: none; color: red;">
-                               🗑️
-                            </a>
-                        </li>
-                    {% endif %}
-                    {% if max_price %}
-                        <li>
-                            <strong>Maximum prijs:</strong> €{{ max_price }}
-                            <a href="{{ url_for('main.verwijder_filter', filter_key='max_price', **request.args.to_dict(flat=True)) | replace('max_price=' ~ max_price|string, '') }}" 
-                               style="text-decoration: none; color: red;">
-                               🗑️
-                            </a>
-                        </li>
-                    {% endif %}
-                    {% if city %}
-                        <li>
-                            <strong>Stad:</strong> {{ city }}
-                            <a href="{{ url_for('main.verwijder_filter', filter_key='city', **request.args.to_dict(flat=True)) | replace('city=' ~ city, '') }}" 
-                               style="text-decoration: none; color: red;">
-                               🗑️
-                            </a>
-                        </li>
-                    {% endif %}
-                    {% if min_rating %}
-                        <li>
-                            <strong>Minimale beoordeling:</strong> {{ min_rating }} sterren
-                            <a href="{{ url_for('main.verwijder_filter', filter_key='min_rating', **request.args.to_dict(flat=True)) | replace('min_rating=' ~ min_rating|string, '') }}" 
-                               style="text-decoration: none; color: red;">
-                               🗑️
-                            </a>
-                        </li>
-                    {% endif %}
-                    {% for category_name in selected_category_names %}
-                        <li>
-                            <strong>Categorie:</strong> {{ category_name }}
-                            <a href="{{ url_for('main.verwijder_filter', filter_key='category_id', **request.args.to_dict(flat=True)) | replace('category_id=' ~ category_name, '') }}" 
-                               style="text-decoration: none; color: red;">
-                               🗑️
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>                                                                             
+                {% if zoekterm %}
+                    <div class="filter-block">
+                        <strong>Zoekterm:</strong> {{ zoekterm }}
+                        <a href="{{ url_for('main.verwijder_filter', filter_key='zoekterm', **request.args.to_dict(flat=True)) | replace('zoekterm=' ~ zoekterm, '') }}">
+                            🗑️
+                        </a>
+                    </div>
+                {% endif %}
+                {% if min_price %}
+                    <div class="filter-block">
+                        <strong>Minimum prijs:</strong> €{{ min_price }}
+                        <a href="{{ url_for('main.verwijder_filter', filter_key='min_price', **request.args.to_dict(flat=True)) | replace('min_price=' ~ min_price|string, '') }}">
+                            🗑️
+                        </a>
+                    </div>
+                {% endif %}
+                {% if max_price %}
+                    <div class="filter-block">
+                        <strong>Maximum prijs:</strong> €{{ max_price }}
+                        <a href="{{ url_for('main.verwijder_filter', filter_key='max_price', **request.args.to_dict(flat=True)) | replace('max_price=' ~ max_price|string, '') }}">
+                            🗑️
+                        </a>
+                    </div>
+                {% endif %}
+                {% if city %}
+                    <div class="filter-block">
+                        <strong>Stad:</strong> {{ city }}
+                        <a href="{{ url_for('main.verwijder_filter', filter_key='city', **request.args.to_dict(flat=True)) | replace('city=' ~ city, '') }}">
+                            🗑️
+                        </a>
+                    </div>
+                {% endif %}
+                {% if min_rating %}
+                    <div class="filter-block">
+                        <strong>Minimale beoordeling:</strong> {{ min_rating }} sterren
+                        <a href="{{ url_for('main.verwijder_filter', filter_key='min_rating', **request.args.to_dict(flat=True)) | replace('min_rating=' ~ min_rating|string, '') }}">
+                            🗑️
+                        </a>
+                    </div>
+                {% endif %}
+                {% for category_name in selected_category_names %}
+                    <div class="filter-block">
+                        <strong>Categorie:</strong> {{ category_name }}
+                        <a href="{{ url_for('main.verwijder_filter', filter_key='category_id', **request.args.to_dict(flat=True)) | replace('category_id=' ~ category_name, '') }}">
+                            🗑️
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>                                                                                         
         </div>        
         <div class="travel-list">
             {% if reizen %}

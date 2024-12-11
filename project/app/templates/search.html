@@ -267,8 +267,52 @@
         <div class="filter-bar">
             <form action="{{ url_for('main.filterpagina') }}" method="get">
                 <button type="submit" class="nav-button">Filteren</button>
-            </form>        
-        </div>
+            </form>
+            <div class="filters-applied" style="margin-top: 10px;">
+                <strong>Actieve filters:</strong>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; gap: 10px; flex-wrap: wrap;">
+                    {% if zoekterm %}
+                        <li>
+                            Zoekterm: <span style="font-weight: bold; color: #24452e;">{{ zoekterm }}</span>
+                            <a href="{{ url_for('main.search', zoekterm=None, min_price=min_price, max_price=max_price, city=city, min_rating=min_rating, category_id=selected_categories) }}" style="color: red; text-decoration: none; margin-left: 5px;">🗑</a>
+                        </li>
+                    {% endif %}
+                    {% if min_price %}
+                        <li>
+                            Min. prijs: <span style="font-weight: bold; color: #24452e;">€{{ min_price }}</span>
+                            <a href="{{ url_for('main.search', zoekterm=zoekterm, min_price=None, max_price=max_price, city=city, min_rating=min_rating, category_id=selected_categories) }}" style="color: red; text-decoration: none; margin-left: 5px;">🗑</a>
+                        </li>
+                    {% endif %}
+                    {% if max_price %}
+                        <li>
+                            Max. prijs: <span style="font-weight: bold; color: #24452e;">€{{ max_price }}</span>
+                            <a href="{{ url_for('main.search', zoekterm=zoekterm, min_price=min_price, max_price=None, city=city, min_rating=min_rating, category_id=selected_categories) }}" style="color: red; text-decoration: none; margin-left: 5px;">🗑</a>
+                        </li>
+                    {% endif %}
+                    {% if city %}
+                        <li>
+                            Stad: <span style="font-weight: bold; color: #24452e;">{{ city }}</span>
+                            <a href="{{ url_for('main.search', zoekterm=zoekterm, min_price=min_price, max_price=max_price, city=None, min_rating=min_rating, category_id=selected_categories) }}" style="color: red; text-decoration: none; margin-left: 5px;">🗑</a>
+                        </li>
+                    {% endif %}
+                    {% if min_rating %}
+                        <li>
+                            Min. beoordeling: <span style="font-weight: bold; color: #24452e;">{{ min_rating }} sterren</span>
+                            <a href="{{ url_for('main.search', zoekterm=zoekterm, min_price=min_price, max_price=max_price, city=city, min_rating=None, category_id=selected_categories) }}" style="color: red; text-decoration: none; margin-left: 5px;">🗑</a>
+                        </li>
+                    {% endif %}
+                    {% if selected_categories %}
+                        {% for category_id in selected_categories %}
+                            {% set category = categories | selectattr('categoryid', 'equalto', category_id) | first %}
+                            <li>
+                                Categorie: <span style="font-weight: bold; color: #24452e;">{{ category.name }}</span>
+                                <a href="{{ url_for('main.search', zoekterm=zoekterm, min_price=min_price, max_price=max_price, city=city, min_rating=min_rating, category_id=selected_categories | reject('equalto', category_id)) }}" style="color: red; text-decoration: none; margin-left: 5px;">🗑</a>
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </div>        
+        </div>        
         <div class="travel-list">
             {% if reizen %}
                 {% for reis in reizen %}

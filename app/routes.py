@@ -4,6 +4,9 @@ from .models import db, Customer, Recipe, UserRecipe, Ingredient
 from app.models import Customer, Recipe
 from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm
 from flask import render_template, redirect, url_for, session, request
+from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify
+from .models import db, Customer
+from app.models import Customer, Recipe, Favorite
 
 main = Blueprint('main', __name__)
 
@@ -210,21 +213,24 @@ def list_recipes():
 
 @bp.route('/submitted-recipes')
 def submitted_recipes():
-    try:
-        # Fetch the logged-in user's ID from the session
-        user_id = session.get('user_id')
+    # Ensure the user is logged in
+    if 'user_id' not in session:
+        return redirect(url_for('routes.login'))
 
-        # If no user is logged in, redirect to the login page
-        if not user_id:
-            return redirect(url_for('routes.login'))
+    # Get the user ID from the session
+    user_id = session['user_id']
 
-        # Query recipes based on the logged-in user's ID
-        recipes = Recipe.query.filter_by(user_id=user_id).all()
-        return render_template('submitted_recipes.html', recipes=recipes)
-    except Exception as e:
-        return f"An error occurred: {e}"
+    # Query the user
+    user = db.session.query(Customer).filter_by(customer_id=user_id).first()
+    if not user:
+        return "User not found", 404
 
-@bp.route("/favorites")
+    # Query the recipes submitted by the user
+    recipes = db.session.query(Recipe).filter_by(user_id=user_id).all()
+
+    return render_template('submitted_recipes.html', user=user, recipes=recipes)
+
+@bp.route('/favorites', methods=['GET'])
 def favorites():
     return "Favorites Page"  # Placeholder
 
@@ -293,4 +299,25 @@ def add_recipe_confirmation():
     ingredients = session.get('ingredients')
     steps = session.get('steps')
     return render_template('add_recipe/confirmation.html', title=title, description=description, ingredients=ingredients, steps=steps)
+    if 'user_id' not in session:
+        return redirect(url_for('routes.login'))
+
+    user_id = session['user_id']
+
+    # Fetch user information
+    user = Customer.query.filter_by(customer_id=user_id).first()
+
+    if not user:
+        return redirect(url_for('routes.login'))  # If the user is not found, redirect to login
+
+    # Fetch favorite recipes
+    favorite_recipes = (
+        db.session.query(Recipe)
+        .join(Favorite, Recipe.recipe_id == Favorite.recipe_id)
+        .filter(Favorite.user_id == user_id)
+        .all()
+    )
+
+    return render_template('favorites.html', favorites=favorite_recipes, user=user)
+
 

@@ -1,28 +1,34 @@
-<!doctype html>
-<html lang="nl">
-<head>
-    <meta charset="utf-8">
-    <title>Recept Titel</title>
-</head>
-<body>
-    <h1>Stap 1: Voeg de titel en een foto toe</h1>
-    <form method="POST" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.title.label }}<br>
-            {{ form.title(size=50) }}<br>
-            {% for error in form.title.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.photo.label }}<br>
-            {{ form.photo() }}<br>
-            {% for error in form.photo.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p><input type="submit" value="Volgende"></p>
-    </form>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}
+Add Recipe Title
+{% endblock %}
+
+{% block content %}
+<main>
+    <section class="form-section">
+        <h1>Add Your Recipe - Title</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.title.label }}
+                {{ form.title(size=50) }}
+                {% for error in form.title.errors %}
+                    <span class="form-error">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <p>
+                {{ form.photo.label }}
+                {{ form.photo() }}
+                {% for error in form.photo.errors %}
+                    <span class="form-error">{{ error }}</span>
+                {% endfor %}
+            </p>
+            <div class="form-navigation">
+                <a href="#" class="btn btn-secondary disabled">Previous</a>
+                <button type="submit" class="btn btn-primary">Next</button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}

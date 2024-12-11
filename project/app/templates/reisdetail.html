@@ -37,8 +37,20 @@
 
         .details {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: flex-start;
+            gap: 20px;
+        }
+
+        .image {
+            flex-shrink: 0;
+        }
+
+        .image img {
+            width: 200px;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
         }
 
         .description {
@@ -124,23 +136,22 @@
             margin-top: 20px;
             font-size: 18px;
         }
-        
+
         .categories ul {
             list-style-type: none;
             padding-left: 0;
-            display: flex;  /* Zet de lijst in een rij */
-            flex-wrap: wrap;  /* Laat de items naar een nieuwe regel gaan als er niet genoeg ruimte is */
-            gap: 10px;  /* Voeg ruimte toe tussen de items */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        
+
         .categories li {
             background: #e9f5e9;
             padding: 8px 12px;
             border-radius: 5px;
             font-size: 16px;
-            margin: 0;  /* Verwijder de marge voor een betere uitlijning */
+            margin: 0;
         }
-        
     </style>
 </head>
 <body>
@@ -156,9 +167,12 @@
             uit {{ eigenaar.country }}
         </p>
         <div class="details">
+            <div class="image">
+                <img src="{{ reis.image_urls[0] if reis.image_urls else '/static/default_image.jpg' }}" alt="Reis afbeelding">
+            </div>
+
             <div class="description">
                 <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
-                <p><strong>Prijs:</strong> €{{ reis.price }}</p>
             </div>
             <form action="{{ url_for('main.toggle_favoriet') }}" method="POST">
                 <input type="hidden" name="goodid" value="{{ reis.goodid }}">
@@ -175,6 +189,7 @@
 
         <!-- Categorieën sectie -->
         <div class="categories">
+            <p><strong>Prijs:</strong> €{{ reis.price }}</p>
             <strong>Categorieën:</strong>
             <ul>
                 {% for category in reis.categories %}

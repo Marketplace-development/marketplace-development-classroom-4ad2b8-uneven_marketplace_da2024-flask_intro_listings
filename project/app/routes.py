@@ -524,6 +524,22 @@ def reisdetail(goodid):
         flash('Reis niet gevonden.', 'error')
         return redirect(url_for('main.search'))
 
+    # Haal afbeelding op
+
+    reis.user = Users.query.filter_by(userid=reis.userid).first()
+    try:
+        reis.image_urls = json.loads(reis.image_urls) if reis.image_urls else []
+    except json.JSONDecodeError:
+        reis.image_urls = []
+    reis.review_count = Feedback.query.filter_by(targetgoodid=reis.goodid).count()
+
+    reviews = Feedback.query.filter_by(targetgoodid=reis.goodid).all()
+    if reviews:
+        reis.gemiddelde_rating = sum(review.rating for review in reviews) / len(reviews)
+    else:
+        reis.gemiddelde_rating = 0
+
+
     # Haal de eigenaar van de reis op
     eigenaar = Users.query.filter_by(userid=reis.userid).first()
 

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Over Ons - Travel Tales</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
     <style>
         body {
             font-family: 'Georgia', serif;
@@ -14,65 +16,6 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-        }
-
-        .main-header {
-            background: #24452e;
-            padding: 20px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo-container .globe {
-            width: 50px;
-            height: 50px;
-            background-color: #24452e;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-        }
-
-        .logo-container .globe img {
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
-        }
-
-        .main-header .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffffff;
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .nav-button {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 16px;
-            padding: 12px 20px;
-            background: #2e5f3d;
-            border-radius: 5px;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        .nav-button:hover {
-            background: #3c764b;
-            color: #e6ffe6;
         }
 
         .content {
@@ -157,19 +100,7 @@
     </style>
 </head>
 <body>
-    <header class="main-header">
-        <div class="logo-container">
-            <div class="globe">
-                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
-            </div>
-            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
-        </div>
-        <nav class="nav-links">
-            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
-            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
-            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
-        </nav>
-    </header>
+    {% include 'header.html' %}
 
     <main class="content">
         <div class="section">
@@ -184,27 +115,28 @@
             <h2 class="about-us-header">Ons Team</h2>
             <div class="team">
                 <div class="team-member">
-                    <img src="https://via.placeholder.com/100" alt="Anna Vermeulen">
+                    <img src="{{ '/static/default_image.jpg' }}" alt="Anna Vermeulen">
                     <h3>Anna Vermeulen</h3>
                 </div>
                 <div class="team-member">
-                    <img src="https://via.placeholder.com/100" alt="Astrid Pensaert">
+                    <img src="{{ '/static/img/Astrid.jpg' }}" alt="Astrid Pensaert">
                     <h3>Astrid Pensaert</h3>
                 </div>
                 <div class="team-member">
-                    <img src="https://via.placeholder.com/100" alt="Sare Vanhoutte">
+                    <img src="{{ '/static/default_image.jpg' }}" alt="Sare Vanhoutte">
                     <h3>Sare Vanhoutte</h3>
                 </div>
                 <div class="team-member">
                     <img src="https://via.placeholder.com/100" alt="Margot De Cock">
+                    <img src="{{ '/static/default_image.jpg' }}" alt="Margot De Cock">
                     <h3>Margot Decock</h3>
                 </div>
                 <div class="team-member">
-                    <img src="https://via.placeholder.com/100" alt="Clémence Van den Ostende">
+                    <img src="{{ '/static/default_image.jpg' }}" alt="Clémence Van den Ostende">
                     <h3>Clémence Van den Ostende</h3>
                 </div>
                 <div class="team-member">
-                    <img src="https://via.placeholder.com/100" alt="Sarah Vandeputte">
+                    <img src="{{ '/static/default_image.jpg' }}" alt="Sarah Vandeputte">
                     <h3>Sarah Vandeputte</h3>
                 </div>
             </div>
@@ -212,9 +144,9 @@
 
         <div class="contact-section">
             <h2 class="about-us-header">Contact</h2>
-            <p class="contact-item"><img src="https://via.placeholder.com/20" alt="Email">info@traveltales.com</p>
-            <p class="contact-item"><img src="https://via.placeholder.com/20" alt="Phone">+32487903465</p>
-            <p class="contact-item"><img src="https://via.placeholder.com/20" alt="Location">Tweekerkenstraat 2, 9000 Gent</p>
+            <p class="contact-item">✉️ info@traveltales.com</p>
+            <p class="contact-item">☎️ +32487903465</p>
+            <p class="contact-item">📍Tweekerkenstraat 2, 9000 Gent</p>
         </div>
     </main>
 </body>

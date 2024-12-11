@@ -3,7 +3,7 @@ import datetime
 import uuid
 import json
 from flask import Blueprint, request, redirect, url_for, render_template, session
-from .models import db, Users, DigitalGoods, Gekocht, Favoriet, Feedback, Connections, Category, digitalgoods_categories, Messages
+from .models import db, Users, DigitalGoods, Gekocht, Favoriet, Feedback, Connections, Category, digitalgoods_categories, Messages, Meldingen
 from flask import flash
 from werkzeug.utils import secure_filename
 from .config import supabase
@@ -11,6 +11,7 @@ from supabase import Client
 from flask import Response
 import requests
 from flask import jsonify
+from .helper import create_notification
 
 main = Blueprint('main', __name__)
 
@@ -70,6 +71,11 @@ def register():
         # Voeg de gebruiker toe aan de database
         db.session.add(new_user)
         db.session.commit()
+
+        create_notification(
+            recipient_id=new_user.userid,
+            message=f"Welkom {new_user.firstname}, dankjewel om lid te worden van de Traveltalescommunity. Neem een kijkje op de website en geniet van je welkomstgift!"
+        )
 
         # Sla de userid op in de sessie
         session['userid'] = new_user.userid
@@ -191,6 +197,16 @@ def post():
 
             db.session.add(new_itinerary)
             db.session.commit()
+
+            followers = Connections.query.filter_by(followed_id=session['userid']).all()
+            for follower in followers:
+                create_notification(
+                    recipient_id=follower.follower_id,
+                    sender_id=session['userid'],
+                    good_id=new_itinerary.goodid,
+                    message=f"{user.firstname} {user.lastname}, die je volgt, heeft een nieuwe reis gepost: '{itinerary_name}'."
+                )
+
 
             return redirect(url_for('main.reistoegevoegd'))
 
@@ -604,6 +620,13 @@ def koop(goodid):
     db.session.add(nieuwe_aankoop)
     db.session.commit()
 
+    create_notification(
+        recipient_id=reis.userid,  # Veronderstel dat reis een eigenaar heeft
+        sender_id=user.userid,
+        good_id=goodid,
+        message=f" {user.firstname} {user.lastname} heeft je reis '{reis.titleofitinerary}' gekocht!"
+    )
+
     return redirect(url_for('main.koopbevestiging'))
 
 @main.route('/koopbevestiging', methods=['GET'])
@@ -676,8 +699,11 @@ def toggle_favoriet():
         flash("Je moet ingelogd zijn om een reis als favoriet te markeren of verwijderen.", "error")
         return redirect(url_for('main.login'))
 
+    user = Users.query.get(session['userid'])
+
     user_id = session['userid']
     goodid = request.form.get('goodid')
+    reis = DigitalGoods.query.filter_by(goodid=goodid).first()
     referer_page = request.form.get('referer')  # Haal de referentiepagina op
 
     if not goodid:
@@ -700,6 +726,15 @@ def toggle_favoriet():
         )
         db.session.add(nieuwe_favoriet)
         db.session.commit()
+
+        good = DigitalGoods.query.get(goodid)
+        create_notification(
+            recipient_id=good.userid,  # Eigenaar van de reis
+            sender_id=user_id,  # Huidige gebruiker
+            good_id=goodid,
+            message=f"{user.firstname} {user.lastname} heeft je reis '{reis.titleofitinerary}' als favoriet gemarkeerd!"
+        )
+
         flash("Reis toegevoegd aan je favorieten!", "success")
 
     # Verwijs terug naar de juiste pagina
@@ -949,6 +984,8 @@ def zoekconnecties():
 def toggle_follow():
     if 'userid' not in session:
         return redirect(url_for('main.login'))
+    
+    user = Users.query.get(session['userid'])
 
     follower_id = session['userid']
     followed_id = request.form.get('followed_id')
@@ -970,7 +1007,14 @@ def toggle_follow():
         new_connection = Connections(follower_id=follower_id, followed_id=followed_id)
         db.session.add(new_connection)
         db.session.commit()
+
+        create_notification(
+            recipient_id=followed_id,
+            sender_id=follower_id,
+            message=f" {user.firstname} {user.lastname} volgt je nu!"
+        )
         flash("Je volgt de gebruiker nu.", "success")
+
 
     # Bepaal de referer-pagina en leid de gebruiker daarheen terug
     referer = request.headers.get('Referer')
@@ -1165,6 +1209,13 @@ def messages():
         new_message = Messages(sender_id=current_user_id, receiver_id=receiver_id, message=message)
         db.session.add(new_message)
         db.session.commit()
+
+        create_notification(
+            recipient_id=receiver_id,
+            sender_id=current_user_id,
+            message=f"Gebruiker {current_user.firstname} {current_user.lastname} heeft je een bericht gestuurd."
+        )
+
         return redirect(url_for('main.messages', chat_with=receiver_id))
 
     # Zoekfunctionaliteit
@@ -1201,3 +1252,23 @@ def messages():
         chat_with=chat_with,
         selected_user=selected_user
     )
+
+
+@main.route('/meldingen', methods=['GET'])
+def meldingen():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    current_user_id = session['userid']
+
+    # Haal meldingen op
+    alle_meldingen = Meldingen.query.filter_by(recipient_id=current_user_id).order_by(Meldingen.created_at.desc()).all()
+
+    # Markeer als gelezen wanneer de gebruiker de meldingenpagina opent
+    for melding in alle_meldingen:
+        melding.is_read = True
+    db.session.commit()
+
+    # Zorg ervoor dat de variabele consistent is
+    return render_template('meldingen.html', notifications=alle_meldingen)
+

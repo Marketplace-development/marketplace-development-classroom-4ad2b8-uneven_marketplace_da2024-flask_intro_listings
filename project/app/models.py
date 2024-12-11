@@ -163,3 +163,23 @@ class Messages(db.Model):
 
     def __repr__(self):
         return f'<Message {self.id} from {self.sender_id} to {self.receiver_id}>'
+    
+
+class Meldingen(db.Model):
+    __tablename__ = 'meldingen'  # Consistente naamgeving
+
+    id = db.Column(db.Integer, primary_key=True)
+    recipient_id = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)  # Gebruiker die de melding ontvangt
+    sender_id = db.Column(db.String, db.ForeignKey('users.userid'), nullable=True)  # Gebruiker die de actie uitvoerde (optioneel)
+    good_id = db.Column(db.String, db.ForeignKey('digitalgoods.goodid'), nullable=True)  # Betrokken reis (optioneel)
+    message = db.Column(db.String, nullable=False)  # Beschrijving van de melding
+    is_read = db.Column(db.Boolean, default=False)  # Of de melding al is gelezen
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+    # Relaties
+    recipient = db.relationship('Users', foreign_keys=[recipient_id], backref='received_meldingen', lazy=True)
+    sender = db.relationship('Users', foreign_keys=[sender_id], backref='sent_meldingen', lazy=True)
+    good = db.relationship('DigitalGoods', backref='meldingen', lazy=True)
+
+    def __repr__(self):
+        return f'<Melding {self.id} to {self.recipient_id}: {self.message}>'

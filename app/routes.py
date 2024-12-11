@@ -2,7 +2,7 @@
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash
 from .models import db, Customer, Recipe, UserRecipe, Ingredient
 from app.models import Customer, Recipe
-from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm
+from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm, PriceForm
 from flask import render_template, redirect, url_for, session, request
 from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify
 from .models import db, Customer
@@ -230,12 +230,6 @@ def submitted_recipes():
 
     return render_template('submitted_recipes.html', user=user, recipes=recipes)
 
-@bp.route('/favorites', methods=['GET'])
-def favorites():
-    return "Favorites Page"  # Placeholder
-
-from flask import render_template, redirect, url_for, session, request
-
 @bp.route('/add-recipe/title', methods=['GET', 'POST'])
 def add_recipe_title():
     form = TitleForm()
@@ -293,12 +287,33 @@ def add_recipe_steps():
 
 @bp.route('/add-recipe/confirmation')
 def add_recipe_confirmation():
-    # Haal de gegevens op uit de sessie om te bevestigen
     title = session.get('title')
     description = session.get('description')
     ingredients = session.get('ingredients')
     steps = session.get('steps')
-    return render_template('add_recipe/confirmation.html', title=title, description=description, ingredients=ingredients, steps=steps)
+    price = session.get('price')
+    image_url = session.get('image_url')  # Dit moet worden ingesteld als de afbeelding wordt opgeslagen
+
+    return render_template(
+        'add_recipe/confirmation.html',
+        title=title,
+        description=description,
+        ingredients=ingredients,
+        steps=steps,
+        price=price,
+        image_url=image_url
+    )
+
+@bp.route('/add-recipe/price', methods=['GET', 'POST'])
+def add_recipe_price():
+    form = PriceForm()
+    if form.validate_on_submit():
+        session['price'] = form.price.data
+        return redirect(url_for('routes.add_recipe_confirmation'))
+    return render_template('add_recipe/price.html', form=form)
+
+@bp.route('/favorites', methods=['GET'])
+def favorites():
     if 'user_id' not in session:
         return redirect(url_for('routes.login'))
 
@@ -319,5 +334,3 @@ def add_recipe_confirmation():
     )
 
     return render_template('favorites.html', favorites=favorite_recipes, user=user)
-
-

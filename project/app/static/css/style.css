@@ -92,6 +92,8 @@
 .dropdown-arrow {
     font-size: 16px;
     transition: transform 0.3s ease; /* Voor een draai-effect */
+    color: #fff;
+
 }
 
 .dropdown-arrow.open {

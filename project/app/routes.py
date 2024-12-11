@@ -1268,11 +1268,14 @@ def meldingen():
     # Haal meldingen op
     alle_meldingen = Meldingen.query.filter_by(recipient_id=current_user_id).order_by(Meldingen.created_at.desc()).all()
 
-    # Markeer als gelezen wanneer de gebruiker de meldingenpagina opent
+    # Markeer als gelezen voor deze sessie
     for melding in alle_meldingen:
-        melding.is_read = True
+        if not melding.is_read:
+            melding.is_read = True
+            melding.is_recently_read = True  # Tijdelijke indicator
+        else:
+            melding.is_recently_read = False
     db.session.commit()
 
     # Zorg ervoor dat de variabele consistent is
     return render_template('meldingen.html', notifications=alle_meldingen)
-

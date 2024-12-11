@@ -73,6 +73,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+        
         .notification {
             padding: 15px;
             border-bottom: 1px solid #eee;
@@ -80,8 +81,12 @@
         .notification:last-child {
             border-bottom: none;
         }
-        .notification.unread {
-            background: #eaf7ff;
+
+        .notification.read-recently {
+            color: rgb(222, 40, 40);
+        }
+        .notification.read {
+            color: rgb(12, 2, 2);
         }
         .notification p {
             margin: 0;
@@ -118,13 +123,13 @@
         <main class="content">
             <h1>Mijn Meldingen</h1>
             {% for notification in notifications %}
-        <div class="notification {% if not notification.is_read %}unread{% endif %}">
-            <p>{{ notification.message }}</p>
-            <small>{{ notification.created_at.strftime('%d-%m-%Y %H:%M') }}</small>
-        </div>
-        {% endfor %}
-
+            <div class="notification {% if not notification.is_read %}unread{% elif notification.is_recently_read %}read-recently{% else %}read{% endif %}">
+                <p>{{ notification.message }}</p>
+                <small>{{ notification.created_at.strftime('%d-%m-%Y %H:%M') }}</small>
+            </div>
+            {% endfor %}
         </main>
+
     </div>
 </body>
 </html>

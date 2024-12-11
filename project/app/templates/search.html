@@ -258,15 +258,15 @@
                         </a>
                     </div>
                 {% endif %}
-                {% for category_name in selected_category_names %}
+                {% if selected_category_names %}
                     <div class="filter-block">
-                        <strong>Categorie:</strong> {{ category_name }}
-                        <a href="{{ url_for('main.verwijder_filter', filter_key='category_id', **request.args.to_dict(flat=True)) | replace('category_id=' ~ category_name, '') }}">
+                        <strong>Categorieën:</strong> {{ selected_category_names | join(', ') }}
+                        <a href="{{ url_for('main.verwijder_filter', filter_key='category_id', **request.args.to_dict(flat=True)) | replace('category_id=' ~ (selected_category_names | join(',')), '') }}">
                             🗑️
                         </a>
                     </div>
-                {% endfor %}
-            </div>                                                                                         
+                {% endif %}
+            </div>                                                                                                     
         </div>        
         <div class="travel-list">
             {% if reizen %}

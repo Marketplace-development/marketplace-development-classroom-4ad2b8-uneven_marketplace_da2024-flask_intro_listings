@@ -6,26 +6,32 @@ Recipe Confirmation
 
 {% block content %}
 <main>
+    <section class="confirmation-title-section">
+        <h1 class="confirmation-title">Recipe Confirmation</h1>
+    </section>
+    
     <section class="confirmation-section">
-        <h1>Recipe Confirmation</h1>
-        <div class="confirmation-container">
-            <div class="confirmation-details">
-                <h2>{{ title }}</h2>
-                <p>{{ description }}</p>
-                <h3>Ingredients:</h3>
-                <p>{{ ingredients }}</p>
-                <h3>Steps:</h3>
-                <p>{{ steps }}</p>
-                <h3>Price:</h3>
-                <p>€{{ price }}</p>
-            </div>
+        <section class="confirmation-section">
+            <div class="confirmation-container">
+                <!-- Linker sectie: Informatie -->
+                <div class="confirmation-details">
+                    <h2>{{ title }}</h2>
+                    <p class="price">€{{ price }}</p>
+                    <p>{{ description }}</p>
+                    <h3>Ingredients:</h3>
+                    <p>{{ ingredients }}</p>
+                    <h3>Steps:</h3>
+                    <p>{{ steps }}</p>
+                    <form method="POST" action="{{ url_for('routes.submitted_recipes') }}">
+                        <button type="submit" class="btn-submit">Submit Recipe</button>
+                    </form>
+                </div>
+               
+            <!-- Rechter sectie: Afbeelding -->
             <div class="confirmation-image">
-                <img src="{{ url_for('static', filename='uploads/' + image_url) }}" alt="Recipe Image">
-            </div>
+                <img src="{{ url_for('static', filename='uploads/' + (image_url if image_url else 'placeholder.jpg')) }}" alt="Recipe Image">
+            </div>         
         </div>
-        <form method="POST" action="{{ url_for('routes.submit_recipe') }}">
-            <button type="submit" class="btn btn-primary">Submit Recipe</button>
-        </form>
     </section>
 </main>
 {% endblock %}

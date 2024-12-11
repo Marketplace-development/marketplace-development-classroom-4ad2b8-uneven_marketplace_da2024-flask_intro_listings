@@ -3,7 +3,7 @@ import datetime
 import uuid
 import json
 from flask import Blueprint, request, redirect, url_for, render_template, session
-from .models import db, Users, DigitalGoods, Gekocht, Favoriet, Feedback, Connections, Category, digitalgoods_categories
+from .models import db, Users, DigitalGoods, Gekocht, Favoriet, Feedback, Connections, Category, digitalgoods_categories, Messages
 from flask import flash
 from werkzeug.utils import secure_filename
 from .config import supabase
@@ -1126,3 +1126,60 @@ def verwijder_filter():
     # Leid de gebruiker terug naar de searchpagina met bijgewerkte filters
     return redirect(url_for('main.search', **query_params))
 
+@main.route('/messages', methods=['GET', 'POST'])
+def messages():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    current_user_id = session['userid']
+
+    # Haal de ingelogde gebruiker op
+    current_user = Users.query.get(current_user_id)
+
+    if request.method == 'POST':
+        receiver_id = request.form.get('receiver_id')
+        message = request.form.get('message')
+
+        if not receiver_id or not message:
+            flash("Selecteer een gebruiker en typ een bericht voordat je verzendt.", "danger")
+            return redirect(url_for('main.messages'))
+
+        new_message = Messages(sender_id=current_user_id, receiver_id=receiver_id, message=message)
+        db.session.add(new_message)
+        db.session.commit()
+        return redirect(url_for('main.messages', chat_with=receiver_id))
+
+    # Zoekfunctionaliteit
+    search_term = request.args.get('search', '').strip()
+    query = Users.query.filter(Users.userid != current_user_id)
+    if search_term:
+        query = query.filter(
+            (Users.firstname.ilike(f"%{search_term}%")) |
+            (Users.lastname.ilike(f"%{search_term}%"))
+        )
+
+    users = query.all()
+
+    # Ophalen van berichten met geselecteerde gebruiker
+    chat_with = request.args.get('chat_with')
+    selected_user = None
+    messages = []
+    if chat_with:
+        selected_user = Users.query.filter_by(userid=chat_with).first()
+        if selected_user:
+            messages = Messages.query.filter(
+                (Messages.sender_id == current_user_id) & (Messages.receiver_id == chat_with) |
+                (Messages.sender_id == chat_with) & (Messages.receiver_id == current_user_id)
+            ).order_by(Messages.created_at).all()
+        else:
+            flash("Geselecteerde gebruiker bestaat niet.", "danger")
+
+    # Geef 'user' door aan de template
+    return render_template(
+        'messages.html',
+        user=current_user,
+        users=users,
+        messages=messages,
+        chat_with=chat_with,
+        selected_user=selected_user
+    )

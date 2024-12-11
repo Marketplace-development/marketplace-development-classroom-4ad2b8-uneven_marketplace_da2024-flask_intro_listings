@@ -152,3 +152,14 @@ class Category(db.Model):
     def __repr__(self):
         return f"<Category {self.name}>"
 
+
+class Messages(db.Model):
+    __tablename__ = 'messages'
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)
+    receiver_id = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Message {self.id} from {self.sender_id} to {self.receiver_id}>'

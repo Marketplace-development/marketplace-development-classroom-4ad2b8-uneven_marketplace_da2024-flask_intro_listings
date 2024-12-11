@@ -191,13 +191,13 @@
         <form class="filter-form" method="GET" action="{{ url_for('main.search') }}">
             <label for="zoekterm">Zoekterm:</label>
             <input type="text" id="zoekterm" name="zoekterm" placeholder="Zoek op titel...">
-
+    
             <label for="min_price">Prijs van:</label>
             <input type="number" id="min_price" name="min_price" placeholder="Minimum prijs">
-
+    
             <label for="max_price">Prijs tot:</label>
             <input type="number" id="max_price" name="max_price" placeholder="Maximum prijs">
-
+    
             <label for="city">Stad:</label>
             <select id="city" name="city">
                 <option value="">Alle steden</option>
@@ -205,7 +205,18 @@
                     <option value="{{ city }}">{{ city.capitalize() }}</option>
                 {% endfor %}
             </select>
-
+    
+            <label for="min_rating">Minimale beoordeling:</label>
+            <select id="min_rating" name="min_rating">
+                <option value="">Geen minimum</option>
+                <option value="0">0 sterren of meer</option>
+                <option value="1">1 ster of meer</option>
+                <option value="2">2 sterren of meer</option>
+                <option value="3">3 sterren of meer</option>
+                <option value="4">4 sterren of meer</option>
+                <option value="5">5 sterren</option>
+            </select>
+    
             <div class="categories">
                 <h3>Categorieën:</h3>
                 {% for category in categories %}
@@ -216,10 +227,10 @@
                     </label>
                 {% endfor %}
             </div>
-
+    
             <button type="submit">Filteren</button>
         </form>
-    </div>
+    </div>    
 </body>
 </html>
 

@@ -441,6 +441,7 @@ def search():
     max_price = request.args.get('max_price', type=float)
     city = request.args.get('city', '').strip().lower()
     selected_categories = request.args.getlist('category_id')
+    min_rating = request.args.get('min_rating', type=int)  # Voeg min_rating toe
 
     available_cities = sorted(set(
         result.start_city.lower() for result in 
@@ -461,6 +462,13 @@ def search():
     if selected_categories:
         query = query.join(digitalgoods_categories).join(Category).filter(
             Category.categoryid.in_(selected_categories)
+        )
+    if min_rating is not None:  # Filter op minimum beoordeling
+        query = query.filter(
+            (db.session.query(db.func.avg(Feedback.rating))
+             .filter(Feedback.targetgoodid == DigitalGoods.goodid)
+             .correlate(DigitalGoods)
+             .label('average_rating')) >= min_rating
         )
 
     reizen = query.all()
@@ -493,8 +501,10 @@ def search():
         city=city,
         available_cities=available_cities,
         categories=categories,  # Alle categorieën voor de filters
-        selected_categories=selected_categories  # Geselecteerde categorieën om de checkboxes vooringevuld te houden
+        selected_categories=selected_categories,  # Geselecteerde categorieën
+        min_rating=min_rating  # Stuur de geselecteerde minimale beoordeling naar de template
     )
+
 
 
 

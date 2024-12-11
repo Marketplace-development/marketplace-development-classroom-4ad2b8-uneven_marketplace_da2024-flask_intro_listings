@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registreren bij Travel Tales</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -16,68 +18,6 @@
             display: flex;
             flex-direction: column; /* Zorgt dat de header bovenaan blijft */
             min-height: 100vh; /* Houdt de pagina fullscreen */
-        }
-
-        .main-header {
-            background: #24452e; /* Donkergroene achtergrond */
-            padding: 20px 30px; /* Zorgt voor consistente hoogte */
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* Verdeelt logo en navigatie */
-            position: sticky; /* Zorgt dat de header bovenaan blijft */
-            top: 0; /* Header vastzetten aan de bovenkant */
-            z-index: 10; /* Zorgt dat de header altijd zichtbaar is */
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Schaduw voor visuele separatie */
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo-container .globe {
-            width: 50px;
-            height: 50px;
-            background-color: #24452e; /* Donkergroene achtergrond */
-            border-radius: 50%; /* Maakt het rond */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px; /* Ruimte tussen wereldbol en tekst */
-            overflow: hidden;
-        }
-
-        .logo-container .globe img {
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
-        }
-
-        .main-header .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffffff;
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 15px; /* Ruimte tussen de navigatieknoppen */
-        }
-
-        .nav-button {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 16px;
-            padding: 10px 15px;
-            background: #2e5f3d; /* Groene achtergrond */
-            border-radius: 5px;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        .nav-button:hover {
-            background: #3c764b; /* Hover-kleur voor knoppen */
-            color: #e6ffe6; /* Lichtere tekstkleur tijdens hover */
         }
 
         .container {
@@ -167,20 +107,8 @@
     </style>
 </head>
 <body>
-    <header class="main-header">
-        <div class="logo-container">
-            <div class="globe">
-                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
-            </div>
-            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
-        </div>
-        <nav class="nav-links">
-            {% if username %}
-            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
-            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
-            {% endif %}
-        </nav>
-    </header>
+    {% include 'header.html' %}
+
 
     <div class="container">
         <h1>Registreren bij Travel Tales</h1>

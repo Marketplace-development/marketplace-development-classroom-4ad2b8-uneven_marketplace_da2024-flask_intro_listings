@@ -1082,3 +1082,10 @@ def filterpagina():
         categories=categories,
         available_cities=available_cities
     )
+
+@main.context_processor
+def inject_user():
+    user_id = session.get('userid')
+    user = Users.query.get(user_id) if user_id else None
+    return dict(username=user.firstname if user else None, user=user)
+

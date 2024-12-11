@@ -1,0 +1,29 @@
+<header class="main-header">
+    <div class="logo-container">
+        <div class="globe">
+            <img src="{{ '/static/logo_TT.png' }}" alt="Wereldbol" style="width: 60px; height: 60px">
+        </div>
+        <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+    </div>
+    <nav class="nav-links">
+        {% if username %}
+        <h2>Hallo {{ username }}</h2>
+        <div class="profile-dropdown">
+            <div class="profile-trigger" onclick="toggleDropdown()">
+                <img src="{{ user.profilepicture if user.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" class="profile-img">
+                <span class="dropdown-arrow" id="dropdownArrow">&#9660;</span> <!-- Pijltje -->
+            </div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="{{ url_for('main.userpage') }}">Profielgegevens</a>
+                <a href="{{ url_for('main.post') }}">Post reis</a>
+                <a href="{{ url_for('main.search') }}">Zoek reis</a>
+                <a href="{{ url_for('main.verkochte_reizen') }}">Mijn portefeuille</a>
+                <a href="{{ url_for('main.logout') }}">Uitloggen</a>
+            </div>
+        </div>
+        {% else %}
+        <a href="{{ url_for('main.login') }}" class="nav-button">Login</a>
+        <a href="{{ url_for('main.register') }}" class="nav-button">Registreer</a>
+        {% endif %}
+    </nav>
+</header>

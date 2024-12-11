@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zoek Connecties</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
     <style>
         body {
             font-family: 'Georgia', serif;
@@ -14,58 +16,6 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-        }
-
-        .main-header {
-            background: #24452e; /* Donkergroene achtergrond */
-            padding: 20px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .main-header .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffffff;
-            text-decoration: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-left: auto; /* Zorgt ervoor dat de knoppen naar rechts verschuiven */
-        }
-
-        .nav-links h2.user-greeting {
-            color: #f0f0f0; /* Lichtgrijze tekst */
-            font-size: 18px;
-            margin: 0;
-            margin-right: 20px; /* Ruimte tussen de tekst en de knoppen */
-            font-weight: bold;
-        }
-
-        .nav-button {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 16px;
-            padding: 12px 20px; /* Vergroot de breedte door de padding */
-            background: #2e5f3d; /* Groene achtergrond */
-            border-radius: 5px;
-            transition: background 0.3s ease, color 0.3s ease;
-            min-width: 120px; /* Minimale breedte voor knoppen */
-            text-align: center; /* Zorg ervoor dat de tekst gecentreerd blijft */
-        }
-
-        .nav-button:hover {
-            background: #3c764b; /* Hover-kleur voor knoppen */
-            color: #e6ffe6; /* Lichtere tekstkleur tijdens hover */
         }
 
         .main-container {
@@ -192,33 +142,11 @@
             gap: 20px; /* Vergroot de ruimte tussen de foto en de naam */
             margin-bottom: 20px; /* Optionele extra marge onder de header */
         }
-        
-        .profile-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #ddd; /* Optionele rand om de afbeelding */
-        }
-        
-        .profile-name {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1f3d2b; /* Tekstkleur aanpassen indien nodig */
-        }
-        
+
     </style>
 </head>
 <body>
-    <header class="main-header">
-        <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
-        <nav class="nav-links">
-            <h2 class="user-greeting">Hallo {{ user.firstname }}</h2>
-            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
-            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
-            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
-        </nav>
-    </header>
+    {% include 'header.html' %}
 
     <div class="main-container">
         <aside class="sidebar">

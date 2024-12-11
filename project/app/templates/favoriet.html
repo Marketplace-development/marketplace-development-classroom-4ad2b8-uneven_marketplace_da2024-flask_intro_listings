@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mijn Favorieten</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+
     <style>
         body {
             font-family: 'Georgia', serif;
@@ -14,77 +17,6 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-        }
-
-        .main-header {
-            background: #24452e;
-            padding: 20px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo-container .globe {
-            width: 50px;
-            height: 50px;
-            background-color: #24452e;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-            overflow: hidden;
-        }
-
-        .logo-container .globe img {
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
-        }
-
-        .main-header .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffffff;
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .nav-links h2 {
-            color: #f0f0f0;
-            font-size: 18px;
-            margin: 0;
-            margin-right: 20px;
-            font-weight: bold;
-        }
-
-        .nav-button {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 16px;
-            padding: 12px 20px;
-            background: #2e5f3d;
-            border-radius: 5px;
-            transition: background 0.3s ease, color 0.3s ease;
-            min-width: 120px;
-            text-align: center;
-        }
-
-        .nav-button:hover {
-            background: #3c764b;
-            color: #e6ffe6;
         }
 
         .main-container {
@@ -194,20 +126,7 @@
     </style>
 </head>
 <body>
-    <header class="main-header">
-        <div class="logo-container">
-            <div class="globe">
-                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
-            </div>
-            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
-        </div>
-        <nav class="nav-links">
-            <h2>Hallo {{ user.firstname }}</h2>
-            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
-            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
-            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
-        </nav>
-    </header>
+    {% include 'header.html' %}
 
     <div class="main-container">
         <aside class="sidebar">

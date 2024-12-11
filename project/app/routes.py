@@ -562,6 +562,9 @@ def reisdetail(goodid):
     # Controleer of deze reis een favoriet is van de gebruiker
     is_favoriet = Favoriet.query.filter_by(userid=user.userid, goodid=goodid).first() is not None
 
+    # Controleer of de gebruiker de eigenaar is van de reis
+    is_owner = (user.userid == eigenaar.userid)
+
     # Haal alle reviews voor deze reis op
     reviews = Feedback.query.filter_by(targetgoodid=goodid).all()
     categorieën = Category.query.join(DigitalGoods.categories).filter(DigitalGoods.goodid == goodid).all()
@@ -585,7 +588,8 @@ def reisdetail(goodid):
         reviews=reviews,
         review_count=review_count,
         gemiddelde_rating=gemiddelde_rating,
-        categorieën=categorieën
+        categorieën=categorieën,
+        is_owner=is_owner
     )
 
 
@@ -716,7 +720,7 @@ def toggle_favoriet():
         # Verwijder de favoriet
         db.session.delete(favoriet)
         db.session.commit()
-        flash("Reis verwijderd uit je favorieten.", "info")
+        #flash("Reis verwijderd uit je favorieten.", "info")
     else:
         # Voeg de favoriet toe
         nieuwe_favoriet = Favoriet(
@@ -735,7 +739,7 @@ def toggle_favoriet():
             message=f"{user.firstname} {user.lastname} heeft je reis '{reis.titleofitinerary}' als favoriet gemarkeerd!"
         )
 
-        flash("Reis toegevoegd aan je favorieten!", "success")
+        #flash("Reis toegevoegd aan je favorieten!", "success")
 
     # Verwijs terug naar de juiste pagina
     if referer_page == 'search':

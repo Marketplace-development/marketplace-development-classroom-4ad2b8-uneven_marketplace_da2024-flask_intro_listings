@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Over Ons - Travel Tales</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            color: #1f3d2b;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-header {
+            background: #24452e;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container .globe {
+            width: 50px;
+            height: 50px;
+            background-color: #24452e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .logo-container .globe img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+
+        .main-header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-button {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 12px 20px;
+            background: #2e5f3d;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #3c764b;
+            color: #e6ffe6;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px 30px;
+            background: #ffffff;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            padding: 15px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .about-us-header {
+            text-align: center;
+            color: #24452e;
+            margin-bottom: 20px;
+        }
+
+        .about-text {
+            margin-top: 20px;
+            line-height: 1.6;
+            color: #1f3d2b;
+        }
+
+        .team {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .team-member {
+            background: #e9f5e9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            width: 250px;
+        }
+
+        .team-member img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .team-member h3 {
+            margin: 0;
+            color: #24452e;
+        }
+
+        .team-member p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #1f3d2b;
+        }
+
+        .contact-section {
+            margin-top: 50px;
+            padding: 20px;
+            background: #e9f5e9;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .contact-item {
+            margin: 15px 0;
+            font-size: 16px;
+            color: #1f3d2b;
+        }
+
+        .contact-item img {
+            width: 20px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo-container">
+            <div class="globe">
+                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
+            </div>
+            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        </div>
+        <nav class="nav-links">
+            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
+            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
+            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+        </nav>
+    </header>
+
+    <main class="content">
+        <div class="section">
+            <h1 class="about-us-header">Over Ons</h1>
+            <p class="about-text">
+                Wij zijn zes studenten aan de Universiteit Gent, verenigd door onze gedeelde liefde voor reizen en technologie. 
+                Ons doel is om anderen te inspireren de wereld te ontdekken. Travel Tales is ons passieproject, een platform waar verhalen worden gedeeld en connecties worden gemaakt. 
+                Als reislustige studenten begrijpen we hoe belangrijk het is om ervaringen vast te leggen en te delen met een community die dezelfde passie deelt. 
+                Samen creëren we herinneringen die de wereld rondgaan!
+            </p>
+
+            <h2 class="about-us-header">Ons Team</h2>
+            <div class="team">
+                <div class="team-member">
+                    <img src="https://via.placeholder.com/100" alt="Anna Vermeulen">
+                    <h3>Anna Vermeulen</h3>
+                </div>
+                <div class="team-member">
+                    <img src="https://via.placeholder.com/100" alt="Astrid Pensaert">
+                    <h3>Astrid Pensaert</h3>
+                </div>
+                <div class="team-member">
+                    <img src="https://via.placeholder.com/100" alt="Sare Vanhoutte">
+                    <h3>Sare Vanhoutte</h3>
+                </div>
+                <div class="team-member">
+                    <img src="https://via.placeholder.com/100" alt="Margot Decock">
+                    <h3>Margot Decock</h3>
+                </div>
+                <div class="team-member">
+                    <img src="https://via.placeholder.com/100" alt="Clémence Van den Ostende">
+                    <h3>Clémence Van den Ostende</h3>
+                </div>
+                <div class="team-member">
+                    <img src="https://via.placeholder.com/100" alt="Sarah Vandeputte">
+                    <h3>Sarah Vandeputte</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <h2 class="about-us-header">Contact</h2>
+            <p class="contact-item"><img src="https://via.placeholder.com/20" alt="Email">info@traveltales.com</p>
+            <p class="contact-item"><img src="https://via.placeholder.com/20" alt="Phone">+32487903465</p>
+            <p class="contact-item"><img src="https://via.placeholder.com/20" alt="Location">Tweekerkenstraat 2, 9000 Gent</p>
+        </div>
+    </main>
+</body>
+</html>
+
+

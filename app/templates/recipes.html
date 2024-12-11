@@ -1,12 +1,9 @@
 {% extends "base.html" %}
-
 {% block title %}
-Recipes
+recipes
 {% endblock %}
 
-
-{% block content %}
-<!-- Hero Section -->
+{% block content %}<!-- Hero Section -->
 <section class="hero video">
     <video autoplay muted loop>
         <source src="{{ url_for('static', filename='videos/hero-video.mp4') }}" type="video/mp4">
@@ -16,8 +13,8 @@ Recipes
         <h1>Culinary Heritage</h1>
         <p>"Get a Taste of Tradition"</p>
         <div class="hero-buttons">
-            <a href="/upload" class="btn-light">Add Recipes</a>
-            <a href="/discover" class="btn-dark">Discover</a>
+            <a href="/upload" class="btn-light">Upload</a>
+            <a href="/search" class="btn-dark">Search</a>
         </div>
     </div>
 </section>
@@ -25,67 +22,7 @@ Recipes
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipes</title>
-    <style>
-        /* Algemene styling */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        /* Styling voor de lijst */
-        ul {
-            list-style-type: none; /* Geen standaard bolletjes */
-            padding: 0;
-            margin: 0 auto;
-            max-width: 800px; /* Maak de lijst smaller */
-        }
-
-        li {
-            background-color: #fff;
-            margin: 15px 0;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Voeg een lichte schaduw toe */
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        li:hover {
-            transform: translateY(-5px); /* Laat de kaart omhoog komen bij hover */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        h2 {
-            margin-top: 0;
-            font-size: 1.5em;
-            color: #555;
-        }
-
-        p {
-            margin: 5px 0;
-            line-height: 1.6;
-        }
-
-        p:first-of-type {
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-
-        .price {
-            color: #27ae60; /* Maak de prijs groen */
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-    </style>
 </head>
 <body>
     <h1>All Recipes</h1>
@@ -95,7 +32,7 @@ Recipes
             <h2>{{ recipe.title }}</h2>
             <p>{{ recipe.description }}</p>
             <p>Ingredients: {{ recipe.ingredients }}</p>
-            <p class="price">Price: ${{ recipe.price }}</p>
+            <p>Price: ${{ recipe.price }}</p>
         </li>
     {% endfor %}
     </ul>

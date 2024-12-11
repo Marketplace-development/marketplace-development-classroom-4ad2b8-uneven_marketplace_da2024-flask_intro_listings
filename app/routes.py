@@ -1,12 +1,11 @@
 # app/routes.py
-from flask import Blueprint, request, redirect, url_for, render_template, session, flash
+from flask import Blueprint, request, redirect, url_for, render_template, session, flash, jsonify
 from .models import db, Customer, Recipe, UserRecipe, Ingredient
-from app.models import Customer, Recipe
+from app.models import Customer, Recipe, Favorite
 from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm, PriceForm
 from flask import render_template, redirect, url_for, session, request
 from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify
 from .models import db, Customer
-from app.models import Customer, Recipe, Favorite
 
 main = Blueprint('main', __name__)
 
@@ -230,6 +229,29 @@ def submitted_recipes():
 
     return render_template('submitted_recipes.html', user=user, recipes=recipes)
 
+@bp.route('/favorites', methods=['GET'])
+def favorites():
+    if 'user_id' not in session:
+        return redirect(url_for('routes.login'))
+
+    user_id = session['user_id']
+
+    # Fetch user information
+    user = Customer.query.filter_by(customer_id=user_id).first()
+
+    if not user:
+        return redirect(url_for('routes.login'))  # If the user is not found, redirect to login
+
+    # Fetch favorite recipes
+    favorite_recipes = (
+        db.session.query(Recipe)
+        .join(Favorite, Recipe.recipe_id == Favorite.recipe_id)
+        .filter(Favorite.user_id == user_id)
+        .all()
+    )
+
+    return render_template('favorites.html', favorites=favorite_recipes, user=user)
+
 @bp.route('/add-recipe/title', methods=['GET', 'POST'])
 def add_recipe_title():
     form = TitleForm()
@@ -291,46 +313,6 @@ def add_recipe_confirmation():
     description = session.get('description')
     ingredients = session.get('ingredients')
     steps = session.get('steps')
-    price = session.get('price')
-    image_url = session.get('image_url')  # Dit moet worden ingesteld als de afbeelding wordt opgeslagen
 
-    return render_template(
-        'add_recipe/confirmation.html',
-        title=title,
-        description=description,
-        ingredients=ingredients,
-        steps=steps,
-        price=price,
-        image_url=image_url
-    )
 
-@bp.route('/add-recipe/price', methods=['GET', 'POST'])
-def add_recipe_price():
-    form = PriceForm()
-    if form.validate_on_submit():
-        session['price'] = form.price.data
-        return redirect(url_for('routes.add_recipe_confirmation'))
-    return render_template('add_recipe/price.html', form=form)
 
-@bp.route('/favorites', methods=['GET'])
-def favorites():
-    if 'user_id' not in session:
-        return redirect(url_for('routes.login'))
-
-    user_id = session['user_id']
-
-    # Fetch user information
-    user = Customer.query.filter_by(customer_id=user_id).first()
-
-    if not user:
-        return redirect(url_for('routes.login'))  # If the user is not found, redirect to login
-
-    # Fetch favorite recipes
-    favorite_recipes = (
-        db.session.query(Recipe)
-        .join(Favorite, Recipe.recipe_id == Favorite.recipe_id)
-        .filter(Favorite.user_id == user_id)
-        .all()
-    )
-
-    return render_template('favorites.html', favorites=favorite_recipes, user=user)

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Recipe - Ingredients</title>
+</head>
+<body>
+    <h1>Step 3: Add Ingredients</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <p>{{ form.ingredients.label }} {{ form.ingredients(rows=5, cols=50) }}</p>
+        <button type="submit">Next</button>
+    </form>
+</body>
+</html>

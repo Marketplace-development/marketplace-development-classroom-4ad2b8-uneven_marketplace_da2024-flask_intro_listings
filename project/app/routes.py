@@ -954,6 +954,11 @@ def connecties():
 
     # Volgers ophalen
     followers = Users.query.join(Connections, Connections.follower_id == Users.userid).filter(Connections.followed_id == user.userid).all()
+    for follower in followers:
+        connection = Connections.query.filter_by(follower_id=user.userid, followed_id=follower.userid).first()
+        follower.is_followed = connection is not None
+
+
 
     # Gevolgden ophalen
     following = Users.query.join(Connections, Connections.followed_id == Users.userid).filter(Connections.follower_id == user.userid).all()

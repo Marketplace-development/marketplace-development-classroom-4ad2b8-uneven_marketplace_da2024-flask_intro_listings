@@ -20,10 +20,6 @@ class Users(db.Model):
     profilepicture = db.Column(db.String, default="")
     nationality = db.Column(db.String, default="")
 
-    # Booleans for roles
-    isprovider = db.Column(db.Boolean, default=False)
-    issearcher = db.Column(db.Boolean, default=False)
-
     # Metadata
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)
 

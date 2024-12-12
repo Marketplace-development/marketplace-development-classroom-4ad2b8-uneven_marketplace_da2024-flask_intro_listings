@@ -59,9 +59,6 @@ def register():
             password=password,  # Hash het wachtwoord
             firstname=first_name,
             lastname=last_name,
-            address=address,
-            city=city,
-            postalcode=postal_code,
             country=country,
             nationality=nationality,
             profilepicture=profile_picture_url

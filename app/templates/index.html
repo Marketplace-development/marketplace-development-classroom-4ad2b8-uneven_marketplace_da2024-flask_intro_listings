@@ -18,6 +18,13 @@ Dashboard
                 {% endif %}
             </div>
 
+            <!-- Add Recipe Section -->
+             <div class="col-sm-4">
+                <h2>Add Recipes</h2>
+                <a href="{{ url_for('routes.add_recipe_title') }}" class="btn btn-primary">Add Recipe</a>
+            </div>
+
+
             <!-- User Listings Section -->
             <div class="col-sm-4">
                 {% if listings %}

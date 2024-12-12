@@ -1208,76 +1208,165 @@
     object-fit: cover; /* Ensures the image fits and maintains aspect ratio */
 }
 
-.form-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.recipe-page .recipe-header {
     text-align: center;
+    margin-bottom: 1em;
 }
 
-.form-section h1 {
-    margin-bottom: 30px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
+.recipe-page .recipe-header h1 {
+    font-size: 2rem;
+    color: #264653;
 }
 
-form {
-    width: 100%;
-    max-width: 600px;
-    background: #fff;
-    padding: 20px;
+.recipe-page .recipe-header .creator {
+    font-size: 1rem;
+    color: #555;
+}
+
+.recipe-page .recipe-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2em;
+    justify-content: center;
+    margin-bottom: 2em;
+}
+
+.recipe-page .recipe-image img {
+    max-width: 100%;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-form p {
-    margin-bottom: 15px;
-    text-align: left;
+.recipe-page .recipe-details {
+    max-width: 400px;
+    line-height: 1.6;
 }
 
-form label {
-    display: block;
+.recipe-page .recipe-details p {
+    margin: 0.5em 0;
+}
+
+.recipe-page .btn-favorite {
+    background-color: #2a9d8f;
+    color: white;
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1em;
+}
+
+.recipe-page .btn-favorite:hover {
+    background-color: #21867a;
+}
+
+.recipe-reviews ul {
+    list-style: none;
+    padding: 0;
+}
+
+.recipe-reviews li {
+    background: #f4f4f4;
+    margin: 1em 0;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-reviews h2 {
+    text-align: center;
+    color: #264653;
+}
+
+/* Confirmation Page */
+.confirmation-section {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.confirmation-container {
+    display: flex;
+    max-width: 900px;
+    margin: auto;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.confirmation-details {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #ffffff;
+}
+
+.confirmation-details h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.confirmation-details .price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 10px;
+}
+
+.confirmation-details p {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.confirmation-details h3 {
+    font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 5px;
+    color: #333;
 }
 
-form input, form textarea, form select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    margin-bottom: 15px;
-}
-
-.form-navigation {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.form-navigation a,
-form button {
-    text-decoration: none;
-    padding: 10px 20px;
-    font-size: 16px;
+.btn-submit {
+    background-color: #000;
     color: #fff;
-    background-color: #007bff;
+    padding: 10px 20px;
+    font-size: 1rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    text-align: center;
+    margin-top: 20px;
 }
 
-.form-navigation a:hover,
-form button:hover {
-    background-color: #0056b3;
+.btn-submit:hover {
+    background-color: #333;
 }
 
-.form-navigation a {
-    background-color: #6c757d;
+/* Recipe Confirmation Titel */
+.confirmation-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
-.form-navigation a:hover {
-    background-color: #5a6268;
+.confirmation-image {
+    flex: 1;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.confirmation-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
 }

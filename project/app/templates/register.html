@@ -8,37 +8,38 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         body {
             font-family: 'Georgia', serif;
             margin: 0;
             padding: 0;
-            background: #1f3d2b; /* Donkergroene achtergrondkleur */
+            background: #1f3d2b;
             color: #ffffff;
             display: flex;
-            flex-direction: column; /* Zorgt dat de header bovenaan blijft */
-            min-height: 100vh; /* Houdt de pagina fullscreen */
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .container {
             text-align: center;
             max-width: 400px;
             width: 100%;
-            margin: auto; /* Centraal plaatsen */
-            padding-bottom: 100px;
+            margin: auto;
+            padding: 20px;
         }
 
         h1 {
             font-size: 36px;
             font-weight: 700;
-            color: #ffffff; /* White text for the main title */
-            margin-bottom: 40px; /* Space below the title */
+            color: #ffffff;
+            margin-bottom: 40px;
         }
 
         form {
             display: flex;
             flex-direction: column;
-            gap: 20px; /* Add consistent spacing between form elements */
+            gap: 20px;
         }
 
         input {
@@ -78,7 +79,7 @@
         }
 
         .submit-button:hover {
-            background: #cccccc; /* Light gray hover effect */
+            background: #cccccc;
             color: #013220;
         }
 
@@ -104,33 +105,73 @@
         .checkbox-group label {
             margin-left: 5px;
         }
+
+        /* Style for hiding file input default appearance */
+        input[type="file"] {
+            display: none;
+        }
+
+        .custom-file-label {
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            border-radius: 20px;
+            background: #eee;
+            color: #333;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-file-label:hover {
+            background: #cccccc;
+        }
     </style>
 </head>
 <body>
     {% include 'header.html' %}
 
-
     <div class="container">
         <h1>Registreren bij Travel Tales</h1>
         <form id="registration-form" method="POST" action="/register" enctype="multipart/form-data">
-            <input type="text" id="firstName" name="firstname" placeholder="Voornaam" required>
-            <input type="text" id="lastName" name="lastname" placeholder="Achternaam" required>
-            <input type="text" id="address" name="address" placeholder="Straatnaam en huisnummer">
-            <input type="text" id="city" name="city" placeholder="Stad">
-            <input type="text" id="postalCode" name="postalcode" placeholder="Postcode">
-            <input type="text" id="country" name="country" placeholder="Land" required>
-            <input type="email" id="email" name="email" placeholder="E-mailadres" required>
-            <input type="password" id="password" name="password" placeholder="Wachtwoord" required>
-            <input type="text" id="nationality" name="nationality" placeholder="Nationaliteit">
-            <label for="profilePicture">Upload een profielfoto:</label>
-            <input type="file" id="profilePicture" name="profilePicture" accept=".jpg, .jpeg, .png, .gif">
-
+            <div class="mb-3">
+                <input type="text" id="firstName" name="firstname" class="form-control" placeholder="Voornaam" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" id="lastName" name="lastname" class="form-control" placeholder="Achternaam" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" id="address" name="address" class="form-control" placeholder="Straatnaam en huisnummer">
+            </div>
+            <div class="mb-3">
+                <input type="text" id="city" name="city" class="form-control" placeholder="Stad">
+            </div>
+            <div class="mb-3">
+                <input type="text" id="postalCode" name="postalcode" class="form-control" placeholder="Postcode">
+            </div>
+            <div class="mb-3">
+                <input type="text" id="country" name="country" class="form-control" placeholder="Land" required>
+            </div>
+            <div class="mb-3">
+                <input type="email" id="email" name="email" class="form-control" placeholder="E-mailadres" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" id="password" name="password" class="form-control" placeholder="Wachtwoord" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" id="nationality" name="nationality" class="form-control" placeholder="Nationaliteit">
+            </div>
+            <div class="mb-3">
+                <label for="profilePicture" class="form-label custom-file-label">Upload een profielfoto</label>
+                <input type="file" id="profilePicture" name="profilePicture" class="form-control" accept=".jpg, .jpeg, .png, .gif">
+            </div>
             <div class="form-group">
                 <button type="submit" class="submit-button">Registreren</button>
             </div>
             <small>Heb je al een account? <a href="{{ url_for('main.login') }}">Log hier in</a>.</small>
         </form>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

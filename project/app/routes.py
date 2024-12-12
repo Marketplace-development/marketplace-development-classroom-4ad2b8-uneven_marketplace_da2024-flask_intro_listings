@@ -1232,23 +1232,25 @@ def messages():
 
         return redirect(url_for('main.messages', chat_with=receiver_id))
 
-    # Haal alle gebruikers op
+    # Haal alle gebruikers op, gesorteerd op basis van interacties van de huidige gebruiker
     users = db.session.query(
-        Users, func.max(Messages.created_at).label('last_activity')
+        Users,
+        func.max(Messages.created_at).label('last_activity')
     ).outerjoin(
         Messages, db.or_(
-            Messages.sender_id == Users.userid,
-            Messages.receiver_id == Users.userid
+            (Messages.sender_id == current_user_id) & (Messages.receiver_id == Users.userid),
+            (Messages.receiver_id == current_user_id) & (Messages.sender_id == Users.userid)
         )
     ).filter(
         Users.userid != current_user_id  # Sluit de huidige gebruiker uit
     ).group_by(
         Users.userid
     ).order_by(
-        func.max(Messages.created_at).desc().nullslast(),  # Plaats gebruikers zonder interactie onderaan
-        Users.firstname.asc()  # Sorteer gebruikers zonder interactie op naam
+        func.max(Messages.created_at).desc().nullslast(),  # Interactie bovenaan, geen interactie onderaan
+        Users.firstname.asc()  # Sorteer alfabetisch als tiebreaker
     ).all()
 
+    # Haal berichten en geselecteerde gebruiker op
     chat_with = request.args.get('chat_with')
     messages = []
     selected_user = None
@@ -1261,7 +1263,7 @@ def messages():
                     (Messages.sender_id == current_user_id) & (Messages.receiver_id == chat_with),
                     (Messages.sender_id == chat_with) & (Messages.receiver_id == current_user_id)
                 )
-            ).order_by(Messages.created_at).all()
+            ).order_by(Messages.created_at.asc()).all()
 
     return render_template(
         'messages.html',

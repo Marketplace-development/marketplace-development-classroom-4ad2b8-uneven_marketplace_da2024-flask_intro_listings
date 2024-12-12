@@ -142,13 +142,10 @@
             overflow-y: auto;
         }
 
-        .chat-header {
-            padding: 10px;
-            background: #3c764b;
-            color: white;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
+        #chat-header {
+            padding: 15px 20px;
+            background-color: #f9f9f9; /* Grijze achtergrond zoals het berichtenvenster */
+            border-bottom: 1px solid #ccc; /* Optionele scheiding onder de header */
         }
         
         .chat-container {
@@ -167,7 +164,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px; /* Ruimte tussen berichten */
-            max-height: calc(100vh - 260px); /* Hoogte aanpassen aan scherm */
+            height: calc(100vh - 350px); /* Hoogte aanpassen aan scherm */
         }
 
         .message {
@@ -412,25 +409,37 @@
             </div>                     
         </aside>    
         <main class="content">
-            <div class="chat-container">
-                <div class="messages" id="messages-container">
+            <div id="chat-container">
+                <div id="chat-header">
+                    {% if selected_user %}
+                    <h2>Chat met {{ selected_user.firstname }} {{ selected_user.lastname }}</h2>
+                    {% else %}
+                    <h2>Selecteer een gebruiker om te beginnen</h2>
+                    {% endif %}
+                </div>
+        
+                <div class="messages"id="messages-container">
                     {% if messages %}
                         {% for message in messages %}
-                        <div class="message {% if message.sender_id == session['userid'] %}sent{% else %}received{% endif %}">
+                        <div class="message {% if message.sender_id == user.userid %}sent{% else %}received{% endif %}">
                             {{ message.message }}
                         </div>
                         {% endfor %}
                     {% else %}
-                        <p style="text-align: center; color: #888;">Selecteer een gebruiker om te beginnen met chatten.</p>
+                        {% if selected_user %}
+                        <p style="text-align: center; color: #888;">Er zijn nog geen berichten met {{ selected_user.firstname }} {{ selected_user.lastname }}.</p>
+                        {% else %}
+                        <p style="text-align: center; color: #888;">Selecteer een gebruiker om te beginnen</p>
+                        {% endif %}
                     {% endif %}
                 </div>
                 <form class="message-form" method="POST" action="{{ url_for('main.messages') }}">
                     <input type="hidden" name="receiver_id" value="{{ chat_with }}">
                     <textarea name="message" placeholder="Typ een bericht..." required></textarea>
                     <button type="submit">Verstuur</button>
-                </form>
-            </div>
-        </main>        
+                </form>            </div>
+        
+        </main>
     </div>
 </body>
 </html>

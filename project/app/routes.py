@@ -404,11 +404,16 @@ def gekocht():
     # Haal alle gekochte reizen van de gebruiker op
     gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
 
-    # Voeg eigenaarinformatie toe aan elk gekocht object
+    # Voeg eigenaarinformatie en andere benodigde gegevens toe aan elk gekocht object
     for aankoop in gekochte_reizen:
+        aankoop.good = DigitalGoods.query.get(aankoop.goodid)  # Koppel het DigitalGoods-object
+        if aankoop.good:
+            aankoop.good.image_urls = json.loads(aankoop.good.image_urls or '[]')  # Decodeer image_urls als JSON
         aankoop.eigenaar = Users.query.get(aankoop.good.userid)
 
     return render_template('gekocht.html', user=user, gekochte_reizen=gekochte_reizen)
+
+
 
 @main.route('/algekocht')
 def algekocht():

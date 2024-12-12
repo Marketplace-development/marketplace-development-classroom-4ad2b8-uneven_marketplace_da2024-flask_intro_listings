@@ -529,21 +529,20 @@ def search():
 @main.route('/reis/<goodid>', methods=['GET'])
 def reisdetail(goodid):
     if 'userid' not in session:
-        return redirect(url_for('main.login'))  # Verwijzen naar login als gebruiker niet is ingelogd
+        return redirect(url_for('main.login'))  # Stuur gebruiker naar login als niet ingelogd
 
     user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
     if not user:
-        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+        return redirect(url_for('main.logout'))  # Log uit als de gebruiker niet bestaat
 
-    # Haal de specifieke reis op uit de database
+    # Haal de reis op uit de database
     reis = DigitalGoods.query.filter_by(goodid=goodid).first()
 
     if not reis:
         flash('Reis niet gevonden.', 'error')
-        return redirect(url_for('main.search'))
+        return redirect(url_for('main.gepost'))  # Terug naar geüploade reizen als reis niet bestaat
 
-    # Haal afbeelding op
-
+    # Voeg aanvullende gegevens toe aan de reis
     reis.user = Users.query.filter_by(userid=reis.userid).first()
     try:
         reis.image_urls = json.loads(reis.image_urls) if reis.image_urls else []
@@ -551,36 +550,22 @@ def reisdetail(goodid):
         reis.image_urls = []
     reis.review_count = Feedback.query.filter_by(targetgoodid=reis.goodid).count()
 
+    # Bereken gemiddelde beoordeling
     reviews = Feedback.query.filter_by(targetgoodid=reis.goodid).all()
-    if reviews:
-        reis.gemiddelde_rating = sum(review.rating for review in reviews) / len(reviews)
-    else:
-        reis.gemiddelde_rating = 0
-
-
-    # Haal de eigenaar van de reis op
-    eigenaar = Users.query.filter_by(userid=reis.userid).first()
+    gemiddelde_rating = (
+        sum(review.rating for review in reviews) / len(reviews) if reviews else 0
+    )
 
     # Controleer of deze reis een favoriet is van de gebruiker
     is_favoriet = Favoriet.query.filter_by(userid=user.userid, goodid=goodid).first() is not None
 
+    # Haal de eigenaar van de reis op
+    eigenaar = Users.query.filter_by(userid=reis.userid).first()
+
     # Controleer of de gebruiker de eigenaar is van de reis
     is_owner = (user.userid == eigenaar.userid)
 
-    # Haal alle reviews voor deze reis op
-    reviews = Feedback.query.filter_by(targetgoodid=goodid).all()
-    categorieën = Category.query.join(DigitalGoods.categories).filter(DigitalGoods.goodid == goodid).all()
-
-    # Bereken het gemiddelde van de reviews
-    if reviews:
-        gemiddelde_rating = int(sum(review.rating for review in reviews) / len(reviews))
-    else:
-        gemiddelde_rating = 0
-
-    # Voeg het aantal reviews toe
-    review_count = len(reviews)
-
-    # Render de template met reisgegevens, reviews, favorietstatus en eigenaar
+    # Render de template met de gegevens
     return render_template(
         'reisdetail.html',
         reis=reis,
@@ -588,11 +573,11 @@ def reisdetail(goodid):
         eigenaar=eigenaar,
         is_favoriet=is_favoriet,
         reviews=reviews,
-        review_count=review_count,
         gemiddelde_rating=gemiddelde_rating,
-        categorieën=categorieën,
-        is_owner=is_owner
+        review_count=len(reviews),
+        is_owner=is_owner,
     )
+
 
 
 @main.route('/koop/<goodid>', methods=['POST'])

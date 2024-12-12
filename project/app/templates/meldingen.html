@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mijn Favorieten</title>
+    <title>Mijn Meldingen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" defer></script>
     <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
-
     <style>
         body {
             font-family: 'Georgia', serif;
@@ -19,38 +20,25 @@
             min-height: 100vh;
         }
 
-        .main-container {
-            display: flex;
-            flex: 1;
-        }
-
-        .sidebar {
-            width: 250px;
+        .navbar-custom {
             background: #2e5f3d;
-            padding: 20px;
+            padding: 15px;
         }
 
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sidebar li {
-            margin: 15px 0;
-        }
-
-        .sidebar a {
-            text-decoration: none;
-            color: #ffffff;
-            font-size: 16px;
-            display: block;
-            padding: 10px;
+        .navbar-custom .navbar-toggler {
             background: #3c764b;
+            border: none;
+        }
+
+        .navbar-custom .nav-link {
+            color: white;
+            font-size: 16px;
+            padding: 10px;
             border-radius: 5px;
             transition: background 0.3s ease;
         }
 
-        .sidebar a:hover {
+        .navbar-custom .nav-link:hover {
             background: #4f8a61;
         }
 
@@ -58,22 +46,16 @@
             flex: 1;
             padding: 20px 30px;
             background: #ffffff;
+            border-radius: 10px 10px 0 0;
         }
 
-        h1 {
+        .content h1 {
             font-size: 24px;
             margin-bottom: 20px;
+            color: #24452e;
+            text-align: center;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
         .notification {
             padding: 15px;
             border-bottom: 1px solid #eee;
@@ -95,41 +77,60 @@
             color: #888;
             font-size: 12px;
         }
-
-        
-
-        
-        
     </style>
 </head>
 <body>
     {% include 'header.html' %}
 
-    <div class="main-container">
-        <aside class="sidebar">
-            <ul>
-                <li><a href="{{ url_for('main.userpage') }}">Profielgegevens</a></li>
-                <li><a href="{{ url_for('main.gekocht') }}">Mijn aangekochte reizen</a></li>
-                <li><a href="{{ url_for('main.gepost') }}">Mijn geüploade reizen</a></li>
-                <li><a href="{{ url_for('main.favoriet') }}">Mijn favorieten</a></li>
-                <li><a href="{{ url_for('main.connecties') }}">Mijn connecties</a></li>
-                <li><a href="{{ url_for('main.zoekconnecties') }}">Zoek connecties</a></li>
-                <li><a href="{{ url_for('main.verkochte_reizen') }}">Mijn portefeuille</a></li>
-                <li><a href="{{ url_for('main.messages') }}">Mijn berichten</a></li>
-                <li><a href="{{ url_for('main.meldingen') }}">Mijn meldingen</a></li>
-            </ul>
-        </aside>
-
-        <main class="content">
-            <h1>Mijn Meldingen</h1>
-            {% for notification in notifications %}
-            <div class="notification {% if not notification.is_read %}unread{% elif notification.is_recently_read %}read-recently{% else %}read{% endif %}">
-                <p>{{ notification.message }}</p>
-                <small>{{ notification.created_at.strftime('%d-%m-%Y %H:%M') }}</small>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="#">Menu</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.userpage') }}">Profielgegevens</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.gekocht') }}">Mijn aangekochte reizen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.gepost') }}">Mijn geüploade reizen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.favoriet') }}">Mijn favorieten</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.connecties') }}">Mijn connecties</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.zoekconnecties') }}">Zoek connecties</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.verkochte_reizen') }}">Mijn portefeuille</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.messages') }}">Mijn berichten</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.meldingen') }}">Mijn meldingen</a>
+                    </li>
+                </ul>
             </div>
-            {% endfor %}
-        </main>
+        </div>
+    </nav>
 
-    </div>
+    <main class="content">
+        <h1>Mijn Meldingen</h1>
+        {% for notification in notifications %}
+        <div class="notification {% if not notification.is_read %}unread{% elif notification.is_recently_read %}read-recently{% else %}read{% endif %}">
+            <p>{{ notification.message }}</p>
+            <small>{{ notification.created_at.strftime('%d-%m-%Y %H:%M') }}</small>
+        </div>
+        {% endfor %}
+    </main>
 </body>
 </html>
+	

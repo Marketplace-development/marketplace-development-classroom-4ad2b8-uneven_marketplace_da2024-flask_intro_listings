@@ -52,22 +52,20 @@
         .sidebar a:hover {
             background: #4f8a61;
         }
-
+        
         .content {
             flex: 1;
             padding: 20px 30px;
             background: #ffffff;
         }
 
-        .section {
-            margin-bottom: 50px;
-            padding: 15px;
-            background: #f5f5f5; /* Lichtgrijze achtergrond voor secties */
-            border: 1px solid #ddd; /* Rand om secties */
-            border-radius: 8px;
+        .connections-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-top: 20px;
         }
 
-        
         .connections-container {
             display: flex;
             justify-content: space-between;
@@ -102,17 +100,27 @@
             color: #333;
         }
         
-        .connection-item p {
+        .connection-item a {
             margin: 0;
-            text-align: right; /* Rechts uitlijnen van de namen */
+            text-align: left; /* Rechts uitlijnen van de namen */
             flex: 1;
+        }
+        .connection-item a {
+            font-size: 16px;
+            color: #333;
+            text-decoration: none;
+            margin-left: auto; /* Zorgt dat de namen naar rechts worden uitgelijnd */
+        }
+
+        .connection-item a:hover {
+            color: #24452e;
         }
         
         .connection-item form {
             margin-left: 20px;
         }
         
-        .connection-item button {
+        button {
             padding: 5px 10px;
             border: none;
             border-radius: 5px;
@@ -121,25 +129,31 @@
             color: white;
             background-color: #24452e;
         }
-        
-        .connection-item button.ontvolg {
-            background-color: #a9a9a9;
+
+
+        button.volg {
+            background-color: #24452e; /* Donkergroen */
+        }
+
+        button.volg:hover {
+            background-color: #3c764b; /* Lichter groen */
+        }
+
+        button.ontvolg {
+            background-color: #a9a9a9; /* Grijs */
+        }
+
+        button.ontvolg:hover {
+            background-color: #808080; /* Donkergrijs */
         }
         
-        .connection-item button:hover {
-            background-color: #3c764b;
+        .connection-item {
+            display: flex;
+            align-items: center; /* Zorgt dat de afbeelding en tekst op dezelfde lijn staan */
+            gap: 20px; /* Vergroot de ruimte tussen de foto en de naam */
+            margin-bottom: 20px; /* Optionele extra marge onder de header */
         }
-        
-    
-        .connections-container h1 {
-            text-align: center;
-            color: #24452e;
-        }
-    
-        .connections-container p {
-            text-align: center;
-            color: #888;
-        }
+
       
         
     </style>
@@ -174,14 +188,16 @@
                         {% for follower in followers %}
                         <div class="connection-item">
                             <img src="{{ follower.profilepicture if follower.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
-                            <p>{{ follower.firstname }} {{ follower.lastname }}</p>
+                            <a href="{{ url_for('main.user_profile', userid=follower.userid) }}">
+                                {{ follower.firstname }} {{ follower.lastname }}
+                            </a>
                             <form method="POST" action="{{ url_for('main.toggle_follow') }}">
                                 <input type="hidden" name="followed_id" value="{{ follower.userid }}">
                                 <input type="hidden" name="referer_page" value="connecties">
                                 {% if follower.is_followed %}
-                                <button type="submit" class="ontvolg">Ontvolgen</button>
+                                    <button type="submit" class="ontvolg">Ontvolgen</button>
                                 {% else %}
-                                <button type="submit" class="volg">Volgen</button>
+                                    <button type="submit" class="volg">Ook volgen</button>
                                 {% endif %}
                             </form>
                         </div>
@@ -198,11 +214,13 @@
                         {% for followed in following %}
                         <div class="connection-item">
                             <img src="{{ followed.profilepicture if followed.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
-                            <p>{{ followed.firstname }} {{ followed.lastname }}</p>
+                            <a href="{{ url_for('main.user_profile', userid=followed.userid) }}">
+                                {{ followed.firstname }} {{ followed.lastname }}
+                            </a>
                             <form method="POST" action="{{ url_for('main.toggle_follow') }}">
                                 <input type="hidden" name="followed_id" value="{{ followed.userid }}">
                                 <input type="hidden" name="referer_page" value="connecties">
-                                <button type="submit" class="ontvolg">Ontvolgen</button>
+                                    <button type="submit" class="ontvolg">Ontvolgen</button>
                             </form>
                         </div>
                         {% endfor %}

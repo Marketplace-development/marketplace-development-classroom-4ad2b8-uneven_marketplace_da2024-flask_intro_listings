@@ -436,11 +436,29 @@ def favoriet():
     # Haal favorieten op voor de huidige gebruiker
     favorieten = Favoriet.query.filter_by(userid=user.userid).all()
 
-    # Voeg eigenaarinformatie toe aan elk favoriet object
+    # Voeg eigenaarinformatie en andere benodigde gegevens toe aan elk favoriet object
+    uitgebreide_favorieten = []
     for favoriet in favorieten:
-        favoriet.eigenaar = Users.query.get(favoriet.good.userid)
+        good = DigitalGoods.query.get(favoriet.goodid)
+        if good:
+            eigenaar = Users.query.get(good.userid)
+            uitgebreide_favorieten.append({
+                "good": {
+                    "goodid": good.goodid,
+                    "titleofitinerary": good.titleofitinerary,
+                    "descriptionofitinerary": good.descriptionofitinerary,
+                    "price": good.price,
+                    "image_urls": json.loads(good.image_urls) if good.image_urls else []
+                },
+                "eigenaar": {
+                    "firstname": eigenaar.firstname if eigenaar else "Onbekend",
+                    "lastname": eigenaar.lastname if eigenaar else "",
+                    "country": eigenaar.country if eigenaar else "Onbekend"
+                }
+            })
 
-    return render_template('favoriet.html', user=user, favorieten=favorieten)
+    return render_template('favoriet.html', user=user, favorieten=uitgebreide_favorieten)
+
 
 @main.route('/search', methods=['GET'])
 def search():

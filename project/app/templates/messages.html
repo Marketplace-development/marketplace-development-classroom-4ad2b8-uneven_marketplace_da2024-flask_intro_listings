@@ -412,7 +412,7 @@
                 <div class="user-item {% if chat_with == user.userid %}active{% endif %}" 
                      data-last-activity="{{ last_activity or '' }}" 
                      onclick="selectUser('{{ user.userid }}', '{{ user.firstname }} {{ user.lastname }}')">
-                    <img src="{{ user.profilepicture if user.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto">
+                    <img src="{{ user.profilepicture if user.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" style="object-fit: cover;">
                     <div>
                         {{ user.firstname }} {{ user.lastname }}
                         {% if unread_count > 0 %}

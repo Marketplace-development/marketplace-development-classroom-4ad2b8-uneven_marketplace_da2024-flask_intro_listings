@@ -96,7 +96,7 @@ def login():
             return redirect(url_for('main.index'))
         
         # Toon een foutbericht als de gebruiker niet wordt gevonden of het wachtwoord onjuist is
-        flash('Ongeldige inloggegevens. Controleer je e-mailadres en wachtwoord.', 'error')
+        flash('Ongeldige inloggegevens. Controleer je e-mailadres en wachtwoord.', 'error') #check
         return redirect(url_for('main.login'))
     
     return render_template('login.html')
@@ -610,13 +610,13 @@ def koop(goodid):
     # Haal de specifieke reis op uit de database
     reis = DigitalGoods.query.filter_by(goodid=goodid).first()
     if not reis:
-        flash('Reis niet gevonden.', 'error')
+        flash('Reis niet gevonden.', 'error') #check
         return redirect(url_for('main.search'))  # Verwijs terug naar de zoekpagina
 
     # Controleer of deze reis al gekocht is door de gebruiker
     bestaande_aankoop = Gekocht.query.filter_by(userid=user.userid, goodid=goodid).first()
     if bestaande_aankoop:
-        flash('Je hebt deze reis al gekocht.', 'info')
+        #flash('Je hebt deze reis al gekocht.', 'info')
         return redirect(url_for('main.algekocht'))  # Verwijs naar de pagina met gekochte reizen
 
     # Voeg de aankoop toe aan de database
@@ -696,7 +696,7 @@ def verwijder_aankoop():
     if aankoop and aankoop.userid == session['userid']:
         db.session.delete(aankoop)
         db.session.commit()
-        flash('Aankoop succesvol verwijderd.', 'success')
+        #flash('Aankoop succesvol verwijderd.', 'success')
     else:
         flash('Er is iets misgegaan bij het verwijderen.', 'error')
 
@@ -787,7 +787,7 @@ def submit_review():
 
     # Controleer of alle velden correct zijn ingevuld
     if not (goodid and review_text and rating):
-        flash('Alle velden zijn verplicht.', 'danger')
+        #flash('Alle velden zijn verplicht.', 'danger')
         return redirect(request.referrer)
 
     # Controleer of de gebruiker deze reis heeft gekocht
@@ -799,8 +799,7 @@ def submit_review():
     # Controleer of er al een review bestaat voor deze gebruiker en reis
     bestaande_review = Feedback.query.filter_by(userid=userid, targetgoodid=goodid).first()
     if bestaande_review:
-        flash('Je hebt al een review geschreven voor deze reis.', 'warning')
-        return redirect(url_for('main.gekocht'))
+        return redirect(url_for('main.al_review'))
 
     # Voeg een nieuwe review toe aan de database
     new_feedback = Feedback(
@@ -814,12 +813,16 @@ def submit_review():
     db.session.add(new_feedback)
     db.session.commit()
 
-    flash('Review succesvol ingediend!', 'success')
     return redirect(url_for('main.review_bedanking'))
 
 @main.route('/review_bedanking', methods=['GET'])
 def review_bedanking():
     return render_template('reviewbedanking.html')
+
+@main.route('/al_review', methods=['GET'])
+def al_review():
+    return render_template('alreview.html')
+
 
 @main.route('/api/travels', methods=['GET'])
 def get_user_travels():
@@ -922,7 +925,7 @@ def boost_payment(goodid):
             # Update de timestamp om de reis als geboost te markeren
             reis.createdat = datetime.datetime.utcnow()
             db.session.commit()
-            flash(f'Reis "{reis.titleofitinerary}" is succesvol geboost!', 'success')
+            #flash(f'Reis "{reis.titleofitinerary}" is succesvol geboost!', 'success')
             return redirect(url_for('main.boost_confirm', goodid=goodid))
         else:
             flash('Betaling mislukt. Probeer het opnieuw.', 'error')
@@ -1015,7 +1018,7 @@ def toggle_follow():
         # Ontvolgen
         db.session.delete(connection)
         db.session.commit()
-        flash("Je hebt de gebruiker ontvolgd.", "success")
+        #flash("Je hebt de gebruiker ontvolgd.", "success")
     else:
         # Volgen
         new_connection = Connections(follower_id=follower_id, followed_id=followed_id)
@@ -1027,7 +1030,7 @@ def toggle_follow():
             sender_id=follower_id,
             message=f" {user.firstname} {user.lastname} volgt je nu!"
         )
-        flash("Je volgt de gebruiker nu.", "success")
+        #flash("Je volgt de gebruiker nu.", "success")
 
 
     # Bepaal de referer-pagina en leid de gebruiker daarheen terug

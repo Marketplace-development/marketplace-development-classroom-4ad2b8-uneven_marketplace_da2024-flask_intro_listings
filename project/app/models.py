@@ -16,7 +16,6 @@ class Users(db.Model):
     country = db.Column(db.String, default="")
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
-    phone = db.Column(db.String, default="")
     profilepicture = db.Column(db.String, default="")
     nationality = db.Column(db.String, default="")
 

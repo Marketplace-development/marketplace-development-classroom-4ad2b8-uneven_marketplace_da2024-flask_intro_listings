@@ -424,6 +424,7 @@ def algekocht():
 
     return render_template('algekocht.html', user=user)
 
+
 @main.route('/favoriet', methods=['GET'])
 def favoriet():
     if 'userid' not in session:

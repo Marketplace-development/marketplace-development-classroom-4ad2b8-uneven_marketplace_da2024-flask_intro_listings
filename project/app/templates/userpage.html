@@ -4,52 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profiel Instellingen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" defer></script>
     <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
     <style>
         body {
             font-family: 'Georgia', serif;
             margin: 0;
             padding: 0;
-            background: #ffffff; /* Witte achtergrond */
-            color: #1f3d2b; /* Donkergroene tekstkleur */
+            background: #ffffff;
+            color: #1f3d2b;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        .main-container {
-            display: flex;
-            flex: 1;
+        .navbar-custom {
+            background: #2e5f3d;
+            padding: 15px;
         }
 
-        .sidebar {
-            width: 250px;
-            background: #2e5f3d; /* Groene zijbalk */
-            padding: 20px;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sidebar li {
-            margin: 15px 0;
-        }
-
-        .sidebar a {
-            text-decoration: none;
-            color: #ffffff;
-            font-size: 16px;
-            display: block;
-            padding: 10px;
+        .navbar-custom .navbar-toggler {
             background: #3c764b;
+            border: none;
+        }
+
+        .navbar-custom .nav-link {
+            color: white;
+            font-size: 16px;
+            padding: 10px;
             border-radius: 5px;
             transition: background 0.3s ease;
         }
 
-        .sidebar a:hover {
+        .navbar-custom .nav-link:hover {
             background: #4f8a61;
         }
 
@@ -111,118 +100,138 @@
 <body>
     {% include 'header.html' %}
 
-    <div class="main-container">
-        <!-- Zijbalk -->
-        <aside class="sidebar">
-            <ul>
-                <li><a href="{{ url_for('main.userpage') }}">Profielgegevens</a></li>
-                <li><a href="{{ url_for('main.gekocht') }}">Mijn aangekochte reizen</a></li>
-                <li><a href="{{ url_for('main.gepost') }}">Mijn geüploade reizen</a></li>
-                <li><a href="{{ url_for('main.favoriet') }}">Mijn favorieten</a></li>
-                <li><a href="{{ url_for('main.connecties') }}">Mijn connecties</a></li>
-                <li><a href="{{ url_for('main.zoekconnecties') }}">Zoek connecties</a></li>
-                <li><a href="{{ url_for('main.verkochte_reizen') }}">Mijn portefeuille</a></li>
-                <li><a href="{{ url_for('main.messages') }}">Mijn berichten</a></li>
-                <li><a href="{{ url_for('main.meldingen') }}">Mijn meldingen</a></li>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="#"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.userpage') }}">Profielgegevens</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.gekocht') }}">Mijn aangekochte reizen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.gepost') }}">Mijn geüploade reizen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.favoriet') }}">Mijn favorieten</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.connecties') }}">Mijn connecties</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.zoekconnecties') }}">Zoek connecties</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.verkochte_reizen') }}">Mijn portefeuille</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.messages') }}">Mijn berichten</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.meldingen') }}">Mijn meldingen</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-            </ul>
-        </aside>
+    <main class="content">
+        <h1>Profielgegevens</h1>
+        <form class="section" id="profile-form" method="POST" action="/userpage" enctype="multipart/form-data">
+            <!-- Huidige profielfoto -->
+            <div class="profile-picture">
+                <h3>Profielfoto:</h3>
+                {% if user.profilepicture %}
+                    <img src="{{ user.profilepicture }}" alt="Profielfoto" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
+                {% else %}
+                    <p>Geen profielfoto beschikbaar.</p>
+                {% endif %}
+                <label for="profilePicture">Nieuwe profielfoto uploaden:</label>
+                <input type="file" id="profilePicture" name="profilePicture" accept=".jpg, .jpeg, .png, .gif">
+            </div>
 
-        <!-- Hoofdgedeelte -->
-        <main class="content">
-            <h1>Profielgegevens</h1>
-            <form class="section" id="profile-form" method="POST" action="/userpage" enctype="multipart/form-data">
-                <!-- Huidige profielfoto -->
-                <div class="profile-picture">
-                    <h3>Profielfoto:</h3>
-                    {% if user.profilepicture %}
-                        <img src="{{ user.profilepicture }}" alt="Profielfoto" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
-                    {% else %}
-                        <p>Geen profielfoto beschikbaar.</p>
-                    {% endif %}
-                    <label for="profilePicture">Nieuwe profielfoto uploaden:</label>
-                    <input type="file" id="profilePicture" name="profilePicture" accept=".jpg, .jpeg, .png, .gif">
-                </div>
+            <div class="form-row">
+                <label for="firstname">Voornaam:</label>
+                <input type="text" id="firstname" name="firstname" value="{{ user.firstname }}" required>
+            </div>
+            <div class="form-row">
+                <label for="lastname">Achternaam:</label>
+                <input type="text" id="lastname" name="lastname" value="{{ user.lastname }}" required>
+            </div>
+            <div class="form-row">
+                <label for="email">E-mailadres:</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+            </div>
+            <div class="form-row">
+                <label for="address">Straat en huisnummer:</label>
+                <input type="text" id="address" name="address" value="{{ user.address or '' }}">
+            </div>
+            <div class="form-row">
+                <label for="city">Stad:</label>
+                <input type="text" id="city" name="city" value="{{ user.city or '' }}">
+            </div>
+            <div class="form-row">
+                <label for="postalcode">Postcode:</label>
+                <input type="text" id="postalcode" name="postalcode" value="{{ user.postalcode or '' }}">
+            </div>
+            <div class="form-row">
+                <label for="country">Land:</label>
+                <input type="text" id="country" name="country" value="{{ user.country or '' }}">
+            </div>
+            <div class="form-row">
+                <label for="nationality">Nationaliteit:</label>
+                <input type="text" id="nationality" name="nationality" value="{{ user.nationality or '' }}">
+            </div>
 
-                <div class="form-row">
-                    <label for="firstname">Voornaam:</label>
-                    <input type="text" id="firstname" name="firstname" value="{{ user.firstname }}" required>
-                </div>
-                <div class="form-row">
-                    <label for="lastname">Achternaam:</label>
-                    <input type="text" id="lastname" name="lastname" value="{{ user.lastname }}" required>
-                </div>
-                <div class="form-row">
-                    <label for="email">E-mailadres:</label>
-                    <input type="email" id="email" name="email" value="{{ user.email }}" required>
-                </div>
-                <div class="form-row">
-                    <label for="address">Straat en huisnummer:</label>
-                    <input type="text" id="address" name="address" value="{{ user.address or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="city">Stad:</label>
-                    <input type="text" id="city" name="city" value="{{ user.city or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="postalcode">Postcode:</label>
-                    <input type="text" id="postalcode" name="postalcode" value="{{ user.postalcode or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="country">Land:</label>
-                    <input type="text" id="country" name="country" value="{{ user.country or '' }}">
-                </div>
-                <div class="form-row">
-                    <label for="nationality">Nationaliteit:</label>
-                    <input type="text" id="nationality" name="nationality" value="{{ user.nationality or '' }}">
-                </div>
+            <div class="form-row">
+                <button type="submit" class="save-button">Wijzigingen opslaan</button>
+            </div>
+        </form>
+        <script>
+            document.getElementById('profile-form').onsubmit = function(e) {
+                const fileInput = document.getElementById('profilePicture');
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    alert("Selecteer een bestand voordat je verdergaat!");
+                    e.preventDefault(); // Voorkom verzending van het formulier
+                }
+            };
+        </script>
 
-                <div class="form-row">
-                    <button type="submit" class="save-button">Wijzigingen opslaan</button>
-                </div>
-                
-            </form>
-            <script>
-                document.getElementById('profile-form').onsubmit = function(e) {
-                    const fileInput = document.getElementById('profilePicture');
-                    if (!fileInput.files || fileInput.files.length === 0) {
-                        alert("Selecteer een bestand voordat je verdergaat!");
-                        e.preventDefault(); // Voorkom verzending van het formulier
-                    }
-                };
-            </script>
-
-            <h1>Wachtwoord aanpassen</h1>
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        <div class="flashes">
-                        {% for category, message in messages %}
-                            <div class="alert {{ category }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
+        <h1>Wachtwoord aanpassen</h1>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flashes">
+                    {% for category, message in messages %}
+                        <div class="alert {{ category }}">
+                            {{ message }}
                         </div>
-                    {% endif %}
-                {% endwith %}
-    
-                <div class="section">
-                    <form method="POST" action="/change_password">
-                        <div class="form-group">
-                            <label for="current_password">Huidig wachtwoord:</label>
-                            <input type="password" id="current_password" name="current_password" placeholder="Voer je huidige wachtwoord in" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="new_password">Nieuw wachtwoord:</label>
-                            <input type="password" id="new_password" name="new_password" placeholder="Voer een nieuw wachtwoord in" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="confirm_password">Bevestig nieuw wachtwoord:</label>
-                            <input type="password" id="confirm_password" name="confirm_password" placeholder="Bevestig je nieuwe wachtwoord" required>
-                        </div>
-                        <button type="submit" class="save-button">Wachtwoord opslaan</button>
-                    </form>
-                </div>
-        </main>
-    </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="section">
+                <form method="POST" action="/change_password">
+                    <div class="form-group">
+                        <label for="current_password">Huidig wachtwoord:</label>
+                        <input type="password" id="current_password" name="current_password" placeholder="Voer je huidige wachtwoord in" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_password">Nieuw wachtwoord:</label>
+                        <input type="password" id="new_password" name="new_password" placeholder="Voer een nieuw wachtwoord in" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Bevestig nieuw wachtwoord:</label>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Bevestig je nieuwe wachtwoord" required>
+                    </div>
+                    <button type="submit" class="save-button">Wachtwoord opslaan</button>
+                </form>
+            </div>
+    </main>
 </body>
 </html>

@@ -219,6 +219,16 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        .unread-badge {
+            background-color: #ff3b30;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
     </style>
     <script>
         // Globale variabele om de huidige geselecteerde gebruiker op te slaan
@@ -398,15 +408,20 @@
                 <input type="text" id="search-bar" placeholder="Zoek gebruiker..." oninput="filterUsers()">
             </div>         
             <div id="user-list">
-                {% for user, last_activity in users %}
+                {% for user, last_activity, unread_count in users %}
                 <div class="user-item {% if chat_with == user.userid %}active{% endif %}" 
                      data-last-activity="{{ last_activity or '' }}" 
                      onclick="selectUser('{{ user.userid }}', '{{ user.firstname }} {{ user.lastname }}')">
-                    <img src="{{ user.profilepicture if user.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
-                    <div>{{ user.firstname }} {{ user.lastname }}</div>
+                    <img src="{{ user.profilepicture if user.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto">
+                    <div>
+                        {{ user.firstname }} {{ user.lastname }}
+                        {% if unread_count > 0 %}
+                        <span class="unread-badge">{{ unread_count }}</span> <!-- Ongelezen berichten badge -->
+                        {% endif %}
+                    </div>
                 </div>
                 {% endfor %}
-            </div>                     
+            </div>
         </aside>    
         <main class="content">
             <div id="chat-container">

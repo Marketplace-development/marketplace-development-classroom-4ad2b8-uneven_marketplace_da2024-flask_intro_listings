@@ -1232,10 +1232,18 @@ def messages():
 
         return redirect(url_for('main.messages', chat_with=receiver_id))
 
-    # Haal alle gebruikers op, gesorteerd op basis van interacties van de huidige gebruiker
+    # Haal gebruikers op waarmee interacties zijn geweest
     users = db.session.query(
         Users,
-        func.max(Messages.created_at).label('last_activity')
+        func.max(Messages.created_at).label('last_activity'),
+        func.coalesce(
+            func.sum(
+                db.case(
+                    (Messages.receiver_id == current_user_id, db.cast(~Messages.is_read, db.Integer))
+                )
+            ),
+            0
+        ).label('unread_count')  # Ongelezen berichten tellen
     ).outerjoin(
         Messages, db.or_(
             (Messages.sender_id == current_user_id) & (Messages.receiver_id == Users.userid),
@@ -1246,9 +1254,10 @@ def messages():
     ).group_by(
         Users.userid
     ).order_by(
-        func.max(Messages.created_at).desc().nullslast(),  # Interactie bovenaan, geen interactie onderaan
-        Users.firstname.asc()  # Sorteer alfabetisch als tiebreaker
+        func.max(Messages.created_at).desc().nullslast()  # Sorteer op laatste activiteit
     ).all()
+
+
 
     # Haal berichten en geselecteerde gebruiker op
     chat_with = request.args.get('chat_with')
@@ -1258,6 +1267,14 @@ def messages():
     if chat_with:
         selected_user = Users.query.get(chat_with)
         if selected_user:
+            # Markeer alle berichten als gelezen
+            Messages.query.filter(
+                Messages.sender_id == selected_user.userid,
+                Messages.receiver_id == current_user_id,
+                ~Messages.is_read
+            ).update({Messages.is_read: True})
+            db.session.commit()
+
             messages = Messages.query.filter(
                 db.or_(
                     (Messages.sender_id == current_user_id) & (Messages.receiver_id == chat_with),

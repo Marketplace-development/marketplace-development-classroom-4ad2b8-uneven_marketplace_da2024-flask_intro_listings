@@ -152,6 +152,8 @@ class Messages(db.Model):
     receiver_id = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)
     message = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    is_read = db.Column(db.Boolean, default=False)  # Of de melding al is gelezen
+    
 
     def __repr__(self):
         return f'<Message {self.id} from {self.sender_id} to {self.receiver_id}>'

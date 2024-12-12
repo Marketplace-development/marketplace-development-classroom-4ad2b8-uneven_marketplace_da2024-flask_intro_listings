@@ -248,6 +248,8 @@
             border-radius: 10px 10px 0 0;
             transform: rotate(180deg);
         }
+
+        
     </style>
     <!-- Voeg Leaflet.js toe -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -289,7 +291,11 @@
             <!-- Kaart -->
             <div id="map"></div>
 
+            {% if geposte_reizen %}
+            {% for reis in geposte_reizen %}
+
             <script>
+                
                 // Initialiseer de kaart
                 var map = L.map('map').setView([0, 0], 2);
 
@@ -308,15 +314,17 @@
                                 // Voeg een marker toe aan de kaart
                                 L.marker([reis.latitude, reis.longitude])
                                     .addTo(map)
-                                    .bindPopup(`<b>${reis.titleofitinerary}</b><br>${reis.descriptionofitinerary}`);
+                                    .bindPopup(`
+                                    <b>${reis.titleofitinerary}</b><br>
+                                    ${reis.descriptionofitinerary}<br>
+                                    <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}";">Bekijk reis</a>
+                                    `);
                             }
                         });
                     })
-                    .catch(error => console.error('Error fetching travel data:', error));
+                   .catch(error => console.error('Error fetching travel data:', error));
             </script>
-
-            {% if geposte_reizen %}
-            {% for reis in geposte_reizen %}
+        
             <div class="travel-item">
                 <a href="{{ url_for('main.boost_payment', goodid=reis.goodid) }}" class="boost-button">
                     Reis Boosten

@@ -32,9 +32,6 @@ def register():
         password = request.form.get('password')  # Zorg dat je wachtwoord veilig opslaat!
         first_name = request.form.get('firstname')
         last_name = request.form.get('lastname')
-        address = request.form.get('address')
-        city = request.form.get('city')
-        postal_code = request.form.get('postalcode')
         country = request.form.get('country')
         nationality = request.form.get('nationality')
         profpic_file = request.files.get('profilePicture')

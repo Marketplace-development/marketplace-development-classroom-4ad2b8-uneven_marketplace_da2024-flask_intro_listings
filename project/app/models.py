@@ -163,7 +163,7 @@ class Messages(db.Model):
 
     def __repr__(self):
         return f'<Message {self.id} from {self.sender_id} to {self.receiver_id}>'
-    
+
 
 class Meldingen(db.Model):
     __tablename__ = 'meldingen'  # Consistente naamgeving

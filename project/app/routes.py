@@ -2,6 +2,7 @@
 import datetime
 import uuid
 import json
+import logging
 from flask import Blueprint, request, redirect, url_for, render_template, session
 from .models import db, Users, DigitalGoods, Gekocht, Favoriet, Feedback, Connections, Category, digitalgoods_categories, Messages, Meldingen
 from flask import flash
@@ -12,6 +13,7 @@ from flask import Response
 import requests
 from flask import jsonify
 from .helper import create_notification
+from sqlalchemy import func
 
 main = Blueprint('main', __name__)
 
@@ -1198,8 +1200,6 @@ def messages():
         return redirect(url_for('main.login'))
 
     current_user_id = session['userid']
-
-    # Haal de ingelogde gebruiker op
     current_user = Users.query.get(current_user_id)
 
     if request.method == 'POST':
@@ -1210,10 +1210,12 @@ def messages():
             flash("Selecteer een gebruiker en typ een bericht voordat je verzendt.", "danger")
             return redirect(url_for('main.messages'))
 
+        # Nieuw bericht opslaan
         new_message = Messages(sender_id=current_user_id, receiver_id=receiver_id, message=message)
         db.session.add(new_message)
         db.session.commit()
 
+        # Maak een melding aan
         create_notification(
             recipient_id=receiver_id,
             sender_id=current_user_id,
@@ -1222,32 +1224,37 @@ def messages():
 
         return redirect(url_for('main.messages', chat_with=receiver_id))
 
-    # Zoekfunctionaliteit
-    search_term = request.args.get('search', '').strip()
-    query = Users.query.filter(Users.userid != current_user_id)
-    if search_term:
-        query = query.filter(
-            (Users.firstname.ilike(f"%{search_term}%")) |
-            (Users.lastname.ilike(f"%{search_term}%"))
+    # Haal alle gebruikers op
+    users = db.session.query(
+        Users, func.max(Messages.created_at).label('last_activity')
+    ).outerjoin(
+        Messages, db.or_(
+            Messages.sender_id == Users.userid,
+            Messages.receiver_id == Users.userid
         )
+    ).filter(
+        Users.userid != current_user_id  # Sluit de huidige gebruiker uit
+    ).group_by(
+        Users.userid
+    ).order_by(
+        func.max(Messages.created_at).desc().nullslast(),  # Plaats gebruikers zonder interactie onderaan
+        Users.firstname.asc()  # Sorteer gebruikers zonder interactie op naam
+    ).all()
 
-    users = query.all()
-
-    # Ophalen van berichten met geselecteerde gebruiker
     chat_with = request.args.get('chat_with')
-    selected_user = None
     messages = []
+    selected_user = None
+
     if chat_with:
-        selected_user = Users.query.filter_by(userid=chat_with).first()
+        selected_user = Users.query.get(chat_with)
         if selected_user:
             messages = Messages.query.filter(
-                (Messages.sender_id == current_user_id) & (Messages.receiver_id == chat_with) |
-                (Messages.sender_id == chat_with) & (Messages.receiver_id == current_user_id)
+                db.or_(
+                    (Messages.sender_id == current_user_id) & (Messages.receiver_id == chat_with),
+                    (Messages.sender_id == chat_with) & (Messages.receiver_id == current_user_id)
+                )
             ).order_by(Messages.created_at).all()
-        else:
-            flash("Geselecteerde gebruiker bestaat niet.", "danger")
 
-    # Geef 'user' door aan de template
     return render_template(
         'messages.html',
         user=current_user,
@@ -1256,7 +1263,6 @@ def messages():
         chat_with=chat_with,
         selected_user=selected_user
     )
-
 
 @main.route('/meldingen', methods=['GET'])
 def meldingen():

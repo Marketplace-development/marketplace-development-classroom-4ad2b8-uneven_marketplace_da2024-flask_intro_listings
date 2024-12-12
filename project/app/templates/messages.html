@@ -11,13 +11,15 @@
             font-family: 'Georgia', serif;
             margin: 0;
             padding: 0;
+            background-size: cover;
             background: #ffffff;
             color: #1f3d2b;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-        }
 
+        }
+    
         .main-container {
             display: flex;
             flex: 1;
@@ -60,18 +62,20 @@
             background: #d3d3d3;
             padding: 20px;
             overflow-y: auto;
-            max-height: calc(100vh - 40px);
+            max-height: calc(100vh - 130px);
         }
 
         .search-container {
             position: relative;
             width: 100%;
             margin-bottom: 15px;
+            display: flex;
+            align-items: center; /* Zorg dat items verticaal worden uitgelijnd */
         }
 
         #search-bar {
-            width: 100%;
-            padding: 10px 15px;
+            width: calc(100% - 30px); /* Zorg dat er ruimte is voor het vergrootglas */
+            padding: 10px 15px 10px 40px; /* Voeg padding toe om ruimte te maken voor het vergrootglas */
             border: 1px solid #ccc;
             border-radius: 25px;
             font-size: 14px;
@@ -79,63 +83,63 @@
             background: #f5f5f5;
             transition: all 0.3s ease-in-out;
         }
-
+    
         #search-bar:focus {
             border-color: #3c764b;
             background: #ffffff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
+    
         #search-bar::placeholder {
             color: #888;
             font-style: italic;
         }
-
+    
         .search-container:before {
-            content: '\1F50D'; /* Unicode voor een zoekicoon */
+            content: '\1F50D'; /* Unicode voor vergrootglas-icoon */
             position: absolute;
-            left: 12px;
+            left: 15px; /* Plaats het icoon in de padding van het tekstveld */
             top: 50%;
             transform: translateY(-50%);
             font-size: 16px;
             color: #888;
         }
-
+    
         .user-item {
             display: flex;
             align-items: center;
             padding: 10px;
             cursor: pointer;
             background: #ffffff;
-            border: 1px solid #ccc;
             border-radius: 5px;
             margin-bottom: 10px;
             transition: background 0.3s, box-shadow 0.3s;
         }
-
+    
         .user-item:hover {
             background: #e0e0e0;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
+    
         .user-item img {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             margin-right: 10px;
         }
-
+    
         .user-item.active {
-            background-color: #94af9c; /* Een andere kleur voor de geselecteerde gebruiker */
-            color: white;
+            background-color: #3c764b; /* Groene achtergrond */
+            color: white; /* Witte tekstkleur */
             font-weight: bold;
-        }        
-
+        }
+    
         .content {
             flex: 1;
             display: flex;
             flex-direction: column;
             background: #ffffff;
+            overflow-y: auto;
         }
 
         .chat-header {
@@ -146,17 +150,28 @@
             font-size: 18px;
             font-weight: bold;
         }
-
+        
+        .chat-container {
+            display: flex;
+            flex-direction: column; /* Zet de items onder elkaar */
+            flex: 1;
+            max-height: 100%; /* Beperk hoogte tot scherm */
+            overflow: hidden; /* Zorg dat inhoud niet buiten container gaat */
+        }
+        
         .messages {
             flex: 1;
-            overflow-y: auto;
+            overflow-y: auto; /* Scrollen mogelijk maken */
             padding: 20px;
             background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Ruimte tussen berichten */
+            max-height: calc(100vh - 260px); /* Hoogte aanpassen aan scherm */
         }
 
         .message {
             padding: 10px 15px;
-            margin-bottom: 15px;
             border-radius: 8px;
             max-width: 70%;
         }
@@ -169,7 +184,7 @@
             font-size: 14px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
+    
         .received {
             align-self: flex-start;
             background: #f0f0f0;
@@ -180,13 +195,15 @@
         }
 
         .message-form {
+            flex-shrink: 0; /* Houd het formulier vast onderaan */
             padding: 20px;
             background: #ffffff;
             display: flex;
             gap: 10px;
             align-items: center;
+            border-top: 1px solid #ddd; /* Optioneel: visuele scheiding met berichten */
         }
-
+        
         .message-form textarea {
             flex: 1;
             height: 60px;
@@ -196,7 +213,7 @@
             resize: vertical;
             max-height: 120px;
         }
-
+        
         .message-form button {
             padding: 10px 20px;
             background: #24452e;
@@ -252,13 +269,113 @@
         let currentUserId = "{{ chat_with }}";
     
         function updateChat(userId, userName) {
-            currentUserId = userId;
+            // Zet de gebruiker in de chat-header
             document.getElementById('chat-header').textContent = userName;
-            document.getElementById('receiver-id').value = userId;
-            window.history.pushState({}, '', `?chat_with=${userId}`);
-            // Fetch and update messages dynamically if needed
+    
+            // Werk de verborgen input bij voor de ontvanger
+            const receiverInput = document.querySelector("input[name='receiver_id']");
+            if (receiverInput) {
+                receiverInput.value = userId;
+            }
+    
+            // Pas de URL aan zonder de pagina opnieuw te laden
+            const newUrl = `${window.location.pathname}?chat_with=${userId}`;
+    
+            // Haal de berichten voor de geselecteerde gebruiker op (optioneel, afhankelijk van hoe je chat werkt)
+            window.location.href = newUrl;
+        }
+    
+
+        function sortUsersByLastActivity() {
+            const userList = document.getElementById('user-list');
+            const users = Array.from(userList.children);
+        
+            users.sort((a, b) => {
+                const lastActivityA = new Date(a.dataset.lastActivity).getTime();
+                const lastActivityB = new Date(b.dataset.lastActivity).getTime();
+                return lastActivityB - lastActivityA; // Meest recente eerst
+            });
+        
+            // Voeg de gesorteerde elementen opnieuw toe
+            users.forEach(user => userList.appendChild(user));
         }
         
+        // Voer de functie uit bij het laden van de pagina
+        document.addEventListener('DOMContentLoaded', sortUsersByLastActivity);
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            const userList = document.getElementById('user-list');
+            const users = Array.from(userList.children);
+        
+            users.sort((a, b) => {
+                const lastActivityA = new Date(a.dataset.lastActivity).getTime();
+                const lastActivityB = new Date(b.dataset.lastActivity).getTime();
+                return lastActivityB - lastActivityA; // Meest recente eerst
+            });
+        
+            users.forEach(user => userList.appendChild(user));
+        });
+        
+        
+        function filterUsers() {
+            const searchValue = document.getElementById('search-bar').value.toLowerCase();
+            const users = document.querySelectorAll('.user-item');
+    
+            users.forEach(user => {
+                const userName = user.textContent.toLowerCase();
+                if (userName.includes(searchValue)) {
+                    user.style.display = 'flex';
+                } else {
+                    user.style.display = 'none';
+                }
+            });
+        }
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            const userList = document.getElementById('user-list');
+            const users = Array.from(userList.children);
+    
+            users.sort((a, b) => {
+                const lastActivityA = new Date(a.dataset.lastActivity).getTime();
+                const lastActivityB = new Date(b.dataset.lastActivity).getTime();
+                return lastActivityB - lastActivityA; // Meest recente eerst
+            });
+    
+            users.forEach(user => userList.appendChild(user));
+        });
+
+        function selectUser(userId, userName) {
+            // Update de chat-header met de naam van de geselecteerde gebruiker
+            const chatHeader = document.getElementById('chat-header');
+            if (chatHeader) {
+                chatHeader.textContent = userName;
+            }
+    
+            // Navigeer naar de nieuwe URL om berichten op te halen voor de geselecteerde gebruiker
+            const newUrl = `${window.location.pathname}?chat_with=${userId}`;
+            window.location.href = newUrl;
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById('messages-container');
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+    
+        // Scroll naar de onderkant van de berichtenlijst bij het laden van de pagina
+        document.addEventListener('DOMContentLoaded', () => {
+            scrollToBottom();
+        });
+    
+        // Optioneel: Scroll opnieuw naar de onderkant na het verzenden van een nieuw bericht
+        const form = document.querySelector('.message-form');
+        if (form) {
+            form.addEventListener('submit', () => {
+                setTimeout(scrollToBottom, 100); // Wacht even zodat het bericht eerst wordt toegevoegd
+            });
+        }    
+
     </script>
     
 </head>
@@ -281,38 +398,39 @@
 
         <aside class="sidebar2">
             <div class="search-container">
-                <input type="text" id="search-bar" placeholder="     Zoek gebruiker... " oninput="filterUsers()">
-            </div>
+                <input type="text" id="search-bar" placeholder="Zoek gebruiker..." oninput="filterUsers()">
+            </div>         
             <div id="user-list">
-                {% for user in users %}
-                <div class="user-item" onclick="setChatHeader('{{ user.firstname }} {{ user.lastname }}'); window.location.href='?chat_with={{ user.userid }}'">
-                    <img src="{{ user.profilepicture if user.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto">
+                {% for user, last_activity in users %}
+                <div class="user-item {% if chat_with == user.userid %}active{% endif %}" 
+                     data-last-activity="{{ last_activity or '' }}" 
+                     onclick="selectUser('{{ user.userid }}', '{{ user.firstname }} {{ user.lastname }}')">
+                    <img src="{{ user.profilepicture if user.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
                     <div>{{ user.firstname }} {{ user.lastname }}</div>
                 </div>
                 {% endfor %}
-            </div>
-        </aside>
-        
+            </div>                     
+        </aside>    
         <main class="content">
-            <div id="chat-header" class="chat-header">Selecteer een gebruiker</div>
-            <div class="messages">
-                {% if messages %}
-                    {% for message in messages %}
-                    <div class="message {% if message.sender_id == session['userid'] %}sent{% else %}received{% endif %}">
-                        {{ message.message }}
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <p style="text-align: center; color: #888;">Selecteer een gebruiker om te beginnen met chatten.</p>
-                {% endif %}
+            <div class="chat-container">
+                <div class="messages" id="messages-container">
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="message {% if message.sender_id == session['userid'] %}sent{% else %}received{% endif %}">
+                            {{ message.message }}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="text-align: center; color: #888;">Selecteer een gebruiker om te beginnen met chatten.</p>
+                    {% endif %}
+                </div>
+                <form class="message-form" method="POST" action="{{ url_for('main.messages') }}">
+                    <input type="hidden" name="receiver_id" value="{{ chat_with }}">
+                    <textarea name="message" placeholder="Typ een bericht..." required></textarea>
+                    <button type="submit">Verstuur</button>
+                </form>
             </div>
-            <form class="message-form" method="POST" action="{{ url_for('main.messages') }}">
-                <input type="hidden" name="receiver_id" value="{{ chat_with }}">
-                <textarea name="message" placeholder="Typ een bericht..." required></textarea>
-                <button type="submit">Verstuur</button>
-            </form>
-        </main>
-        
+        </main>        
     </div>
 </body>
 </html>

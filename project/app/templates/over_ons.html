@@ -45,10 +45,13 @@
         }
 
         .team {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 kolommen */
+            gap: 10px; /* Ruimte tussen items */
+            justify-items: center;
+            max-width: 900px; /* Beperk de totale breedte van het grid */
+            margin: 0 auto; /* Centreer het grid op de pagina */
+            padding: 10px;
         }
 
         .team-member {
@@ -115,7 +118,7 @@
             <h2 class="about-us-header">Ons Team</h2>
             <div class="team">
                 <div class="team-member">
-                    <img src="{{ '/static/default_image.jpg' }}" alt="Anna Vermeulen">
+                    <img src="{{ '/static/img/Anna.jpg' }}" alt="Anna Vermeulen">
                     <h3>Anna Vermeulen</h3>
                 </div>
                 <div class="team-member">
@@ -135,7 +138,7 @@
                     <h3>Clémence Van den Ostende</h3>
                 </div>
                 <div class="team-member">
-                    <img src="{{ '/static/Sarah.jpg' }}" alt="Sarah Vandeputte">
+                    <img src="{{ '/static/img/Sarah.jpg' }}" alt="Sarah Vandeputte">
                     <h3>Sarah Vandeputte</h3>
                 </div>
             </div>

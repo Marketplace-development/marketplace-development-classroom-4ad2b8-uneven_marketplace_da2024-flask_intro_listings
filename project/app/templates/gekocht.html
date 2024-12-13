@@ -25,11 +25,6 @@
             padding: 15px;
         }
 
-        .navbar-custom .navbar-toggler {
-            background: #3c764b;
-            border: none;
-        }
-
         .navbar-custom .nav-link {
             color: white;
             font-size: 16px;
@@ -46,11 +41,13 @@
             flex: 1;
             padding: 20px 30px;
             background: #ffffff;
-            border-radius: 10px 10px 0 0;
+            border-radius: 10px;
+            max-width: 900px;
+            margin: auto;
         }
 
         .content h1 {
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 20px;
             color: #24452e;
             text-align: center;
@@ -62,9 +59,11 @@
             border-radius: 8px;
             background-color: #f9f9f9;
             margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+        }
+
+        .travel-item h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
         }
 
         .add-button {
@@ -128,7 +127,7 @@
                         <a class="nav-link" href="{{ url_for('main.gekocht') }}">Mijn aangekochte reizen</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.gepost') }}">Mijn geüploade reizen</a>
+                        <a class="nav-link" href="{{ url_for('main.gepost') }}">Mijn ge&uuml;ploade reizen</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.favoriet') }}">Mijn favorieten</a>
@@ -158,44 +157,44 @@
     
         {% if gekochte_reizen %}
             {% for aankoop in gekochte_reizen %}
-                {% if not aankoop['aankoop'].is_saldo_aanvulling %}
-                    <div class="travel-item">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <h2>{{ aankoop['good'].titleofitinerary if aankoop['good'] else 'Niet beschikbaar' }}</h2>
-                                <p style="color: #666; margin-bottom: 15px;">
-                                    Gepost door 
-                                    {% if aankoop['eigenaar'] %}
-                                        <a href="{{ url_for('main.user_profile', userid=aankoop['eigenaar'].userid) }}">
-                                            {{ aankoop['eigenaar'].firstname }} {{ aankoop['eigenaar'].lastname }}
-                                        </a>
-                                        uit {{ aankoop['eigenaar'].country }}
-                                    {% else %}
-                                        Eigenaar onbekend
-                                    {% endif %}
-                                </p>
-                                <p><strong>Beschrijving:</strong> {{ aankoop['good'].descriptionofitinerary if aankoop['good'] else 'Geen beschrijving beschikbaar' }}</p>
-                                <p><strong>Prijs (€):</strong> {{ aankoop['good'].price if aankoop['good'] else 'Onbekend' }}</p>
-                                <p><strong>Aangekocht op:</strong> {{ aankoop['aankoop'].createdat.strftime('%d-%m-%Y') if aankoop['aankoop'] and aankoop['aankoop'].createdat else 'Onbekend' }}</p>
-                            </div>
-    
+                <div class="travel-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h2>{{ aankoop['good'].titleofitinerary if aankoop['good'] else 'Niet beschikbaar' }}</h2>
+                            <p style="color: #666; margin-bottom: 15px;">
+                                Gepost door 
+                                {% if aankoop['eigenaar'] %}
+                                    <a href="{{ url_for('main.user_profile', userid=aankoop['eigenaar'].userid) }}">
+                                        {{ aankoop['eigenaar'].firstname }} {{ aankoop['eigenaar'].lastname }}
+                                    </a>
+                                    uit {{ aankoop['eigenaar'].country }}
+                                {% else %}
+                                    Eigenaar onbekend
+                                {% endif %}
+                            </p>
+                            <p><strong>Beschrijving:</strong> {{ aankoop['good'].descriptionofitinerary if aankoop['good'] else 'Geen beschrijving beschikbaar' }}</p>
+                            <p><strong>Prijs (&euro;):</strong> {{ aankoop['good'].price if aankoop['good'] else 'Onbekend' }}</p>
+                            <p><strong>Aangekocht op:</strong> {{ aankoop['aankoop'].createdat.strftime('%d-%m-%Y') if aankoop['aankoop'] and aankoop['aankoop'].createdat else 'Onbekend' }}</p>
+                        </div>
+
+                        {% if aankoop['aankoop'] and not aankoop['aankoop'].is_archived %}
                             <form action="{{ url_for('main.verwijder_aankoop') }}" method="POST" style="margin-left: 20px;">
                                 <input type="hidden" name="gekochtid" value="{{ aankoop['aankoop'].gekochtid }}">
                                 <button type="submit" class="delete-button">Verwijder</button>
                             </form>
-                        </div>
-    
-                        {% if aankoop['good'] and aankoop['good'].pdf_url %}
-                            <a href="{{ url_for('main.download_aankoop_pdf', gekochtid=aankoop['aankoop'].gekochtid) }}" target="_blank" class="add-button">
-                                Open mijn reis (PDF)
-                            </a>
-                        {% endif %}
-    
-                        {% if aankoop['good'] %}
-                            <a href="{{ url_for('main.review_page', goodid=aankoop['good'].goodid) }}" class="add-button">Review deze reis</a>
                         {% endif %}
                     </div>
-                {% endif %}
+
+                    {% if aankoop['good'] and aankoop['good'].pdf_url %}
+                        <a href="{{ url_for('main.download_aankoop_pdf', gekochtid=aankoop['aankoop'].gekochtid) }}" target="_blank" class="add-button">
+                            Open mijn reis (PDF)
+                        </a>
+                    {% endif %}
+
+                    {% if aankoop['good'] %}
+                        <a href="{{ url_for('main.review_page', goodid=aankoop['good'].goodid) }}" class="add-button">Review deze reis</a>
+                    {% endif %}
+                </div>
             {% endfor %}
         {% else %}
             <p>Je hebt nog geen reizen gekocht.</p>

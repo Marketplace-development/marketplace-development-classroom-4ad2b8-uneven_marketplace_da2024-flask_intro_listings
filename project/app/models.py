@@ -80,6 +80,8 @@ class Gekocht(db.Model):
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     amount = db.Column(db.Numeric, nullable=True)
     is_saldo_aanvulling = db.Column(Boolean, default=False)
+    is_archived = db.Column(db.Boolean, default=False)  # Markering voor verwijderde aankopen
+
 
     # Relaties
     user = db.relationship('Users', backref='gekochte_reizen', lazy=True)

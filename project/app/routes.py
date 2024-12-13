@@ -399,7 +399,8 @@ def gekocht():
         return redirect(url_for('main.logout'))
 
     # Haal alle gekochte reizen van de gebruiker op, exclusief saldo-aanvullingen
-    gekochte_reizen = Gekocht.query.filter_by(userid=user.userid, is_saldo_aanvulling=False).all()
+    gekochte_reizen = Gekocht.query.filter_by(userid=user.userid, is_saldo_aanvulling=False, is_archived=False).all()
+
 
     # Voeg eigenaarinformatie en andere benodigde gegevens toe aan elk gekocht object
     uitgebreide_aankopen = []
@@ -689,7 +690,7 @@ def verwijder_aankoop():
     if 'userid' not in session:
         return redirect(url_for('main.login'))
     
-    user = Users.query.get(session['userid'])  # Haal de huidige gebruiker op
+    user = Users.query.get(session['userid'])
     if not user:
         return redirect(url_for('main.logout'))
 
@@ -697,9 +698,9 @@ def verwijder_aankoop():
     aankoop = Gekocht.query.filter_by(gekochtid=gekochtid).first()
 
     if aankoop and aankoop.userid == session['userid']:
-        db.session.delete(aankoop)
+        aankoop.is_archived = True  # Markeer als gearchiveerd
         db.session.commit()
-        #flash('Aankoop succesvol verwijderd.', 'success')
+        flash('Aankoop succesvol verborgen uit de lijst.', 'success')
     else:
         flash('Er is iets misgegaan bij het verwijderen.', 'error')
 
@@ -1069,7 +1070,9 @@ def verkochte_reizen():
         'description': 'Welkomscadeau',
         'amount': 15.0,
         'date': user.createdat or datetime.datetime.utcnow()  # Gebruik de aanmaakdatum van de gebruiker
-    }) 
+    })
+
+    # Haal saldo-aanvullingen op
     saldo_aanvullingen = Gekocht.query.filter_by(userid=user.userid, goodid=None, is_saldo_aanvulling=True).all()
     for aanvulling in saldo_aanvullingen:
         if aanvulling.amount:  # Controleer of amount niet None is
@@ -1078,24 +1081,24 @@ def verkochte_reizen():
                 'description': 'Saldo aanvulling',
                 'amount': aanvulling.amount,
                 'date': aanvulling.createdat
-                })
+            })
 
     # Voeg verkopen toe aan de geschiedenis
     reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
     for reis in reizen:
-        aantal_aankopen = Gekocht.query.filter_by(goodid=reis.goodid).count()
+        aantal_aankopen = Gekocht.query.filter_by(goodid=reis.goodid, is_archived=False).count()
         verdiend = aantal_aankopen * reis.price
         totaal_verdiend += verdiend
 
         if aantal_aankopen > 0:
-            for aankoop in Gekocht.query.filter_by(goodid=reis.goodid).all():
+            for aankoop in Gekocht.query.filter_by(goodid=reis.goodid, is_archived=False).all():
                 geschiedenis.append({
                     'description': reis.titleofitinerary,
                     'amount': reis.price,
                     'date': aankoop.createdat  # Datum van aankoop
                 })
 
-    # Voeg aankopen toe aan de geschiedenis
+    # Voeg aankopen (inclusief gearchiveerde) toe aan de geschiedenis
     gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
     for aankoop in gekochte_reizen:
         reis = DigitalGoods.query.filter_by(goodid=aankoop.goodid).first()
@@ -1118,6 +1121,7 @@ def verkochte_reizen():
         geschiedenis=geschiedenis,
         user=user
     )
+
 
 
 @main.route('/filterpagina', methods=['GET', 'POST'])

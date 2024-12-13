@@ -107,6 +107,8 @@ def logout():
     session.pop('userid', None)
     return redirect(url_for('main.index'))
 
+from decimal import Decimal, InvalidOperation
+
 @main.route('/post', methods=['GET', 'POST'])
 def post():
     if 'userid' not in session:
@@ -114,21 +116,30 @@ def post():
     user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
     if not user:
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaa
-    
+
     error_message = None
 
     if request.method == 'POST':
         try:
             # Haal formuliergegevens op
             itinerary_name = request.form['titleofitinerary']
-            price = float(request.form['price'])
             description_tekst = request.form['descriptionofitinerary']
-            pdf_file = request.files['file']
             stad = request.form['start_city']
+            pdf_file = request.files['file']
             image_files = request.files.getlist('images[]')
             selected_categories = request.form.getlist('category_id')
+
+            # Valideer prijs
+            try:
+                price = Decimal(request.form['price'])
+                if price < 0:
+                    raise ValueError("De prijs mag niet negatief zijn.")
+            except (InvalidOperation, ValueError):
+                raise ValueError("Voer een geldige prijs in. Gebruik een punt als decimale scheidingsteken (bijv. 10.50).")
+
             if not selected_categories:
                 raise ValueError("Selecteer minstens één categorie.")
+
             # Valideer en upload PDF
             if pdf_file and pdf_file.filename.endswith('.pdf'):
                 filename = secure_filename(pdf_file.filename)
@@ -204,7 +215,6 @@ def post():
                     message=f"{user.firstname} {user.lastname}, die je volgt, heeft een nieuwe reis gepost: '{itinerary_name}'."
                 )
 
-
             return redirect(url_for('main.reistoegevoegd'))
 
         except ValueError as ve:
@@ -213,8 +223,10 @@ def post():
             print(f"Error: {e}")
             db.session.rollback()
             error_message = "Er ging iets mis bij het opslaan van de reis."
+
     categories = Category.query.all()
-    return render_template('post.html', error_message=error_message, user = user, categories = categories)
+    return render_template('post.html', error_message=error_message, user=user, categories=categories)
+
 
 @main.route('/userpage', methods=['GET', 'POST'])
 def userpage():

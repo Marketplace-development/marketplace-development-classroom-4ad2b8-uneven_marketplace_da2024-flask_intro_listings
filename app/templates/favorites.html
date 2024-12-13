@@ -25,22 +25,61 @@ Favorites
         <!-- Main Content -->
         <div class="dashboard-content">
             <h2>Favorites</h2>
-            <p>Browse your list of favorite recipes.</p>
-            <div class="favorites-container">
-                {% for recipe in favorites %}
-                <div class="recipe-box">
-                    <div class="recipe-content">
-                        <h2 class="recipe-title">{{ recipe.title }}</h2>
-                        <p class="recipe-description">{{ recipe.description }}</p>
-                        <p class="recipe-region">Region: {{ recipe.region or 'Unknown' }}</p>
+            <p>View all your favorite recipes here!</p>
+            
+            <!-- Search and Filter Section -->
+            <form method="GET" action="{{ url_for('routes.favorites') }}" class="filter-form">
+                <input
+                    type="text"
+                    id="search-bar"
+                    name="search"
+                    placeholder="Search favorites..."
+                    value="{{ request.args.get('search', '') }}"
+                />
+                <select id="filter-region" name="region">
+                    <option value="">All Regions</option>
+                    {% for region in unique_regions %}
+                    <option
+                        value="{{ region }}"
+                        {% if request.args.get('region') == region %}selected{% endif %}
+                    >
+                        {{ region.capitalize() }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <button type="button" class="btn-reset-filters" onclick="resetFilters()">Reset</button>
+            </form>
+
+            <!-- Favorite Recipes -->
+            <section class="favorites-recipes">
+                <div id="favorites-recipes-container" class="favorites-recipes-container">
+                    {% for recipe in favorites %}
+                    <div class="recipe-box" data-title="{{ recipe.title }}" data-region="{{ recipe.region.lower() }}">
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">{{ recipe.title }}</h2>
+                            <p class="recipe-description">{{ recipe.description }}</p>
+                            <p class="recipe-region">Region: {{ recipe.region or 'Unknown' }}</p>
+                            <div class="recipe-actions">
+                                <button 
+                                    class="favorite-button favorited" 
+                                    data-recipe-id="{{ recipe.recipe_id }}">
+                                    ❤️
+                                </button>
+                            </div>
+                        </div>
+                        <div class="recipe-image">
+                            <img src="{{ recipe.image_url or url_for('static', filename='images/default-recipe.png') }}" alt="{{ recipe.title }}">
+                        </div>
                     </div>
-                    <div class="recipe-image">
-                        <img src="{{ recipe.image_url or url_for('static', filename='images/default-recipe.png') }}" alt="{{ recipe.title }}">
-                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
-            </div>
+            </section>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='javascript/favorites-filters.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/favorites.js') }}"></script>
 {% endblock %}

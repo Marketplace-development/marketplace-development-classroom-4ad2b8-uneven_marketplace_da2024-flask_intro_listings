@@ -79,7 +79,7 @@
 .profile-trigger {
     display: flex;
     align-items: center; /* Zorgt dat de afbeelding en het pijltje op één lijn staan */
-    gap: 10px; /* Verhoogde ruimte tussen de profielfoto en het pijltje */
+    gap: 5px; /* Verhoogde ruimte tussen de profielfoto en het pijltje */
 }
 
 .profile-img {
@@ -104,7 +104,7 @@
     display: none; /* Verberg menu standaard */
     position: absolute;
     right: 0;
-    top: 100%;
+    top: 50px;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;

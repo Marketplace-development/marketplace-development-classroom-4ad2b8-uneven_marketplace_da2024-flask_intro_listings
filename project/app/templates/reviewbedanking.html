@@ -105,23 +105,8 @@
         </style>
     </head>
     <body>
-        <header class="main-header">
-            <div class="logo-container">
-                <div class="globe">
-                    <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
-                </div>
-                <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
-            </div>
-            <nav class="nav-links">
-                {% if user %}
-                    <span>Hallo, {{ user.firstname }}</span>
-                {% else %}
-                    <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
-                    <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
-                    <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
-                {% endif %}
-            </nav>
-        </header>
+        {% include 'header.html' %}
+        
         <main class="content">
             <h1>Bedankt voor je feedback!</h1>
             <p>We waarderen je mening enorm en hopen dat je tevreden bent met onze service.</p>

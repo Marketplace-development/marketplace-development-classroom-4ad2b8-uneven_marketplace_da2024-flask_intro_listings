@@ -127,20 +127,7 @@
     </style>
 </head>
 <body>
-    <header class="main-header">
-        <div class="logo-container">
-            <div class="globe">
-                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
-            </div>
-            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
-        </div>
-        <nav class="nav-links">
-            <h2>Hallo {{ user.firstname }}</h2>
-            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
-            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
-            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
-        </nav>
-    </header>
+    {% include 'header.html' %}
 
     <div class="content">
         <h1>Reis succesvol toegevoegd!</h1>

@@ -111,20 +111,7 @@
     </style>
 </head>
 <body>
-    <header class="main-header d-flex justify-content-between align-items-center">
-        <div class="logo-container">
-            <div class="globe">
-                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
-            </div>
-            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
-        </div>
-        <nav>
-            {% if username %}
-            <a href="{{ url_for('main.logout') }}" class="btn btn-outline-light">Uitloggen</a>
-            <a href="{{ url_for('main.userpage') }}" class="btn btn-outline-light">Mijn profiel</a>
-            {% endif %}
-        </nav>
-    </header>
+    {% include 'header.html' %}
     <main class="d-flex justify-content-center align-items-center flex-grow-1">
         <div class="login-container">
             <h1 class="text-center">Inloggen</h1>

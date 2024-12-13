@@ -102,23 +102,7 @@
     </style>
 </head>
 <body>
-    <header class="main-header">
-        <a href="{{ url_for('main.index') }}" class="logo">
-            <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
-            <span>Travel Tales</span>
-        </a>
-        <nav class="nav-links">
-            {% if user %}
-            <h2>Hallo, {{ user.firstname }}</h2>
-            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
-            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
-            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
-            {% else %}
-            <a href="{{ url_for('main.login') }}" class="nav-button">Login</a>
-            <a href="{{ url_for('main.register') }}" class="nav-button">Registreer</a>
-            {% endif %}
-        </nav>
-    </header>
+    {% include 'header.html' %}
 
     <div class="content">
         <h1>Je hebt deze reis al gekocht</h1>

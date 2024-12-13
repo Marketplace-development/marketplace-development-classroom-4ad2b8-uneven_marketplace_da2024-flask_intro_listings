@@ -996,14 +996,26 @@ def boost_payment(goodid):
         return redirect(url_for('main.gepost'))
 
     if request.method == 'POST':
-        # Simuleer een succesvolle betaling (voeg hier een echte betaalprovider-integratie toe)
+        # Simuleer een succesvolle betaling (hier voeg je een echte betaalprovider-integratie toe)
         payment_success = True
 
         if payment_success:
             # Update de timestamp om de reis als geboost te markeren
             reis.createdat = datetime.datetime.utcnow()
+
+            # Voeg de €1.00 uitgave toe aan de "gekocht" tabel als saldo-uitgave
+            nieuwe_uitgave = Gekocht(
+                gekochtid=str(uuid.uuid4()),
+                userid=session['userid'],
+                goodid=None,  # Geen specifieke reis gekoppeld, alleen een uitgave
+                amount=Decimal('1.00'),
+                createdat=datetime.datetime.utcnow(),
+                is_saldo_aanvulling=False  # Dit is een uitgave, geen saldo-aanvulling
+            )
+            db.session.add(nieuwe_uitgave)
             db.session.commit()
-            #flash(f'Reis "{reis.titleofitinerary}" is succesvol geboost!', 'success')
+
+            flash(f'Reis "{reis.titleofitinerary}" is succesvol geboost!', 'success')
             return redirect(url_for('main.boost_confirm', goodid=goodid))
         else:
             flash('Betaling mislukt. Probeer het opnieuw.', 'error')
@@ -1011,6 +1023,7 @@ def boost_payment(goodid):
 
     # Render de betaalpagina
     return render_template('boost_payment.html', reis=reis)
+
 
 @main.route('/boost_confirm/<goodid>', methods=['GET'])
 def boost_confirm(goodid):
@@ -1171,19 +1184,15 @@ def verkochte_reizen():
                     'amount': round(Decimal(reis.price), 2),
                     'date': aankoop.createdat  # Datum van aankoop
                 })
-
-    # Voeg aankopen (inclusief gearchiveerde) toe aan de geschiedenis
     gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
     for aankoop in gekochte_reizen:
-        reis = DigitalGoods.query.filter_by(goodid=aankoop.goodid).first()
-        if reis:
-            administratieve_kost = Decimal(reis.price) * Decimal('0.10')  # Bereken 10% administratieve kost met Decimal
-            totaal_uitgegeven += Decimal(reis.price) + administratieve_kost  # Inclusief administratieve kost
+        if aankoop.goodid is None and not aankoop.is_saldo_aanvulling:
+            totaal_uitgegeven += Decimal(aankoop.amount)  # Voeg de €1.00 toe aan de uitgaven
             geschiedenis.append({
-                'description': f"{reis.titleofitinerary} (inclusief 10% administratie)",
-                'amount': -round(Decimal(reis.price) + administratieve_kost, 2),
-                'date': aankoop.createdat  # Datum van aankoop
-            })
+                'description': 'Boostkosten',
+                'amount': -round(Decimal(aankoop.amount), 2),
+                'date': aankoop.createdat
+                })
 
     # Sorteer de geschiedenis op datum (nieuwste eerst)
     geschiedenis.sort(key=lambda x: x['date'], reverse=True)

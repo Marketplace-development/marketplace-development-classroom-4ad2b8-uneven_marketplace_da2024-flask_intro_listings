@@ -2,6 +2,8 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime
 import json
 from . import db
+from sqlalchemy import Column, String, ForeignKey, DateTime, Numeric, Boolean, Text
+
 
 
 class Users(db.Model):
@@ -77,6 +79,7 @@ class Gekocht(db.Model):
     goodid = db.Column(db.String, db.ForeignKey('digitalgoods.goodid'), nullable=True)
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     amount = db.Column(db.Numeric, nullable=True)
+    is_saldo_aanvulling = db.Column(Boolean, default=False)
 
     # Relaties
     user = db.relationship('Users', backref='gekochte_reizen', lazy=True)

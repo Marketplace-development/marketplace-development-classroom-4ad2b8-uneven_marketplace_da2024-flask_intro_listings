@@ -398,17 +398,24 @@ def gekocht():
     if not user:
         return redirect(url_for('main.logout'))
 
-    # Haal alle gekochte reizen van de gebruiker op
-    gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
+    # Haal alle gekochte reizen van de gebruiker op, exclusief saldo-aanvullingen
+    gekochte_reizen = Gekocht.query.filter_by(userid=user.userid, is_saldo_aanvulling=False).all()
 
     # Voeg eigenaarinformatie en andere benodigde gegevens toe aan elk gekocht object
+    uitgebreide_aankopen = []
     for aankoop in gekochte_reizen:
-        aankoop.good = DigitalGoods.query.get(aankoop.goodid)  # Koppel het DigitalGoods-object
-        if aankoop.good:
-            aankoop.good.image_urls = json.loads(aankoop.good.image_urls or '[]')  # Decodeer image_urls als JSON
-        aankoop.eigenaar = Users.query.get(aankoop.good.userid)
+        good = DigitalGoods.query.get(aankoop.goodid)  # Koppel het DigitalGoods-object
+        eigenaar = Users.query.get(good.userid) if good else None  # Haal eigenaar op als good bestaat
+        uitgebreide_aankopen.append({
+            "aankoop": aankoop,
+            "good": good,
+            "eigenaar": eigenaar
+        })
 
-    return render_template('gekocht.html', user=user, gekochte_reizen=gekochte_reizen)
+    return render_template('gekocht.html', user=user, gekochte_reizen=uitgebreide_aankopen)
+
+
+
 
 
 
@@ -596,8 +603,6 @@ def reisdetail(goodid):
         is_owner=is_owner,
     )
 
-
-
 @main.route('/koop/<goodid>', methods=['POST'])
 def koop(goodid):
     if 'userid' not in session:
@@ -619,7 +624,10 @@ def koop(goodid):
         return redirect(url_for('main.algekocht'))  # Verwijs naar de pagina met gekochte reizen
 
     # Bereken het saldo van de gebruiker
-    totaal_verdiend = 15  # Welkomstcadeau
+    totaal_verdiend = 15  # Start met het welkomstcadeau
+    saldo_aanvullingen = Gekocht.query.filter_by(userid=user.userid, goodid=None).all()
+    totaal_verdiend += sum(aanvulling.amount for aanvulling in saldo_aanvullingen)
+
     totaal_uitgegeven = sum(
         aankoop.good.price for aankoop in Gekocht.query.filter_by(userid=user.userid).all() if aankoop.good
     )
@@ -640,15 +648,15 @@ def koop(goodid):
     db.session.add(nieuwe_aankoop)
     db.session.commit()
 
+    # Maak een melding aan voor de verkoper
     create_notification(
-        recipient_id=reis.userid,  # Veronderstel dat reis een eigenaar heeft
+        recipient_id=reis.userid,  # Eigenaar van de reis
         sender_id=user.userid,
         good_id=goodid,
-        message=f" {user.firstname} {user.lastname} heeft je reis '{reis.titleofitinerary}' gekocht!"
+        message=f"{user.firstname} {user.lastname} heeft je reis '{reis.titleofitinerary}' gekocht!"
     )
 
     return redirect(url_for('main.koopbevestiging'))
-
 
 @main.route('/koopbevestiging', methods=['GET'])
 def koopbevestiging():
@@ -1062,7 +1070,7 @@ def verkochte_reizen():
         'amount': 15.0,
         'date': user.createdat or datetime.datetime.utcnow()  # Gebruik de aanmaakdatum van de gebruiker
     }) 
-    saldo_aanvullingen = Gekocht.query.filter_by(userid=user.userid, goodid=None).all()
+    saldo_aanvullingen = Gekocht.query.filter_by(userid=user.userid, goodid=None, is_saldo_aanvulling=True).all()
     for aanvulling in saldo_aanvullingen:
         if aanvulling.amount:  # Controleer of amount niet None is
             totaal_verdiend += aanvulling.amount
@@ -1374,15 +1382,10 @@ def vul_saldo_aan():
                 userid=user.userid,
                 goodid=None,  # Geen specifiek product
                 amount=bedrag,  # Toegevoegd bedrag
-                createdat=datetime.datetime.utcnow()
+                createdat=datetime.datetime.utcnow(),
+                is_saldo_aanvulling=True  # Markeer dit als een saldo-aanvulling
             )
             db.session.add(nieuwe_transactie)
-
-            # Update het gebruikerssaldo (optioneel)
-            user.balance += bedrag
-
-            # Debugging
-            print(f"Transactie aangemaakt: UserID: {user.userid}, Amount: {bedrag}")
 
             # Sla de wijzigingen op
             db.session.commit()
@@ -1393,6 +1396,7 @@ def vul_saldo_aan():
             flash('Voer een geldig bedrag in.', 'error')
 
     return render_template('vul_saldo_aan.html', user=user)
+
 
 
 

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Totaalprijs Bevestigen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: #1f3d2b; /* Donkergroene achtergrond */
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .content {
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        .content h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #e6ffe6;
+        }
+
+        .content p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .content button, .content a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none; /* Verwijdert onderstreping */
+            background: #2e5f3d; /* Groene achtergrond */
+            border-radius: 5px; /* Ronde hoeken */
+            border: none; /* Geen rand voor de knop */
+            transition: background 0.3s ease, color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .content button:hover, .content a:hover {
+            background: #3c764b; /* Donkergroene hover-kleur */
+        }
+
+        .content a {
+            text-decoration: none; /* Geen onderstreping voor links */
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <div class="content">
+        <h1>Totaalprijs van je aankoop</h1>
+
+        <p><strong>Reis:</strong> {{ reis.titleofitinerary }}</p>
+        <p><strong>Prijs:</strong> €{{ reis.price }}</p>
+        <p><strong>Administratieve kosten (10%):</strong> €{{ administratieve_kost }}</p>
+        <p><strong>Totaal te betalen:</strong> €{{ totaal_prijs }}</p>
+
+        <form action="{{ url_for('main.bevestig_koop', goodid=reis.goodid) }}" method="post">
+            <button type="submit">Bevestig Aankoop</button>
+        </form>
+
+        <a href="{{ url_for('main.search') }}">Annuleer</a>
+    </div>
+</body>
+</html>

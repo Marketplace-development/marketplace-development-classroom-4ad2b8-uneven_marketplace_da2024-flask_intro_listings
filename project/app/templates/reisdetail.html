@@ -189,7 +189,7 @@
 
         <div class="text-center">
             {% if not is_owner %}
-            <form action="{{ url_for('main.koop', goodid=reis.goodid) }}" method="POST">
+            <form action="{{ url_for('main.koop', goodid=reis.goodid) }}" method="GET">
                 <button type="submit" class="koop-knop">Koop Reis</button>
             </form>
             {% else %}

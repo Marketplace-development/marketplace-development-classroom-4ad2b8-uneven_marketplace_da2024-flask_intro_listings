@@ -14,6 +14,7 @@ import requests
 from flask import jsonify
 from .helper import create_notification
 from sqlalchemy import func
+from decimal import Decimal
 
 main = Blueprint('main', __name__)
 
@@ -604,8 +605,66 @@ def reisdetail(goodid):
         is_owner=is_owner,
     )
 
-@main.route('/koop/<goodid>', methods=['POST'])
+@main.route('/koop/<goodid>', methods=['GET', 'POST'])
 def koop(goodid):
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
+
+    if request.method == 'GET':
+        # Toon de totaalprijs
+        user = Users.query.get(session['userid'])
+        if not user:
+            return redirect(url_for('main.logout'))
+
+        reis = DigitalGoods.query.filter_by(goodid=goodid).first()
+        if not reis:
+            flash('Reis niet gevonden.', 'error')
+            return redirect(url_for('main.search'))
+
+        administratieve_kost = Decimal(reis.price) * Decimal('0.10')
+        totaal_prijs = Decimal(reis.price) + administratieve_kost
+
+        return render_template(
+            'totaal_prijs.html',
+            reis=reis,
+            totaal_prijs=round(totaal_prijs, 2),
+            administratieve_kost=round(administratieve_kost, 2),
+            user=user
+        )
+
+    if request.method == 'POST':
+        # Hier wordt de aankoop verwerkt
+        user = Users.query.get(session['userid'])
+        if not user:
+            return redirect(url_for('main.logout'))
+
+        # Voeg de aankoop toe aan de database
+        reis = DigitalGoods.query.filter_by(goodid=goodid).first()
+        if not reis:
+            flash('Reis niet gevonden.', 'error')
+            return redirect(url_for('main.search'))
+
+        nieuwe_aankoop = Gekocht(
+            gekochtid=str(uuid.uuid4()),
+            userid=user.userid,
+            goodid=reis.goodid,
+            createdat=datetime.datetime.utcnow()
+        )
+        db.session.add(nieuwe_aankoop)
+        db.session.commit()
+
+        # Maak een melding aan
+        create_notification(
+            recipient_id=reis.userid,
+            sender_id=user.userid,
+            good_id=goodid,
+            message=f"{user.firstname} {user.lastname} heeft je reis '{reis.titleofitinerary}' gekocht!"
+        )
+
+        return redirect(url_for('main.koopbevestiging'))
+
+@main.route('/bevestig_koop/<goodid>', methods=['POST'])
+def bevestig_koop(goodid):
     if 'userid' not in session:
         return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
 
@@ -635,7 +694,10 @@ def koop(goodid):
     beschikbaar_saldo = totaal_verdiend - totaal_uitgegeven
 
     # Controleer of het saldo voldoende is
-    if beschikbaar_saldo < reis.price:
+    administratieve_kost = Decimal(reis.price) * Decimal('0.10')  # Bereken 10% administratieve kosten
+    totaal_prijs = Decimal(reis.price) + administratieve_kost
+
+    if beschikbaar_saldo < totaal_prijs:
         flash('Saldo ontoereikend. Je kunt deze reis niet aankopen.', 'error')
         return redirect(url_for('main.saldo_ontoereikend'))  # Verwijs naar een pagina met foutmelding
 
@@ -1061,14 +1123,14 @@ def verkochte_reizen():
     if not user:
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
-    totaal_verdiend = 15  # Start met het welkomstcadeau
-    totaal_uitgegeven = 0
+    totaal_verdiend = Decimal('15.00')  # Start met het welkomstcadeau
+    totaal_uitgegeven = Decimal('0.00')
     geschiedenis = []
 
     # Voeg het welkomstcadeau toe aan de geschiedenis
     geschiedenis.append({
         'description': 'Welkomscadeau',
-        'amount': 15.0,
+        'amount': round(Decimal('15.00'), 2),
         'date': user.createdat or datetime.datetime.utcnow()  # Gebruik de aanmaakdatum van de gebruiker
     })
 
@@ -1076,10 +1138,10 @@ def verkochte_reizen():
     saldo_aanvullingen = Gekocht.query.filter_by(userid=user.userid, goodid=None, is_saldo_aanvulling=True).all()
     for aanvulling in saldo_aanvullingen:
         if aanvulling.amount:  # Controleer of amount niet None is
-            totaal_verdiend += aanvulling.amount
+            totaal_verdiend += Decimal(aanvulling.amount)
             geschiedenis.append({
                 'description': 'Saldo aanvulling',
-                'amount': aanvulling.amount,
+                'amount': round(Decimal(aanvulling.amount), 2),
                 'date': aanvulling.createdat
             })
 
@@ -1087,14 +1149,14 @@ def verkochte_reizen():
     reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
     for reis in reizen:
         aantal_aankopen = Gekocht.query.filter_by(goodid=reis.goodid, is_archived=False).count()
-        verdiend = aantal_aankopen * reis.price
+        verdiend = Decimal(aantal_aankopen) * Decimal(reis.price)
         totaal_verdiend += verdiend
 
         if aantal_aankopen > 0:
             for aankoop in Gekocht.query.filter_by(goodid=reis.goodid, is_archived=False).all():
                 geschiedenis.append({
                     'description': reis.titleofitinerary,
-                    'amount': reis.price,
+                    'amount': round(Decimal(reis.price), 2),
                     'date': aankoop.createdat  # Datum van aankoop
                 })
 
@@ -1103,10 +1165,11 @@ def verkochte_reizen():
     for aankoop in gekochte_reizen:
         reis = DigitalGoods.query.filter_by(goodid=aankoop.goodid).first()
         if reis:
-            totaal_uitgegeven += reis.price
+            administratieve_kost = Decimal(reis.price) * Decimal('0.10')  # Bereken 10% administratieve kost met Decimal
+            totaal_uitgegeven += Decimal(reis.price) + administratieve_kost  # Inclusief administratieve kost
             geschiedenis.append({
-                'description': reis.titleofitinerary,
-                'amount': -reis.price,
+                'description': f"{reis.titleofitinerary} (inclusief 10% administratie)",
+                'amount': -round(Decimal(reis.price) + administratieve_kost, 2),
                 'date': aankoop.createdat  # Datum van aankoop
             })
 
@@ -1115,12 +1178,39 @@ def verkochte_reizen():
 
     return render_template(
         'reis_aankopen.html',
-        totaal_verdiend=totaal_verdiend,
-        totaal_uitgegeven=totaal_uitgegeven,
-        beschikbaar_saldo=totaal_verdiend - totaal_uitgegeven,
+        totaal_verdiend=round(totaal_verdiend, 2),
+        totaal_uitgegeven=round(totaal_uitgegeven, 2),
+        beschikbaar_saldo=round(totaal_verdiend - totaal_uitgegeven, 2),
         geschiedenis=geschiedenis,
         user=user
     )
+
+@main.route('/totaal_prijs/<goodid>', methods=['GET'])
+def totaal_prijs(goodid):
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
+
+    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
+    if not user:
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+
+    # Haal de specifieke reis op uit de database
+    reis = DigitalGoods.query.filter_by(goodid=goodid).first()
+    if not reis:
+        flash('Reis niet gevonden.', 'error')
+        return redirect(url_for('main.search'))  # Verwijs terug naar de zoekpagina
+
+    administratieve_kost = Decimal(reis.price) * Decimal('0.10')  # Bereken 10% administratieve kost
+    totaal_prijs = Decimal(reis.price) + administratieve_kost  # Totaal inclusief kosten
+
+    return render_template(
+        'totaal_prijs.html',
+        reis=reis,
+        totaal_prijs=round(totaal_prijs, 2),
+        administratieve_kost=round(administratieve_kost, 2),
+        user=user
+    )
+
 
 
 

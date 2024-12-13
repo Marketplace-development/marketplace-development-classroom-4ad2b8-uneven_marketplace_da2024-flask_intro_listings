@@ -106,19 +106,6 @@
             <div class="form-row">
                 <label for="email">E-mailadres:</label>
                 <input type="email" id="email" name="email" value="{{ user.email }}" required>
-            </div>
-            <div class="form-row">
-                <label for="address">Straat en huisnummer:</label>
-                <input type="text" id="address" name="address" value="{{ user.address or '' }}">
-            </div>
-            <div class="form-row">
-                <label for="city">Stad:</label>
-                <input type="text" id="city" name="city" value="{{ user.city or '' }}">
-            </div>
-            <div class="form-row">
-                <label for="postalcode">Postcode:</label>
-                <input type="text" id="postalcode" name="postalcode" value="{{ user.postalcode or '' }}">
-            </div>
             <div class="form-row">
                 <label for="country">Land:</label>
                 <input type="text" id="country" name="country" value="{{ user.country or '' }}">

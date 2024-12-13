@@ -168,25 +168,7 @@
     </style>
 </head>
 <body>
-    <header class="main-header">
-        <div class="logo-container">
-            <div class="globe">
-                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
-            </div>
-            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
-        </div>
-        <nav class="nav-links">
-            {% if user %}
-                <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
-                <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
-                <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
-            {% else %}
-                <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
-                <a href="{{ url_for('main.login') }}" class="nav-button">Login</a>
-                <a href="{{ url_for('main.register') }}" class="nav-button">Registreer</a>
-            {% endif %}
-        </nav>
-    </header>
+    {% include 'header.html' %}
 
     <div class="container">
         <h1>Filter Reizen</h1>

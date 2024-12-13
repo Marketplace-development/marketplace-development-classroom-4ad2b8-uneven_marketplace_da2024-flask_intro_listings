@@ -1433,6 +1433,7 @@ def meldingen():
 
     # Haal meldingen op
     alle_meldingen = Meldingen.query.filter_by(recipient_id=current_user_id).order_by(Meldingen.created_at.desc()).all()
+    heeft_welkomsmelding = any(melding.message.startswith("Welkom") for melding in alle_meldingen)
 
     # Markeer als gelezen voor deze sessie
     for melding in alle_meldingen:
@@ -1444,7 +1445,7 @@ def meldingen():
     db.session.commit()
 
     # Zorg ervoor dat de variabele consistent is
-    return render_template('meldingen.html', notifications=alle_meldingen)
+    return render_template('meldingen.html', notifications=alle_meldingen, heeft_welkomsmelding=heeft_welkomsmelding)
 
 @main.route('/verwijder_reis', methods=['POST'])
 def verwijder_reis():

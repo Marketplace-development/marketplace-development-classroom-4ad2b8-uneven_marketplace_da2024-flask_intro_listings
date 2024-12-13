@@ -1,3 +1,4 @@
+{% set unread_notifications = unread_notifications or 0 %}
 <header class="main-header">
     <div class="logo-container">
         <div class="globe">
@@ -5,12 +6,27 @@
         </div>
         <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
     </div>
-    <nav class="nav-links">
+    <nav class="nav-links" style="display: flex; align-items: center;">
         {% if userx %}
-        <h2>Hallo {{ username }}</h2>
+        <h2 style="margin-right: 15px;">Hallo {{ username }}</h2>
+        <a href="{{ url_for('main.meldingen') }}" style="position: relative; margin-right: 15px;">
+            <img src="{{ '/static/img/clock_icon.png' }}" alt="Notificaties" style="width: 25px; height: 25px; cursor: pointer;">
+            {% if unread_notifications > 0 %}
+            <span style="
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                width: 10px;
+                height: 10px;
+                background-color: #ff3b30;
+                border-radius: 50%;
+                box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+            "></span>
+            {% endif %}
+        </a>        
         <div class="profile-dropdown">
             <div class="profile-trigger" onclick="toggleDropdown()">
-                <img src="{{ userx.profilepicture if userx.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" class="profile-img">
+                <img src="{{ userx.profilepicture if userx.profilepicture else '/static/img/default_image.jpg' }}" alt="Profielfoto" class="profile-img">
                 <span class="dropdown-arrow" id="dropdownArrow">&#9660;</span> <!-- Pijltje -->
             </div>
             <div class="dropdown-menu" id="dropdownMenu">

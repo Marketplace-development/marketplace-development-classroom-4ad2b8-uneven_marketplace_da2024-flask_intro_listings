@@ -144,3 +144,13 @@
     }
 }
 
+.notification-clock img {
+    vertical-align: middle;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.nav-links a img:hover {
+    transform: scale(1.1); /* Zoom in op hover */
+    filter: brightness(1.2); /* Maak het icoon iets helderder */
+}

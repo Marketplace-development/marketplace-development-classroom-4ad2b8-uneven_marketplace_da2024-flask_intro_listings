@@ -1203,6 +1203,17 @@ def inject_user():
     userx = Users.query.get(user_id) if user_id else None
     return dict(username=userx.firstname if userx else None, userx=userx)
 
+@main.context_processor
+def inject_unread_notifications():
+    unread_notifications = 0
+    if 'userid' in session:
+        user_id = session['userid']
+        unread_notifications = db.session.query(Meldingen).filter_by(
+            recipient_id=user_id, is_read=False
+        ).count()
+    return dict(unread_notifications=unread_notifications)
+
+
 @main.route('/over_ons',methods=['GET'])
 def overons():
     return render_template('over_ons.html')

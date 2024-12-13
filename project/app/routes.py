@@ -1433,7 +1433,10 @@ def meldingen():
 
     # Haal meldingen op
     alle_meldingen = Meldingen.query.filter_by(recipient_id=current_user_id).order_by(Meldingen.created_at.desc()).all()
-    heeft_welkomsmelding = any(melding.message.startswith("Welkom") for melding in alle_meldingen)
+    heeft_welkomsmelding = (
+        len(alle_meldingen) > 0
+        and alle_meldingen[0].message.startswith("Welkom")
+    )
 
     # Markeer als gelezen voor deze sessie
     for melding in alle_meldingen:

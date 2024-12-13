@@ -30,12 +30,10 @@
                 <span class="dropdown-arrow" id="dropdownArrow">&#9660;</span> <!-- Pijltje -->
             </div>
             <div class="dropdown-menu" id="dropdownMenu">
-                <a href="{{ url_for('main.userpage') }}">Profielgegevens</a>
+                <a href="{{ url_for('main.userpage') }}">Mijn profiel</a>
                 <a href="{{ url_for('main.post') }}">Post reis</a>
                 <a href="{{ url_for('main.search') }}">Zoek reis</a>
-                <a href="{{ url_for('main.favoriet') }}">Mijn favorieten</a>
-                <a href="{{ url_for('main.verkochte_reizen') }}">Mijn portefeuille</a>
-                <a href="{{ url_for('main.logout') }}">Uitloggen</a>
+$                <a href="{{ url_for('main.logout') }}">Uitloggen</a>
             </div>
         </div>
         {% else %}

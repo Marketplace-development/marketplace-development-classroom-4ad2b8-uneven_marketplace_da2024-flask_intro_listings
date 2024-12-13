@@ -154,3 +154,12 @@
     transform: scale(1.1); /* Zoom in op hover */
     filter: brightness(1.2); /* Maak het icoon iets helderder */
 }
+
+.notification-dot2 {
+    height: 7px; /* Grootte van het bolletje */
+    width: 7px;  /* Grootte van het bolletje */
+    background-color: red; /* Kleur van het bolletje */
+    border-radius: 50%; /* Maakt het rond */
+    display: inline-block; /* Zorgt dat het inline staat met tekst */
+    margin-left: 8px; /* Ruimte tussen "Mijn berichten" en het bolletje */
+}

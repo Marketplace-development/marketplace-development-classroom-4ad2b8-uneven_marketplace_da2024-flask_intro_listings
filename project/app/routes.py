@@ -1213,6 +1213,15 @@ def inject_unread_notifications():
         ).count()
     return dict(unread_notifications=unread_notifications)
 
+@main.context_processor
+def inject_unread_messages():
+    unread_messages = 0
+    if 'userid' in session:
+        user_id = session['userid']
+        unread_messages = db.session.query(Messages).filter_by(receiver_id=user_id, is_read=False).count()
+    return dict(unread_messages=unread_messages)
+
+
 
 @main.route('/over_ons',methods=['GET'])
 def overons():
@@ -1413,7 +1422,5 @@ def vul_saldo_aan():
             flash('Voer een geldig bedrag in.', 'error')
 
     return render_template('vul_saldo_aan.html', user=user)
-
-
 
 

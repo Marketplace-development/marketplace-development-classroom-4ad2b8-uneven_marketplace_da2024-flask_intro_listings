@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zoek Connecties</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Mijn Berichten</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
     <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
             font-family: 'Georgia', serif;
@@ -18,28 +19,6 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-        }
-
-        .navbar-custom {
-            background: #2e5f3d;
-            padding: 15px;
-        }
-
-        .navbar-custom .navbar-toggler {
-            background: #3c764b;
-            border: none;
-        }
-
-        .navbar-custom .nav-link {
-            color: white;
-            font-size: 16px;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background 0.3s ease;
-        }
-
-        .navbar-custom .nav-link:hover {
-            background: #4f8a61;
         }
 
         .content {
@@ -135,46 +114,7 @@
 </head>
 <body>
     {% include 'header.html' %}
-
-    <nav class="navbar navbar-expand-lg navbar-custom">
-        <div class="container-fluid">
-            <a class="navbar-brand text-white" href="#"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.userpage') }}">Profielgegevens</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.gekocht') }}">Mijn aangekochte reizen</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.gepost') }}">Mijn geüploade reizen</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.favoriet') }}">Mijn favorieten</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.connecties') }}">Mijn connecties</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.zoekconnecties') }}">Zoek connecties</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.verkochte_reizen') }}">Mijn portefeuille</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.messages') }}">Mijn berichten</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.meldingen') }}">Mijn meldingen</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    {% include 'navbar.html' %}
 
     <main class="content">
         <h1>Zoek Connecties</h1>

@@ -58,6 +58,7 @@ class DigitalGoods(db.Model):
     image_urls = db.Column(db.Text, nullable=True)  # Gebruik Text om JSON-lijsten op te slaan
     latitude = db.Column(db.String, nullable=True)
     longitude = db.Column(db.String, nullable=True)
+    is_deleted = db.Column(db.Boolean, default=False)
 
     # Nieuwe variabele voor de startstad
     start_city = db.Column(db.String, nullable=True)  # Maak het optioneel

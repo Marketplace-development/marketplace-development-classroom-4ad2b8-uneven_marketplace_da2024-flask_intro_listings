@@ -336,7 +336,7 @@ def gepost():
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
     # Geposte reizen van de ingelogde gebruiker ophalen, gesorteerd op nieuwste eerst
-    geposte_reizen = DigitalGoods.query.filter_by(userid=user.userid).order_by(DigitalGoods.createdat.desc()).all()
+    geposte_reizen = DigitalGoods.query.filter_by(userid=user.userid, is_deleted=False).order_by(DigitalGoods.createdat.desc()).all()
 
     # Voeg het aantal aankopen toe aan elke reis
     for reis in geposte_reizen:
@@ -486,7 +486,7 @@ def search():
         category.name for category in categories if str(category.categoryid) in selected_categories
     ]
 
-    query = DigitalGoods.query.order_by(DigitalGoods.createdat.desc())
+    query = DigitalGoods.query.filter_by(is_deleted=False).order_by(DigitalGoods.createdat.desc())
 
     if zoekterm:
         query = query.filter(DigitalGoods.titleofitinerary.ilike(f'%{zoekterm}%'))
@@ -648,23 +648,6 @@ def koopbevestiging():
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
     return render_template('koopbevestiging.html', user=user)
-
-@main.route('/verwijder_reis', methods=['POST'])
-def verwijder_reis():
-    if 'userid' not in session:
-        return redirect(url_for('main.login'))
-
-    goodid = request.form.get('goodid')
-    reis = DigitalGoods.query.filter_by(goodid=goodid, userid=session['userid']).first()
-
-    if reis:
-        db.session.delete(reis)
-        db.session.commit()
-        return redirect(url_for('main.reisverwijderd'))
-
-    flash('Reis kon niet worden gevonden of verwijderd.', 'error')
-    return redirect(url_for('main.gepost'))
-
 
 @main.route('/reisverwijderd', methods=['GET'])
 def reisverwijderd():
@@ -1152,7 +1135,8 @@ def filterpagina():
         session.modified = True
 
     # Bouw query voor gefilterde resultaten
-    query = DigitalGoods.query.order_by(DigitalGoods.createdat.desc())
+    query = DigitalGoods.query.filter_by(is_deleted=False)
+
 
     if 'zoekterm' in active_filters:
         query = query.filter(DigitalGoods.titleofitinerary.ilike(f"%{active_filters['zoekterm']}%"))
@@ -1315,3 +1299,21 @@ def meldingen():
 
     # Zorg ervoor dat de variabele consistent is
     return render_template('meldingen.html', notifications=alle_meldingen)
+
+@main.route('/verwijder_reis', methods=['POST'])
+def verwijder_reis():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    goodid = request.form.get('goodid')
+    reis = DigitalGoods.query.filter_by(goodid=goodid, userid=session['userid']).first()
+
+    if reis:
+        # Markeer de reis als verwijderd
+        reis.is_deleted = True
+        db.session.commit()
+        flash('Reis succesvol verwijderd.', 'success')
+        return redirect(url_for('main.reisverwijderd'))
+
+    flash('Reis kon niet worden gevonden of verwijderd.', 'error')
+    return redirect(url_for('main.gepost'))

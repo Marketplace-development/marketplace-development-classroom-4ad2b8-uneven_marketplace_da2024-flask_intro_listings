@@ -1244,6 +1244,10 @@ def messages():
 
     if request.method == 'POST':
         receiver_id = request.form.get('receiver_id')
+        if not receiver_id or Users.query.get(receiver_id) is None:
+            flash("Geen gebruiker geselecteerd.", "danger")
+            return redirect(url_for('main.messages'))
+
         message = request.form.get('message')
 
         if not receiver_id or not message:
@@ -1288,8 +1292,6 @@ def messages():
     ).order_by(
         func.max(Messages.created_at).desc().nullslast()  # Sorteer op laatste activiteit
     ).all()
-
-
 
     # Haal berichten en geselecteerde gebruiker op
     chat_with = request.args.get('chat_with')

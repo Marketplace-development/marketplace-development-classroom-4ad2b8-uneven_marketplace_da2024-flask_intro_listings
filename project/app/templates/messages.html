@@ -229,6 +229,7 @@
             border-radius: 50%;
             margin-left: 10px;
         }
+        
     </style>
     <script>
         // Globale variabele om de huidige geselecteerde gebruiker op te slaan
@@ -381,8 +382,30 @@
             form.addEventListener('submit', () => {
                 setTimeout(scrollToBottom, 100); // Wacht even zodat het bericht eerst wordt toegevoegd
             });
-        }    
+        }
+        
+        function validateMessageForm() {
+            const message = document.querySelector("textarea[name='message']").value.trim();
+            const receiver = document.querySelector("input[name='receiver_id']").value.trim();
+            if (!message) {
+                alert("Het bericht mag niet leeg zijn.");
+                return false;
+            }
+            if (!receiver) {
+                alert("Selecteer een ontvanger.");
+                return false;
+            }
+            return true;    
+        }
 
+        document.addEventListener('DOMContentLoaded', function () {
+            // Als er een geselecteerde gebruiker is, scroll naar de berichtencontainer
+            const messagesContainer = document.getElementById('messages-container');
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        });
+    
     </script>
     
 </head>
@@ -447,12 +470,31 @@
                         <p style="text-align: center; color: #888;">Selecteer een gebruiker om te beginnen</p>
                         {% endif %}
                     {% endif %}
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div>
+                                {% for category, message in messages %}
+                                    <div style="
+                                        font-size: 16px;
+                                        font-weight: bold;
+                                        color: #155724;
+                                        text-align: center;
+                                    ">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                  
+                  
                 </div>
                 <form class="message-form" method="POST" action="{{ url_for('main.messages') }}">
                     <input type="hidden" name="receiver_id" value="{{ chat_with }}">
                     <textarea name="message" placeholder="Typ een bericht..." required></textarea>
                     <button type="submit">Verstuur</button>
-                </form>            </div>
+                </form>            
+            </div>
         
         </main>
     </div>

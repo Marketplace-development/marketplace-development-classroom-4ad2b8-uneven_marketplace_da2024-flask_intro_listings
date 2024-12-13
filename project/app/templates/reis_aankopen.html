@@ -83,6 +83,23 @@
             text-decoration: underline;
         }
 
+        .btn-saldo-aanvullen {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #3c764b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-saldo-aanvullen:hover {
+            background-color: #4f8a61;
+        }
+
         .transaction {
             display: flex;
             justify-content: space-between;
@@ -177,7 +194,8 @@
             <div class="portfolio">
                 <h2>Beschikbaar saldo</h2>
                 <p>€{{ totaal_verdiend - totaal_uitgegeven }}</p>
-            </div>
+                <a href="{{ url_for('main.vul_saldo_aan') }}" class="btn-saldo-aanvullen">Saldo Aanvullen</a>
+            </div>            
         </div>
 
         <div class="history">

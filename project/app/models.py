@@ -18,6 +18,7 @@ class Users(db.Model):
     password = db.Column(db.String, nullable=False)
     profilepicture = db.Column(db.String, default="")
     nationality = db.Column(db.String, default="")
+    balance = db.Column(db.Float, default=0.0)
 
     # Metadata
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)
@@ -32,7 +33,7 @@ class Users(db.Model):
         self.password = password
 
     def __repr__(self):
-        return f'<User {self.email}>'
+        return f'<User {self.email}, Saldo: {self.balance}>'
 
 
 digitalgoods_categories = db.Table(
@@ -73,15 +74,16 @@ class Gekocht(db.Model):
 
     gekochtid = db.Column(db.String, primary_key=True, nullable=False)  # Unieke ID, NOT NULL
     userid = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)
-    goodid = db.Column(db.String, db.ForeignKey('digitalgoods.goodid'), nullable=False)
+    goodid = db.Column(db.String, db.ForeignKey('digitalgoods.goodid'), nullable=True)
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    amount = db.Column(db.Numeric, nullable=True)
 
     # Relaties
     user = db.relationship('Users', backref='gekochte_reizen', lazy=True)
     good = db.relationship('DigitalGoods', backref='gekocht_door', lazy=True)
 
     def __repr__(self):
-        return f'<Gekocht {self.gekochtid} door {self.userid} - {self.goodid}>'
+        return f'<Gekocht {self.gekochtid} door {self.userid} - {self.goodid} (Amount: {self.amount})>'
 
 
 class Favoriet(db.Model):

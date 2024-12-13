@@ -610,21 +610,32 @@ def koop(goodid):
     # Haal de specifieke reis op uit de database
     reis = DigitalGoods.query.filter_by(goodid=goodid).first()
     if not reis:
-        flash('Reis niet gevonden.', 'error') #check
+        flash('Reis niet gevonden.', 'error')
         return redirect(url_for('main.search'))  # Verwijs terug naar de zoekpagina
 
     # Controleer of deze reis al gekocht is door de gebruiker
     bestaande_aankoop = Gekocht.query.filter_by(userid=user.userid, goodid=goodid).first()
     if bestaande_aankoop:
-        #flash('Je hebt deze reis al gekocht.', 'info')
         return redirect(url_for('main.algekocht'))  # Verwijs naar de pagina met gekochte reizen
+
+    # Bereken het saldo van de gebruiker
+    totaal_verdiend = 15  # Welkomstcadeau
+    totaal_uitgegeven = sum(
+        aankoop.good.price for aankoop in Gekocht.query.filter_by(userid=user.userid).all() if aankoop.good
+    )
+    beschikbaar_saldo = totaal_verdiend - totaal_uitgegeven
+
+    # Controleer of het saldo voldoende is
+    if beschikbaar_saldo < reis.price:
+        flash('Saldo ontoereikend. Je kunt deze reis niet aankopen.', 'error')
+        return redirect(url_for('main.saldo_ontoereikend'))  # Verwijs naar een pagina met foutmelding
 
     # Voeg de aankoop toe aan de database
     nieuwe_aankoop = Gekocht(
-    gekochtid=str(uuid.uuid4()),  # Unieke ID voor gekochtid
-    userid=user.userid,
-    goodid=reis.goodid,
-    createdat=datetime.datetime.utcnow()  # Dit wordt standaard gebruikt
+        gekochtid=str(uuid.uuid4()),  # Unieke ID voor gekochtid
+        userid=user.userid,
+        goodid=reis.goodid,
+        createdat=datetime.datetime.utcnow()  # Dit wordt standaard gebruikt
     )
     db.session.add(nieuwe_aankoop)
     db.session.commit()
@@ -637,6 +648,7 @@ def koop(goodid):
     )
 
     return redirect(url_for('main.koopbevestiging'))
+
 
 @main.route('/koopbevestiging', methods=['GET'])
 def koopbevestiging():
@@ -1049,7 +1061,16 @@ def verkochte_reizen():
         'description': 'Welkomscadeau',
         'amount': 15.0,
         'date': user.createdat or datetime.datetime.utcnow()  # Gebruik de aanmaakdatum van de gebruiker
-    })
+    }) 
+    saldo_aanvullingen = Gekocht.query.filter_by(userid=user.userid, goodid=None).all()
+    for aanvulling in saldo_aanvullingen:
+        if aanvulling.amount:  # Controleer of amount niet None is
+            totaal_verdiend += aanvulling.amount
+            geschiedenis.append({
+                'description': 'Saldo aanvulling',
+                'amount': aanvulling.amount,
+                'date': aanvulling.createdat
+                })
 
     # Voeg verkopen toe aan de geschiedenis
     reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
@@ -1089,6 +1110,7 @@ def verkochte_reizen():
         geschiedenis=geschiedenis,
         user=user
     )
+
 
 @main.route('/filterpagina', methods=['GET', 'POST'])
 def filterpagina():
@@ -1317,3 +1339,60 @@ def verwijder_reis():
 
     flash('Reis kon niet worden gevonden of verwijderd.', 'error')
     return redirect(url_for('main.gepost'))
+
+@main.route('/saldo_ontoereikend', methods=['GET'])
+def saldo_ontoereikend():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    user = Users.query.get(session['userid'])
+    if not user:
+        return redirect(url_for('main.logout'))
+
+    return render_template('saldo_ontoereikend.html', user=user)
+
+@main.route('/vul_saldo_aan', methods=['GET', 'POST'])
+def vul_saldo_aan():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijs naar login als gebruiker niet is ingelogd
+
+    user = Users.query.get(session['userid'])  # Haal de huidige gebruiker op
+    if not user:
+        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+
+    if request.method == 'POST':
+        try:
+            # Haal het ingevoerde bedrag op
+            bedrag = float(request.form.get('bedrag'))
+            if bedrag <= 0:
+                flash('Voer een geldig bedrag in.', 'error')
+                return redirect(url_for('main.vul_saldo_aan'))
+
+            # Voeg een saldo-aanvulling toe aan de "gekocht"-tabel
+            nieuwe_transactie = Gekocht(
+                gekochtid=str(uuid.uuid4()),  # Genereer een unieke ID
+                userid=user.userid,
+                goodid=None,  # Geen specifiek product
+                amount=bedrag,  # Toegevoegd bedrag
+                createdat=datetime.datetime.utcnow()
+            )
+            db.session.add(nieuwe_transactie)
+
+            # Update het gebruikerssaldo (optioneel)
+            user.balance += bedrag
+
+            # Debugging
+            print(f"Transactie aangemaakt: UserID: {user.userid}, Amount: {bedrag}")
+
+            # Sla de wijzigingen op
+            db.session.commit()
+
+            flash(f'Saldo succesvol aangevuld met €{bedrag:.2f}', 'success')
+            return redirect(url_for('main.verkochte_reizen'))  # Verwijs terug naar portefeuillepagina
+        except ValueError:
+            flash('Voer een geldig bedrag in.', 'error')
+
+    return render_template('vul_saldo_aan.html', user=user)
+
+
+

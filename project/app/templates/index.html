@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Tales - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://media.cntraveler.com/photos/5eb18e42fc043ed5d9779733/4:3/w_3820,h_2865,c_limit/BlackForest-Germany-GettyImages-147180370.jpg') no-repeat center center;
+            background-size: cover;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .hero-section {
+            margin-top: -50px; /* Brengt de tekst iets lager */
+        }
+
+        .hero-section h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .hero-section p {
+            font-size: 18px;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 20px auto;
+            font-weight: bold; /* Vetgedrukt */
+        }
+
+        .buttons a {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+            background: #2e5f3d;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .buttons a:hover {
+            background: #3c764b;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            font-size: 14px;
+            color: #b3b3b3;
+            text-align: center;
+        }
+
+        #about-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .about-button {
+            background-color: #2e5f3d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            border-radius: 5px; /* Afronding van de hoeken */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Schaduw om de knop */
+            cursor: pointer; /* Wijzig de cursor bij hover */
+        }
+
+        .about-button:hover {
+            background-color: #3c764b;
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        #chat-button {
+            position: fixed;
+            bottom: 20px;
+            right: 130px;
+            z-index: 1000;
+        }
+
+        .chat-btn {
+            background-color: #2e5f3d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .chat-btn:hover {
+            background-color: #3c764b;
+        }
+
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    <div class="container">
+        <div class="hero-section">
+            <h1>Share your journey, inspire others</h1>
+            <p>Welkom bij Travel Tales – dé plek waar reizigers hun eigen verhalen kunnen delen, en die van anderen ontdekken. Laat je inspireren door reizen over de hele wereld en maak van jouw reiservaringen iets waardevols door ze te delen met een community van avonturiers.</p>
+        </div>
+
+        <div class="buttons">
+            <a href="{{ url_for('main.post') }}">Post Reis</a>
+            <a href="{{ url_for('main.search') }}">Zoek Reis</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>Bij Travel Tales geloven we dat de mooiste verhalen gedeeld moeten worden. Sluit je aan bij onze community en laat jouw reisverhaal de wereld rondgaan!</p>
+        <p>~ Travel Tales-team</p>
+    </footer>
+
+    <div id="chat-button">
+        <button onclick="Tawk_API.toggle();" class="chat-btn">Maak gebruik van onze chatbox</button>
+    </div>
+
+    <div id="about-button">
+        <a href="{{ url_for('main.overons') }}" class="about-button">Over ons</a>
+    </div>
+
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6754505c2480f5b4f5a99bf6/1iegljr6f';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+
+    function toggleDropdown() {
+        const dropdown = document.getElementById('dropdownMenu');
+        const arrow = document.getElementById('dropdownArrow');
+
+        if (dropdown.style.display === 'block') {
+            dropdown.style.display = 'none';
+            arrow.classList.remove('open');
+        } else {
+            dropdown.style.display = 'block';
+            arrow.classList.add('open');
+        }
+    }
+
+    // Sluit het menu als je ergens anders klikt
+    window.onclick = function(event) {
+        if (!event.target.closest('.profile-dropdown')) {
+            const dropdown = document.getElementById('dropdownMenu');
+            const arrow = document.getElementById('dropdownArrow');
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+                arrow.classList.remove('open');
+            }
+        }
+    };
+    </script>
+</body>
+</html>

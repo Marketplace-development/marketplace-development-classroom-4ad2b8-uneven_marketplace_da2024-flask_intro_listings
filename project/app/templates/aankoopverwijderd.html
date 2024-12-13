@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aankoop Succesvol Verwijderd</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: #1f3d2b; /* Donkergroene achtergrond */
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .main-header {
+            background: #24452e; /* Donkergroene achtergrond */
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky; /* Zorgt dat de header bovenaan blijft */
+            top: 0;
+            z-index: 10;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Schaduw voor visuele separatie */
+        }
+
+        .main-header .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .main-header .logo img {
+            height: 40px;
+            width: 40px;
+            margin-right: 10px;
+        }
+
+        .main-header .logo span {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px; /* Ruimte tussen de knoppen */
+            justify-content: flex-end;
+            flex-wrap: wrap; /* Voorkomt overflow door knoppen */
+        }
+
+        .nav-button {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 15px;
+            background: #2e5f3d;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+            white-space: nowrap; /* Zorg dat de knop niet afbreekt */
+        }
+
+        .nav-button:hover {
+            background: #3c764b; /* Hover-kleur voor knoppen */
+            color: #e6ffe6; /* Lichtere tekstkleur tijdens hover */
+        }
+
+        .content {
+            margin: 50px auto;
+            padding: 20px;
+            max-width: 600px;
+            background: #2a4a38;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .content h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #e6ffe6;
+        }
+
+        .content a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none; /* Verwijdert onderstreping */
+            background: #2e5f3d; /* Groene achtergrond */
+            border-radius: 5px; /* Ronde hoeken */
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .content a:hover {
+            background: #3c764b; /* Donkergroene hover-kleur */
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <a href="{{ url_for('main.index') }}" class="logo">
+            <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
+            <span>Travel Tales</span>
+        </a>
+        <nav class="nav-links">
+            {% if user %}
+            <h2>Hallo, {{ user.firstname }}</h2>
+            <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
+            <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
+            <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+            {% else %}
+            <a href="{{ url_for('main.login') }}" class="nav-button">Login</a>
+            <a href="{{ url_for('main.register') }}" class="nav-button">Registreer</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="content">
+        <h1>Aankoop succesvol verwijderd!</h1>
+        <a href="{{ url_for('main.gekocht') }}">Terug naar mijn gekochte reizen</a>
+    </div>
+</body>
+</html>

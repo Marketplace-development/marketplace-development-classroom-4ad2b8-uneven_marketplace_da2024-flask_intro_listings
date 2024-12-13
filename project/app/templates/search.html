@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Tales - Zoek een Reis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: #1f3d2b;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            padding: 20px 40px;
+            width: 80%;
+            max-width: 2000px;
+            margin: 20px auto;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #24452e;
+        }
+
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .filter-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-bar form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-bar button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #2e5f3d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .filter-bar button:hover {
+            background-color: #24452e;
+        }
+
+        .filters-applied {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .filter-block {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: transparent;
+            border: 2px solid #2e5f3d;
+            color: #2e5f3d;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .filter-block strong {
+            color: #2e5f3d;
+        }
+
+        .filter-block a {
+            text-decoration: none;
+            color: #ff4d4d;
+            font-weight: bold;
+        }
+
+        .filter-block a:hover {
+            color: #d41c1c;
+        }
+
+        .travel-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .travel-item {
+            width: 300px;
+            background: #e9f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            position: relative;
+        }
+
+        .travel-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .travel-item h2 {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #24452e;
+            text-align: left;
+        }
+
+        .travel-item .description {
+            font-style: italic;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+
+        .travel-item .star-rating {
+            margin-bottom: 10px;
+        }
+
+        .favorite-button {
+            background: none;
+            border: none;
+            color: red;
+            font-size: 24px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+        }
+
+        .favorite-button:hover {
+            color: darkred;
+        }
+
+        .travel-item-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .review-count {
+            color: black; /* Zwart maken van het aantal reviews */
+        }
+
+        .star-rating {
+            color: #ffa500; /* Behoud de sterkleur */
+        }
+
+        .star-rating span {
+            color: black; /* Specifieke stijl voor tekst zoals 'Nog geen beoordelingen' */
+        }
+
+        .price-tag {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: #24452e;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .travel-item a {
+            text-decoration: none;
+        }
+
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    <div class="container">
+        <h1>Zoek een Reis</h1>
+        <div class="filter-bar">
+            <form action="{{ url_for('main.filterpagina') }}" method="get">
+                <button type="submit">Filteren</button>
+            </form>
+            <div class="filters-applied">
+                {% if zoekterm %}
+                    <div class="filter-block">
+                        <strong>Zoekterm:</strong> {{ zoekterm }}
+                        <a href="{{ url_for('main.verwijder_filter', filter_key='zoekterm', **request.args.to_dict(flat=True)) | replace('zoekterm=' ~ zoekterm, '') }}">🗑️</a>
+                    </div>
+                {% endif %}
+                {% if min_price %}
+                    <div class="filter-block">
+                        <strong>Minimum prijs:</strong> €{{ min_price }}
+                        <a href="{{ url_for('main.verwijder_filter', filter_key='min_price', **request.args.to_dict(flat=True)) | replace('min_price=' ~ min_price|string, '') }}">🗑️</a>
+                    </div>
+                {% endif %}
+                {% if max_price %}
+                    <div class="filter-block">
+                        <strong>Maximum prijs:</strong> €{{ max_price }}
+                        <a href="{{ url_for('main.verwijder_filter', filter_key='max_price', **request.args.to_dict(flat=True)) | replace('max_price=' ~ max_price|string, '') }}">🗑️</a>
+                    </div>
+                {% endif %}
+                {% if city %}
+                    <div class="filter-block">
+                        <strong>Stad:</strong> {{ city }}
+                        <a href="{{ url_for('main.verwijder_filter', filter_key='city', **request.args.to_dict(flat=True)) | replace('city=' ~ city, '') }}">🗑️</a>
+                    </div>
+                {% endif %}
+                {% if min_rating %}
+                    <div class="filter-block">
+                        <strong>Minimale beoordeling:</strong> {{ min_rating }} sterren
+                        <a href="{{ url_for('main.verwijder_filter', filter_key='min_rating', **request.args.to_dict(flat=True)) | replace('min_rating=' ~ min_rating|string, '') }}">🗑️</a>
+                    </div>
+                {% endif %}
+                {% if selected_category_names %}
+                    <div class="filter-block">
+                        <strong>Categorieën:</strong> {{ selected_category_names | join(', ') }}
+                        <a href="{{ url_for('main.verwijder_filter', filter_key='category_id', **request.args.to_dict(flat=True)) | replace('category_id=' ~ (selected_category_names | join(',')), '') }}">🗑️</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="travel-list">
+            {% if reizen %}
+                {% for reis in reizen %}
+                <div class="travel-item">
+                    <a class="travel-item-link" href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}"></a>
+                    <img src="{{ reis.image_urls[0] if reis.image_urls else '/static/default_image.jpg' }}" alt="Reis afbeelding">
+                    
+                    <!-- Form for favorite button -->
+                    <form action="{{ url_for('main.toggle_favoriet') }}" method="POST" style="position: absolute; top: 10px; right: 10px;">
+                        <input type="hidden" name="goodid" value="{{ reis.goodid }}">
+                        <button type="submit" class="favorite-button" title="Favoriet">
+                            {% if reis.goodid in favorieten %}
+                                ❤️
+                            {% else %}
+                                🤍
+                            {% endif %}
+                        </button>
+                    </form>
+
+                    <h2>
+                        <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" style="color: #24452e;">
+                            {{ reis.titleofitinerary }}
+                        </a>
+                    </h2>
+                    <p class="description">{{ reis.descriptionofitinerary }}</p>
+                    <p>
+                        {% if reis.review_count > 0 %}
+                            <span class="star-rating">
+                                {% for _ in range(reis.gemiddelde_rating|round(0, 'floor')|int) %}
+                                    ⭐
+                                {% endfor %}
+                                <span class="review-count">({{ reis.review_count }})</span>
+                            </span>
+                        {% else %}
+                            <span class="star-rating"><span>Nog geen beoordelingen</span></span>
+                        {% endif %}
+                    </p>
+                    <div class="price-tag">€{{ reis.price }}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>Geen reizen gevonden.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

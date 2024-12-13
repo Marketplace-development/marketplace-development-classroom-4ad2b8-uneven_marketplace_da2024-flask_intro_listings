@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Bedankt voor je Feedback</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>    
+        <style>
+            body {
+                font-family: 'Georgia', serif;
+                margin: 0;
+                padding: 0;
+                background: #013220; /* Donkergroene achtergrond */
+                color: #ffffff;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+
+            .main-header {
+                background: #013220;
+                padding: 20px 30px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                position: relative;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+            }
+            .logo-container .globe img {
+                width: 40px;
+                height: 40px;
+                object-fit: cover;
+            }
+            .main-header .logo {
+                color: #ffffff;
+                text-decoration: none;
+                font-size: 24px;
+                font-weight: bold;
+                margin-left: 10px;
+            }
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 15px; /* Ruimte tussen de knoppen */
+            }
+            .nav-button {
+                color: #ffffff;
+                text-decoration: none;
+                font-size: 16px;
+                padding: 12px 20px;
+                background: #2e5f3d;
+                border-radius: 5px;
+                transition: background 0.3s ease, color 0.3s ease;
+                min-width: 120px;
+                text-align: center;
+            }
+            .nav-button:hover {
+                background: #3c764b;
+                color: #e6ffe6;
+            }
+
+            .content {
+                margin: 50px auto;
+                padding: 30px;
+                max-width: 600px;
+                background: #2a4a38;
+                border-radius: 10px;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+                text-align: center;
+            }
+            .content h1 {
+                font-size: 32px;
+                margin-bottom: 20px;
+                color: #e6ffe6;
+            }
+            .content p {
+                font-size: 18px;
+                margin-bottom: 30px;
+                color: #e6ffe6;
+            }
+            .content .button-container {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+            .content .button {
+                display: inline-block;
+                padding: 15px 30px;
+                font-size: 18px;
+                font-weight: bold;
+                color: #ffffff;
+                text-decoration: none;
+                background: #2e5f3d;
+                border-radius: 5px;
+                transition: background 0.3s ease, color 0.3s ease;
+            }
+            .content .button:hover {
+                background: #3c764b;
+            }
+        </style>
+    </head>
+    <body>
+        <header class="main-header">
+            <div class="logo-container">
+                <div class="globe">
+                    <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
+                </div>
+                <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+            </div>
+            <nav class="nav-links">
+                {% if user %}
+                    <span>Hallo, {{ user.firstname }}</span>
+                {% else %}
+                    <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
+                    <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
+                    <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+                {% endif %}
+            </nav>
+        </header>
+        <main class="content">
+            <h1>Je gaf al een review op deze reis.</h1>
+            <p>We waarderen je mening enorm en hopen dat je tevreden bent met onze service.</p>
+            <div class="button-container">
+                <a href="{{ url_for('main.gekocht') }}" class="button">Mijn Aangekochte Reizen</a>
+                <a href="{{ url_for('main.search') }}" class="button">Zoek een andere reis</a>
+            </div>
+        </main>
+    </body>
+    </html>

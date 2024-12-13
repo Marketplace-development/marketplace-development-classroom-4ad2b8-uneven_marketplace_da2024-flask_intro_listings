@@ -1,0 +1,165 @@
+.main-header {
+    background: #24452e;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-container .globe {
+    width: 50px;
+    height: 50px;
+    background-color: #24452e; /* Donkergroene achtergrond */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px; /* Ruimte tussen wereldbol en tekst */
+    overflow: hidden;
+}
+
+.logo-container .globe img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.main-header .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-links h2 {
+    color: #f0f0f0;
+    font-size: 18px;
+    margin: 0;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+.nav-button {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 12px 20px;
+    background: #2e5f3d;
+    border-radius: 5px;
+    transition: background 0.3s ease, color 0.3s ease;
+    min-width: 120px;
+    text-align: center;
+}
+
+.nav-button:hover {
+    background: #3c764b;
+    color: #e6ffe6;
+}
+.profile-dropdown {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.profile-trigger {
+    display: flex;
+    align-items: center; /* Zorgt dat de afbeelding en het pijltje op één lijn staan */
+    gap: 5px; /* Ruimte tussen de profielfoto en het pijltje */
+}
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ddd; /* Optionele rand */
+}
+
+.dropdown-arrow {
+    font-size: 16px;
+    transition: transform 0.3s ease; /* Voor een draai-effect */
+    color: #fff;
+
+}
+
+.dropdown-arrow.open {
+    transform: rotate(180deg); /* Draai het pijltje */
+}
+
+.dropdown-menu {
+    display: none; /* Verberg menu standaard */
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    min-width: 200px;
+    padding: 10px 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f4f4f4;
+}
+
+.dropdown-menu:focus-within {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        padding: 10px 15px;
+    }
+    .nav-button {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+    .profile-img {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+.notification-clock img {
+    vertical-align: middle;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.nav-links a img:hover {
+    transform: scale(1.1); /* Zoom in op hover */
+    filter: brightness(1.2); /* Maak het icoon iets helderder */
+}
+
+.notification-dot2 {
+    height: 7px; /* Grootte van het bolletje */
+    width: 7px;  /* Grootte van het bolletje */
+    background-color: red; /* Kleur van het bolletje */
+    border-radius: 50%; /* Maakt het rond */
+    display: inline-block; /* Zorgt dat het inline staat met tekst */
+    margin-left: 8px; /* Ruimte tussen "Mijn berichten" en het bolletje */
+}

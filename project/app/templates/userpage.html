@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mijn Berichten</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            color: #1f3d2b;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px 30px;
+            background: #ffffff;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            padding: 15px;
+            background: #f5f5f5; /* Lichtgrijze achtergrond voor secties */
+            border: 1px solid #ddd; /* Rand om secties */
+            border-radius: 8px;
+        }
+
+        .section h2 {
+            font-size: 18px; /* Sectietitel kleiner dan hoofdtitel */
+        }
+
+        .section label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+            color: #1f3d2b;
+        }
+
+        .section input,
+        .section select,
+        .section textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #ffffff;
+            color: #333;
+        }
+
+        .save-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #2e5f3d;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .save-button:hover {
+            background: #4f8a61;
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    {% include 'navbar.html' %}
+
+    <main class="content">
+        <h1>Profielgegevens</h1>
+        <form class="section" id="profile-form" method="POST" action="/userpage" enctype="multipart/form-data">
+            <!-- Huidige profielfoto -->
+            <div class="profile-picture">
+                <h3>Profielfoto:</h3>
+                {% if user.profilepicture %}
+                    <img src="{{ user.profilepicture }}" alt="Profielfoto" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
+                {% else %}
+                    <p>Geen profielfoto beschikbaar.</p>
+                {% endif %}
+                <label for="profilePicture">Nieuwe profielfoto uploaden:</label>
+                <input type="file" id="profilePicture" name="profilePicture" accept=".jpg, .jpeg, .png, .gif">
+            </div>
+
+            <div class="form-row">
+                <label for="firstname">Voornaam:</label>
+                <input type="text" id="firstname" name="firstname" value="{{ user.firstname }}" required>
+            </div>
+            <div class="form-row">
+                <label for="lastname">Achternaam:</label>
+                <input type="text" id="lastname" name="lastname" value="{{ user.lastname }}" required>
+            </div>
+            <div class="form-row">
+                <label for="email">E-mailadres:</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+            </div>
+            <div class="form-row">
+                <label for="address">Straat en huisnummer:</label>
+                <input type="text" id="address" name="address" value="{{ user.address or '' }}">
+            </div>
+            <div class="form-row">
+                <label for="city">Stad:</label>
+                <input type="text" id="city" name="city" value="{{ user.city or '' }}">
+            </div>
+            <div class="form-row">
+                <label for="postalcode">Postcode:</label>
+                <input type="text" id="postalcode" name="postalcode" value="{{ user.postalcode or '' }}">
+            </div>
+            <div class="form-row">
+                <label for="country">Land:</label>
+                <input type="text" id="country" name="country" value="{{ user.country or '' }}">
+            </div>
+            <div class="form-row">
+                <label for="nationality">Nationaliteit:</label>
+                <input type="text" id="nationality" name="nationality" value="{{ user.nationality or '' }}">
+            </div>
+
+            <div class="form-row">
+                <button type="submit" class="save-button">Wijzigingen opslaan</button>
+            </div>
+        </form>
+        <script>
+            document.getElementById('profile-form').onsubmit = function(e) {
+                const fileInput = document.getElementById('profilePicture');
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    alert("Selecteer een bestand voordat je verdergaat!");
+                    e.preventDefault(); // Voorkom verzending van het formulier
+                }
+            };
+        </script>
+
+        <h1>Wachtwoord aanpassen</h1>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flashes">
+                    {% for category, message in messages %}
+                        <div class="alert {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="section">
+                <form method="POST" action="/change_password">
+                    <div class="form-group">
+                        <label for="current_password">Huidig wachtwoord:</label>
+                        <input type="password" id="current_password" name="current_password" placeholder="Voer je huidige wachtwoord in" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_password">Nieuw wachtwoord:</label>
+                        <input type="password" id="new_password" name="new_password" placeholder="Voer een nieuw wachtwoord in" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Bevestig nieuw wachtwoord:</label>
+                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Bevestig je nieuwe wachtwoord" required>
+                    </div>
+                    <button type="submit" class="save-button">Wachtwoord opslaan</button>
+                </form>
+            </div>
+    </main>
+</body>
+</html>

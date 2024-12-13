@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filterpagina</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: #1f3d2b;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-header {
+            background: #24452e;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container .globe {
+            width: 50px;
+            height: 50px;
+            background-color: #24452e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .logo-container .globe img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+        }
+
+        .main-header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-button {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 12px 20px;
+            background: #2e5f3d;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .nav-button:hover {
+            background: #3c764b;
+            color: #e6ffe6;
+        }
+
+        .container {
+            padding: 20px 40px;
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #24452e;
+        }
+
+        .container h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .filter-form label {
+            display: block;
+            margin-top: 15px;
+            font-size: 18px;
+        }
+
+        .filter-form input, 
+        .filter-form select, 
+        .filter-form button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        .filter-form button {
+            background: #2e5f3d;
+            color: #ffffff;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .filter-form button:hover {
+            background: #3c764b;
+        }
+
+        .categories {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .categories label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 16px;
+            color: #24452e;
+            cursor: pointer;
+        }
+
+        .categories input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            border: 2px solid #ccc;
+            border-radius: 3px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .categories input:checked {
+            background: #24452e;
+            border-color: #24452e;
+        }
+
+        .categories input:checked::before {
+            content: "✔";
+            color: #fff;
+            font-size: 14px;
+            display: inline-block;
+            text-align: center;
+            line-height: 18px;
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo-container">
+            <div class="globe">
+                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
+            </div>
+            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
+        </div>
+        <nav class="nav-links">
+            {% if user %}
+                <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
+                <a href="{{ url_for('main.userpage') }}" class="nav-button">Mijn profiel</a>
+                <a href="{{ url_for('main.logout') }}" class="nav-button">Uitloggen</a>
+            {% else %}
+                <a href="{{ url_for('main.index') }}" class="nav-button">Home</a>
+                <a href="{{ url_for('main.login') }}" class="nav-button">Login</a>
+                <a href="{{ url_for('main.register') }}" class="nav-button">Registreer</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Filter Reizen</h1>
+        <form class="filter-form" method="GET" action="{{ url_for('main.search') }}">
+            <label for="zoekterm">Zoekterm:</label>
+            <input type="text" id="zoekterm" name="zoekterm" placeholder="Zoek op titel...">
+    
+            <label for="min_price">Prijs van:</label>
+            <input type="number" id="min_price" name="min_price" placeholder="Minimum prijs">
+    
+            <label for="max_price">Prijs tot:</label>
+            <input type="number" id="max_price" name="max_price" placeholder="Maximum prijs">
+    
+            <label for="city">Stad:</label>
+            <select id="city" name="city">
+                <option value="">Alle steden</option>
+                {% for city in available_cities %}
+                    <option value="{{ city }}">{{ city.capitalize() }}</option>
+                {% endfor %}
+            </select>
+    
+            <label for="min_rating">Minimale beoordeling:</label>
+            <select id="min_rating" name="min_rating">
+                <option value="">Geen minimum</option>
+                <option value="0">0 sterren of meer</option>
+                <option value="1">1 ster of meer</option>
+                <option value="2">2 sterren of meer</option>
+                <option value="3">3 sterren of meer</option>
+                <option value="4">4 sterren of meer</option>
+                <option value="5">5 sterren</option>
+            </select>
+    
+            <div class="categories">
+                <h3>Categorieën:</h3>
+                {% for category in categories %}
+                    <label>
+                        <input type="checkbox" name="category_id" value="{{ category.categoryid }}"
+                            {% if category.categoryid|string in selected_categories %}checked{% endif %}>
+                        {{ category.name }}
+                    </label>
+                {% endfor %}
+            </div>
+    
+            <button type="submit">Filteren</button>
+        </form>
+    </div>    
+</body>
+</html>
+

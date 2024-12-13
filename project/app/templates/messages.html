@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mijn Berichten</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background: #ffffff;
+            color: #1f3d2b;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+
+        }
+    
+        .main-container {
+            display: flex;
+            flex: 1;
+        }
+
+        /* Groene navigatie zijbalk */
+        .sidebar {
+            width: 250px;
+            background: #2e5f3d;
+            padding: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin: 15px 0;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 16px;
+            display: block;
+            padding: 10px;
+            background: #3c764b;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background: #4f8a61;
+        }
+
+        /* Grijze gebruikerslijst zijbalk */
+        .sidebar2 {
+            width: 250px;
+            background: #d3d3d3;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 130px);
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center; /* Zorg dat items verticaal worden uitgelijnd */
+        }
+
+        #search-bar {
+            width: calc(100% - 30px); /* Zorg dat er ruimte is voor het vergrootglas */
+            padding: 10px 15px 10px 40px; /* Voeg padding toe om ruimte te maken voor het vergrootglas */
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            background: #f5f5f5;
+            transition: all 0.3s ease-in-out;
+        }
+    
+        #search-bar:focus {
+            border-color: #3c764b;
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    
+        #search-bar::placeholder {
+            color: #888;
+            font-style: italic;
+        }
+    
+        .search-container:before {
+            content: '\1F50D'; /* Unicode voor vergrootglas-icoon */
+            position: absolute;
+            left: 15px; /* Plaats het icoon in de padding van het tekstveld */
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #888;
+        }
+    
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            background: #ffffff;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+    
+        .user-item:hover {
+            background: #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    
+        .user-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    
+        .user-item.active {
+            background-color: #3c764b; /* Groene achtergrond */
+            color: white; /* Witte tekstkleur */
+            font-weight: bold;
+        }
+    
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            overflow-y: auto;
+        }
+
+        #chat-header {
+            padding: 15px 20px;
+            background-color: #f9f9f9; /* Grijze achtergrond zoals het berichtenvenster */
+            border-bottom: 1px solid #ccc; /* Optionele scheiding onder de header */
+        }
+        
+        .chat-container {
+            display: flex;
+            flex-direction: column; /* Zet de items onder elkaar */
+            flex: 1;
+            max-height: 100%; /* Beperk hoogte tot scherm */
+            overflow: hidden; /* Zorg dat inhoud niet buiten container gaat */
+        }
+        
+        .messages {
+            flex: 1;
+            overflow-y: auto; /* Scrollen mogelijk maken */
+            padding: 20px;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Ruimte tussen berichten */
+            height: calc(100vh - 350px); /* Hoogte aanpassen aan scherm */
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 70%;
+        }
+
+        .sent {
+            align-self: flex-end;
+            background: #24452e;
+            color: white;
+            border-radius: 12px;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    
+        .received {
+            align-self: flex-start;
+            background: #f0f0f0;
+            color: #333;
+            border-radius: 12px;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-form {
+            flex-shrink: 0; /* Houd het formulier vast onderaan */
+            padding: 20px;
+            background: #ffffff;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            border-top: 1px solid #ddd; /* Optioneel: visuele scheiding met berichten */
+        }
+        
+        .message-form textarea {
+            flex: 1;
+            height: 60px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            max-height: 120px;
+        }
+        
+        .message-form button {
+            padding: 10px 20px;
+            background: #24452e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .unread-badge {
+            background-color: #ff3b30;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        
+    </style>
+    <script>
+        // Globale variabele om de huidige geselecteerde gebruiker op te slaan
+        let currentUser = null;
+    
+        function filterUsers() {
+            const searchValue = document.getElementById('search-bar').value.toLowerCase();
+            const users = document.querySelectorAll('.user-item');
+    
+            users.forEach(user => {
+                const userName = user.textContent.toLowerCase();
+                if (userName.includes(searchValue)) {
+                    user.style.display = 'flex';
+                } else {
+                    user.style.display = 'none';
+                }
+            });
+        }
+    
+        function setChatHeader(userName) {
+            const users = document.querySelectorAll('.user-item');
+            users.forEach(user => {
+                user.classList.remove('active'); // Verwijder markering van alle gebruikers
+            });
+        
+            const selectedUser = Array.from(users).find(user => user.textContent.trim() === userName);
+            if (selectedUser) {
+                selectedUser.classList.add('active'); // Voeg markering toe aan geselecteerde gebruiker
+            }
+        
+            if (currentUser !== userName) {
+                currentUser = userName;
+                document.getElementById('chat-header').textContent = currentUser;
+            }
+        }
+        
+    
+        // Zorg dat de huidige gebruiker na refresh behouden blijft
+        document.addEventListener('DOMContentLoaded', () => {
+            if (currentUser) {
+                document.getElementById('chat-header').textContent = currentUser;
+            }
+        });
+        
+        let currentUserId = "{{ chat_with }}";
+    
+        function updateChat(userId, userName) {
+            // Zet de gebruiker in de chat-header
+            document.getElementById('chat-header').textContent = userName;
+    
+            // Werk de verborgen input bij voor de ontvanger
+            const receiverInput = document.querySelector("input[name='receiver_id']");
+            if (receiverInput) {
+                receiverInput.value = userId;
+            }
+    
+            // Pas de URL aan zonder de pagina opnieuw te laden
+            const newUrl = `${window.location.pathname}?chat_with=${userId}`;
+    
+            // Haal de berichten voor de geselecteerde gebruiker op (optioneel, afhankelijk van hoe je chat werkt)
+            window.location.href = newUrl;
+        }
+    
+
+        function sortUsersByLastActivity() {
+            const userList = document.getElementById('user-list');
+            const users = Array.from(userList.children);
+        
+            users.sort((a, b) => {
+                const lastActivityA = new Date(a.dataset.lastActivity).getTime();
+                const lastActivityB = new Date(b.dataset.lastActivity).getTime();
+                return lastActivityB - lastActivityA; // Meest recente eerst
+            });
+        
+            // Voeg de gesorteerde elementen opnieuw toe
+            users.forEach(user => userList.appendChild(user));
+        }
+        
+        // Voer de functie uit bij het laden van de pagina
+        document.addEventListener('DOMContentLoaded', sortUsersByLastActivity);
+        
+        document.addEventListener('DOMContentLoaded', function () {
+            const userList = document.getElementById('user-list');
+            const users = Array.from(userList.children);
+        
+            users.sort((a, b) => {
+                const lastActivityA = new Date(a.dataset.lastActivity).getTime();
+                const lastActivityB = new Date(b.dataset.lastActivity).getTime();
+                return lastActivityB - lastActivityA; // Meest recente eerst
+            });
+        
+            users.forEach(user => userList.appendChild(user));
+        });
+        
+        
+        function filterUsers() {
+            const searchValue = document.getElementById('search-bar').value.toLowerCase();
+            const users = document.querySelectorAll('.user-item');
+    
+            users.forEach(user => {
+                const userName = user.textContent.toLowerCase();
+                if (userName.includes(searchValue)) {
+                    user.style.display = 'flex';
+                } else {
+                    user.style.display = 'none';
+                }
+            });
+        }
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            const userList = document.getElementById('user-list');
+            const users = Array.from(userList.children);
+    
+            users.sort((a, b) => {
+                const lastActivityA = new Date(a.dataset.lastActivity).getTime();
+                const lastActivityB = new Date(b.dataset.lastActivity).getTime();
+                return lastActivityB - lastActivityA; // Meest recente eerst
+            });
+    
+            users.forEach(user => userList.appendChild(user));
+        });
+
+        function selectUser(userId, userName) {
+            // Update de chat-header met de naam van de geselecteerde gebruiker
+            const chatHeader = document.getElementById('chat-header');
+            if (chatHeader) {
+                chatHeader.textContent = userName;
+            }
+    
+            // Navigeer naar de nieuwe URL om berichten op te halen voor de geselecteerde gebruiker
+            const newUrl = `${window.location.pathname}?chat_with=${userId}`;
+            window.location.href = newUrl;
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById('messages-container');
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+    
+        // Scroll naar de onderkant van de berichtenlijst bij het laden van de pagina
+        document.addEventListener('DOMContentLoaded', () => {
+            scrollToBottom();
+        });
+    
+        // Optioneel: Scroll opnieuw naar de onderkant na het verzenden van een nieuw bericht
+        const form = document.querySelector('.message-form');
+        if (form) {
+            form.addEventListener('submit', () => {
+                setTimeout(scrollToBottom, 100); // Wacht even zodat het bericht eerst wordt toegevoegd
+            });
+        }    
+    </script>
+    
+</head>
+<body>
+    {% include 'header.html' %}
+    {% include 'navbar.html' %}
+    <div class="main-container">
+        <aside class="sidebar2">
+            <div class="search-container">
+                <input type="text" id="search-bar" placeholder="Zoek gebruiker..." oninput="filterUsers()">
+            </div>         
+            <div id="user-list">
+                {% for user, last_activity, unread_count in users %}
+                <div class="user-item {% if chat_with == user.userid %}active{% endif %}" 
+                     data-last-activity="{{ last_activity or '' }}" 
+                     onclick="selectUser('{{ user.userid }}', '{{ user.firstname }} {{ user.lastname }}')">
+                    <img src="{{ user.profilepicture if user.profilepicture else '/static/default_image.jpg' }}" alt="Profielfoto" style="object-fit: cover;">
+                    <div>
+                        {{ user.firstname }} {{ user.lastname }}
+                        {% if unread_count > 0 %}
+                        <span class="unread-badge">{{ unread_count }}</span> <!-- Ongelezen berichten badge -->
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </aside>    
+        <main class="content">
+            <div id="chat-container">
+                <div id="chat-header">
+                    {% if selected_user %}
+                    <h2>Chat met {{ selected_user.firstname }} {{ selected_user.lastname }}</h2>
+                    {% else %}
+                    <h2>Selecteer een gebruiker om te beginnen</h2>
+                    {% endif %}
+                </div>
+        
+                <div class="messages"id="messages-container">
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="message {% if message.sender_id == user.userid %}sent{% else %}received{% endif %}">
+                            {{ message.message }}
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        {% if selected_user %}
+                        <p style="text-align: center; color: #888;">Er zijn nog geen berichten met {{ selected_user.firstname }} {{ selected_user.lastname }}.</p>
+                        {% else %}
+                        <p style="text-align: center; color: #888;">Selecteer een gebruiker om te beginnen</p>
+                        {% endif %}
+                    {% endif %}
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <div>
+                                {% for category, message in messages %}
+                                    <div style="
+                                        font-size: 16px;
+                                        font-weight: bold;
+                                        color: #155724;
+                                        text-align: center;
+                                    ">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                  
+                  
+                </div>
+                <form class="message-form" method="POST" action="{{ url_for('main.messages') }}">
+                    <input type="hidden" name="receiver_id" value="{{ chat_with }}">
+                    <textarea name="message" placeholder="Typ een bericht..." required></textarea>
+                    <button type="submit">Verstuur</button>
+                </form>            
+            </div>
+        
+        </main>
+    </div>
+</body>
+</html>

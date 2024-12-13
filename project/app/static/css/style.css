@@ -6,7 +6,7 @@
     justify-content: space-between;
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 1001; /* Zorgt ervoor dat dropdown voor de balk komt */
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -69,6 +69,7 @@
     background: #3c764b;
     color: #e6ffe6;
 }
+
 .profile-dropdown {
     position: relative;
     display: inline-block;
@@ -78,7 +79,7 @@
 .profile-trigger {
     display: flex;
     align-items: center; /* Zorgt dat de afbeelding en het pijltje op één lijn staan */
-    gap: 5px; /* Ruimte tussen de profielfoto en het pijltje */
+    gap: 10px; /* Verhoogde ruimte tussen de profielfoto en het pijltje */
 }
 
 .profile-img {
@@ -93,7 +94,6 @@
     font-size: 16px;
     transition: transform 0.3s ease; /* Voor een draai-effect */
     color: #fff;
-
 }
 
 .dropdown-arrow.open {
@@ -104,12 +104,12 @@
     display: none; /* Verberg menu standaard */
     position: absolute;
     right: 0;
-    top: 50px;
+    top: 100%;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    z-index: 1002; /* Voor dropdown boven andere elementen */
     min-width: 200px;
     padding: 10px 0;
 }

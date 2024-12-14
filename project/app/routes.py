@@ -415,26 +415,29 @@ def gekocht():
     gekochte_reizen = (
         Gekocht.query
         .filter(
-            Gekocht.userid == user.userid,  # Aankopen van de gebruiker
-            Gekocht.is_saldo_aanvulling == False,  # Geen saldo-aanvullingen
-            Gekocht.is_archived == False,  # Geen gearchiveerde aankopen
-            Gekocht.goodid.isnot(None)  # Alleen aankopen gekoppeld aan een reis (geen boostkosten)
+            Gekocht.userid == user.userid,
+            Gekocht.is_saldo_aanvulling == False,
+            Gekocht.is_archived == False,
+            Gekocht.goodid.isnot(None)
         )
         .all()
     )
 
-    # Voeg eigenaarinformatie en andere benodigde gegevens toe aan elk gekocht object
+    # Voeg eigenaarinformatie, foto's en andere gegevens toe
     uitgebreide_aankopen = []
     for aankoop in gekochte_reizen:
-        good = DigitalGoods.query.get(aankoop.goodid)  # Koppel het DigitalGoods-object
-        eigenaar = Users.query.get(good.userid) if good else None  # Haal eigenaar op als good bestaat
+        good = DigitalGoods.query.get(aankoop.goodid)
+        eigenaar = Users.query.get(good.userid) if good else None
+        image_urls = json.loads(good.image_urls) if good and good.image_urls else []
         uitgebreide_aankopen.append({
             "aankoop": aankoop,
             "good": good,
-            "eigenaar": eigenaar
+            "eigenaar": eigenaar,
+            "image_urls": image_urls  # Voeg de afbeelding toe
         })
 
     return render_template('gekocht.html', user=user, gekochte_reizen=uitgebreide_aankopen)
+
 
 
 

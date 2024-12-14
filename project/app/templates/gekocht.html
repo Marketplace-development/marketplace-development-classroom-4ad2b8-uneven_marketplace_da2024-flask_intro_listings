@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mijn Berichten</title>
+    <title>Mijn Gekochte Reizen</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
     <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
@@ -26,8 +26,7 @@
             flex: 1;
             padding: 20px 30px;
             background: #ffffff;
-            border-radius: 10px;
-            max-width: 900px;
+            max-width: 1200px;
             margin: auto;
         }
 
@@ -38,30 +37,66 @@
             text-align: center;
         }
 
-        .travel-item {
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            margin-bottom: 20px;
+        .travel-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
         }
 
+        .travel-item {
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            text-align: left;
+        }
+
+        .travel-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        
         .travel-item h2 {
             font-size: 20px;
+            font-weight: bold;
             margin-bottom: 10px;
+            color: #24452e;
+        }
+
+        .travel-item .description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Maximaal 3 regels */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+        .travel-item {
+            background: #e9f5e9;
         }
 
         .add-button {
             display: inline-block;
+            margin: 10px 5px 0 0;
             padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
             background-color: #24452e;
             color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 10px;
-            text-align: center;
         }
 
         .add-button:hover {
@@ -70,27 +105,41 @@
 
         .delete-button {
             background-color: #d9534f;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            display: inline-block;
+            margin: 10px 5px 0 0;
+            padding: 10px 20px;
             font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
             text-align: center;
-            min-width: 100px;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            border: none;
         }
 
         .delete-button:hover {
             background-color: #c9302c;
         }
 
-        a {
-            color: #24452e;
+        .travel-item a {
+            color: white
             text-decoration: underline;
         }
 
-        a:hover {
+        .travel-item a:hover {
             color: #3c764b;
+        }
+
+        .price-tag {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: #24452e;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -100,53 +149,44 @@
 
     <main class="content">
         <h1>Mijn Gekochte Reizen</h1>
-    
-        {% if gekochte_reizen %}
-            {% for aankoop in gekochte_reizen %}
+        <div class="travel-list">
+            {% if gekochte_reizen %}
+                {% for aankoop in gekochte_reizen %}
                 <div class="travel-item">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <h2>{{ aankoop['good'].titleofitinerary if aankoop['good'] else 'Niet beschikbaar' }}</h2>
-                            <p style="color: #666; margin-bottom: 15px;">
-                                Gepost door 
-                                {% if aankoop['eigenaar'] %}
-                                    <a href="{{ url_for('main.user_profile', userid=aankoop['eigenaar'].userid) }}">
-                                        {{ aankoop['eigenaar'].firstname }} {{ aankoop['eigenaar'].lastname }}
-                                    </a>
-                                    uit {{ aankoop['eigenaar'].country }}
-                                {% else %}
-                                    Eigenaar onbekend
-                                {% endif %}
-                            </p>
-                            <p><strong>Beschrijving:</strong> {{ aankoop['good'].descriptionofitinerary if aankoop['good'] else 'Geen beschrijving beschikbaar' }}</p>
-                            <p><strong>Prijs (&euro;):</strong> {{ aankoop['good'].price if aankoop['good'] else 'Onbekend' }}</p>
-                            <p><strong>Aangekocht op:</strong> {{ aankoop['aankoop'].createdat.strftime('%d-%m-%Y') if aankoop['aankoop'] and aankoop['aankoop'].createdat else 'Onbekend' }}</p>
-                        </div>
-
-                        {% if aankoop['aankoop'] and not aankoop['aankoop'].is_archived %}
-                            <form action="{{ url_for('main.verwijder_aankoop') }}" method="POST" style="margin-left: 20px;">
-                                <input type="hidden" name="gekochtid" value="{{ aankoop['aankoop'].gekochtid }}">
-                                <button type="submit" class="delete-button">Verwijder</button>
-                            </form>
-                        {% endif %}
-                    </div>
-
+                    <a class="travel-item-link" href="{{ url_for('main.reisdetail', goodid=aankoop['good'].goodid if aankoop['good'] else 0) }}"></a>
+                    <img src="{{ aankoop['image_urls'][0] if aankoop['image_urls'] else '/static/default_image.jpg' }}" alt="Reis afbeelding">
+                
+                    <h2>
+                        <a href="{{ url_for('main.reisdetail', goodid=aankoop['good'].goodid if aankoop['good'] else 0) }}" style="color: #24452e;">
+                            {{ aankoop['good'].titleofitinerary if aankoop['good'] else 'Niet beschikbaar' }}
+                        </a>
+                    </h2>
+                    <p class="description">{{ aankoop['good'].descriptionofitinerary if aankoop['good'] else 'Geen beschrijving beschikbaar' }}</p>
+                    <div class="price-tag">€{{ aankoop['good'].price if aankoop['good'] else 'Onbekend' }}</div>
+                
+                    {% if aankoop['aankoop'] and not aankoop['aankoop'].is_archived %}
+                        <form action="{{ url_for('main.verwijder_aankoop') }}" method="POST" style="display: inline;">
+                            <input type="hidden" name="gekochtid" value="{{ aankoop['aankoop'].gekochtid }}">
+                            <button type="submit" class="delete-button">Verwijder</button>
+                        </form>
+                    {% endif %}
+                
                     {% if aankoop['good'] and aankoop['good'].pdf_url %}
                         <a href="{{ url_for('main.download_aankoop_pdf', gekochtid=aankoop['aankoop'].gekochtid) }}" target="_blank" class="add-button">
                             Open mijn reis (PDF)
                         </a>
                     {% endif %}
-
+                
                     {% if aankoop['good'] %}
                         <a href="{{ url_for('main.review_page', goodid=aankoop['good'].goodid) }}" class="add-button">Review deze reis</a>
                     {% endif %}
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>Je hebt nog geen reizen gekocht.</p>
-        {% endif %}
-    
+                </div>                
+                {% endfor %}
+            {% else %}
+                <p>Je hebt nog geen reizen gekocht.</p>
+            {% endif %}
+        </div>
         <a href="{{ url_for('main.search') }}" class="add-button">Terug naar zoeken</a>
-    </main>    
+    </main>
 </body>
-</html>
+</html>  

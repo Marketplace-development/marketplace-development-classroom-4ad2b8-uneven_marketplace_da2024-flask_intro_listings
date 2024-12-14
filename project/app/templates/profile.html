@@ -43,16 +43,18 @@
             margin-bottom: 20px;
         }
 
-        .icon {
-            font-size: 20px;
-            color: #2e5f3d;
+        .profile-img2 {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd; /* Optionele rand om de afbeelding */
         }
 
         .container {
-            padding: 20px 40px;
-            width: 100%;
-            max-width: 2000px;
-            margin: 20px auto;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
             background: #f9f9f9;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -90,7 +92,6 @@
             font-weight: bold;
             margin: 10px 0;
             color: #24452e;
-            text-align: left;
         }
 
         .travel-item .description {
@@ -113,7 +114,6 @@
             position: absolute;
             top: 10px;
             right: 10px;
-            z-index: 2;
         }
 
         .favorite-button:hover {
@@ -129,85 +129,6 @@
             padding: 5px 10px;
             border-radius: 4px;
             font-weight: bold;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px; /* Ruimte tussen de knoppen */
-            margin-top: 20px;
-        }
-        
-        button.follow-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-            color: #ffffff;
-            background-color: #2e5f3d; /* Donkergroen */
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        
-        button.follow-btn:hover {
-            background-color: #2e5f3d;
-            transform: translateY(-2px);
-        }
-        
-        button.unfollow-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-            color: #ffffff;
-            background-color: #cccccc; /* Lichtgrijs */
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        
-        button.unfollow-btn:hover {
-            background-color: #bbbbbb;
-            transform: translateY(-2px);
-        }
-        
-        .connect-btn {
-            background-color: #2e5f3d !important; /* Groene kleur */
-        }
-        
-        .connect-btn:hover {
-            background-color: #2e5f3d !important;
-        }
-
-        .back-button {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            text-align: center;
-            color: #ffffff;
-            background-color: #2e5f3d; /* Donkergroen */
-            border-radius: 5px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        
-        .back-button:hover {
-            background-color: #3c764b;
-            transform: translateY(-2px);
-        }
-
-        .profile-img2 {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #ddd; /* Optionele rand om de afbeelding */
         }
     </style>
 </head>
@@ -253,19 +174,18 @@
                     <a href="{{ url_for('main.zoekconnecties') }}" class="btn btn-success connect-btn">Connecties Zoeken</a>
                 </div>
             </div>
-            <div class="container">
-                <h2>Geüploade Reizen:</h2>
+        </div>
+        <div class="container">
+            <h2>Geüploade Reizen:</h2>
+            <div class="travel-list">
                 {% if reizen %}
                     {% for reis in reizen %}
                     <div class="travel-item">
-                        <a class="travel-item-link" href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}"></a>
-                        {% if reis.image_urls[0] %}
-                            <img src="{{ reis.image_urls[0] }}" alt="foto">
-                        {% endif %}
+                        <img src="{{ reis.image_urls[0] if reis.image_urls else '/static/default_image.jpg' }}" alt="Reis afbeelding">
                         <form action="{{ url_for('main.toggle_favoriet') }}" method="POST" style="position: absolute; top: 10px; right: 10px;">
                             <input type="hidden" name="goodid" value="{{ reis.goodid }}">
-                            <input type="hidden" name="referer" value="favoriet">
-                            <button type="submit" class="favorite-button" title="Verwijder favoriet">❤️</button>
+                            <input type="hidden" name="referer" value="profile">
+                            <button type="submit" class="favorite-button" title="Toevoegen aan favorieten">❤️</button>
                         </form>
                         <h2>
                             <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" style="color: #24452e;">
@@ -279,9 +199,9 @@
                 {% else %}
                     <p>Geen reizen gevonden.</p>
                 {% endif %}
-            </div>          
-            <a href="{{ url_for('main.search') }}" class="back-button btn btn-outline-secondary mt-3">Terug naar zoekpagina</a>
+            </div>
         </div>
+        <a href="{{ url_for('main.search') }}" class="back-button btn btn-outline-secondary mt-3">Terug naar zoekpagina</a>
     </main>
 </body>
 </html>

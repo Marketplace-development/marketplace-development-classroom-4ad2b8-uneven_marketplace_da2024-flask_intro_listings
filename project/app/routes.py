@@ -411,9 +411,17 @@ def gekocht():
     if not user:
         return redirect(url_for('main.logout'))
 
-    # Haal alle gekochte reizen van de gebruiker op, exclusief saldo-aanvullingen
-    gekochte_reizen = Gekocht.query.filter_by(userid=user.userid, is_saldo_aanvulling=False, is_archived=False).all()
-
+    # Haal alle gekochte reizen van de gebruiker op, exclusief saldo-aanvullingen en boostkosten
+    gekochte_reizen = (
+        Gekocht.query
+        .filter(
+            Gekocht.userid == user.userid,  # Aankopen van de gebruiker
+            Gekocht.is_saldo_aanvulling == False,  # Geen saldo-aanvullingen
+            Gekocht.is_archived == False,  # Geen gearchiveerde aankopen
+            Gekocht.goodid.isnot(None)  # Alleen aankopen gekoppeld aan een reis (geen boostkosten)
+        )
+        .all()
+    )
 
     # Voeg eigenaarinformatie en andere benodigde gegevens toe aan elk gekocht object
     uitgebreide_aankopen = []
@@ -427,8 +435,6 @@ def gekocht():
         })
 
     return render_template('gekocht.html', user=user, gekochte_reizen=uitgebreide_aankopen)
-
-
 
 
 
@@ -970,7 +976,7 @@ def user_profile(userid):
     ).first() is not None
 
     # Haal de geüploade reizen van deze gebruiker op
-    reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
+    reizen = DigitalGoods.query.filter_by(userid=user.userid, is_deleted=False).all()
     for reis in reizen:
         if reis.image_urls:
             reis.image_urls = json.loads(reis.image_urls)

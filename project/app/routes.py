@@ -1138,7 +1138,6 @@ def toggle_follow():
     # Standaard terugvaloptie
     return redirect(url_for('main.index'))
 
-
 @main.route('/verkochte_reizen', methods=['GET'])
 def verkochte_reizen():
     if 'userid' not in session:
@@ -1184,10 +1183,14 @@ def verkochte_reizen():
                     'amount': round(Decimal(reis.price), 2),
                     'date': aankoop.createdat  # Datum van aankoop
                 })
+
+
     gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
     for aankoop in gekochte_reizen:
         if aankoop.goodid is None and not aankoop.is_saldo_aanvulling:
             totaal_uitgegeven += Decimal(aankoop.amount)  # Voeg de €1.00 toe aan de uitgaven
+
+
             geschiedenis.append({
                 'description': 'Boostkosten',
                 'amount': -round(Decimal(aankoop.amount), 2),

@@ -102,6 +102,19 @@
             width: 20px;
             margin-right: 10px;
         }
+        /* Media query voor mobiele apparaten */
+@media (max-width: 768px) {
+    .team {
+        grid-template-columns: 1fr; /* 1 kolom */
+        gap: 20px; /* Extra ruimte tussen items voor overzichtelijkheid */
+    }
+
+    .team-member {
+        width: 90%; /* Zorg dat de kaarten niet de volledige breedte innemen */
+        margin: 0 auto; /* Centreer de kaarten */
+    }
+}
+
     </style>
 </head>
 <body>

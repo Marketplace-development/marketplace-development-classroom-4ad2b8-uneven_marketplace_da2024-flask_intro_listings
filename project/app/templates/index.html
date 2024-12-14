@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel Tales - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
     <link rel="icon" type="image/x-icon" href="static/img/favicon.ico">
@@ -92,9 +93,6 @@
             text-decoration: none;
             text-align: center;
             transition: background-color 0.3s ease, transform 0.3s ease;
-            border-radius: 5px; /* Afronding van de hoeken */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Schaduw om de knop */
-            cursor: pointer; /* Wijzig de cursor bij hover */
         }
 
         .about-button:hover {
@@ -126,6 +124,44 @@
             background-color: #3c764b;
         }
 
+        /* Alleen aanpassingen voor mobiele apparaten */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 0 15px; /* Extra padding aan de zijkanten voor ruimte */
+    }
+
+    .hero-section h1 {
+        font-size: 22px; /* Maak de titel kleiner op mobiele apparaten */
+        line-height: 1.3; /* Zorg voor een compactere regelafstand */
+        word-wrap: break-word; /* Lange woorden worden gebroken */
+        text-align: center; /* Titel gecentreerd */
+    }
+
+    .hero-section p {
+        font-size: 16px; /* Iets kleinere tekstgrootte */
+        line-height: 1.5; /* Betere leesbaarheid */
+        padding: 0 10px; /* Extra ruimte aan de zijkanten */
+    }
+
+    .buttons a {
+        display: block; /* Zorg dat knoppen onder elkaar staan */
+        width: 90%; /* Maak knoppen breder op mobiel */
+        margin: 10px auto; /* Horizontaal gecentreerd */
+        font-size: 16px; /* Kleinere knoptekst op mobiel */
+    }
+
+    footer {
+        padding: 10px 0; /* Minimaliseer footer-padding */
+    }
+
+    #about-button {
+        bottom: 10px; /* Positioneer de knop dichter bij de onderkant */
+        left: 10px; /* Houd een beetje ruimte aan de linkerzijde */
+    }
+}
+
+
+
     </style>
 </head>
 <body>
@@ -146,15 +182,12 @@
         <p>Bij Travel Tales geloven we dat de mooiste verhalen gedeeld moeten worden. Sluit je aan bij onze community en laat jouw reisverhaal de wereld rondgaan!</p>
         <p>~ Travel Tales-team</p>
     </footer>
-
-    <div id="chat-button">
-        <button onclick="Tawk_API.toggle();" class="chat-btn">Maak gebruik van onze chatbox</button>
-    </div>
-
+    
     <div id="about-button">
         <a href="{{ url_for('main.overons') }}" class="about-button">Over ons</a>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript">
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
     (function(){
@@ -179,7 +212,6 @@
         }
     }
 
-    // Sluit het menu als je ergens anders klikt
     window.onclick = function(event) {
         if (!event.target.closest('.profile-dropdown')) {
             const dropdown = document.getElementById('dropdownMenu');

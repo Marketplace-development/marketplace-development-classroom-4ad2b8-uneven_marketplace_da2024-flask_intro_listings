@@ -27,9 +27,10 @@
 }
 
 .logo-container .globe img {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
+    width: 60px;
+    height: auto; /* Zorgt dat de afbeelding proportioneel schaalt */
+    object-fit: contain; /* Voorkomt vervorming */
+    max-width: 100%; /* Beperkt de breedte tot de container */
 }
 
 .main-header .logo {
@@ -141,6 +142,9 @@
     .profile-img {
         width: 30px;
         height: 30px;
+    }
+    .logo-container .globe img {
+        width: 40px; /* Kleinere afbeelding op kleinere schermen */
     }
 }
 

@@ -29,44 +29,13 @@
             flex: 1;
         }
 
-        /* Groene navigatie zijbalk */
-        .sidebar {
-            width: 250px;
-            background: #2e5f3d;
-            padding: 20px;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sidebar li {
-            margin: 15px 0;
-        }
-
-        .sidebar a {
-            text-decoration: none;
-            color: #ffffff;
-            font-size: 16px;
-            display: block;
-            padding: 10px;
-            background: #3c764b;
-            border-radius: 5px;
-            transition: background 0.3s ease;
-        }
-
-        .sidebar a:hover {
-            background: #4f8a61;
-        }
-
         /* Grijze gebruikerslijst zijbalk */
         .sidebar2 {
             width: 250px;
             background: #d3d3d3;
             padding: 20px;
             overflow-y: auto;
-            max-height: calc(100vh - 130px);
+            max-height: calc(100vh - 150px);
         }
 
         .search-container {
@@ -168,7 +137,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px; /* Ruimte tussen berichten */
-            height: calc(100vh - 350px); /* Hoogte aanpassen aan scherm */
+            height: calc(100vh - 330px); /* Hoogte aanpassen aan scherm */
         }
 
         .message {
@@ -233,7 +202,44 @@
             border-radius: 50%;
             margin-left: 10px;
         }
+
+        @media (max-width: 600px) {
+            .main-container {
+                flex-direction: column; /* Plaats de inhoud onder elkaar */
+            }
         
+            .sidebar2 {
+                width: 100%; /* Laat de zijbalken de volledige breedte nemen */
+                max-height: 150px; /* Beperk de hoogte om ruimte voor andere inhoud te laten */
+                overflow-y: auto; /* Voeg scrollen toe als de inhoud te lang is */
+            }
+        
+            .content {
+                flex: 1;
+                margin-top: 10px; /* Voeg wat ruimte toe boven de inhoud */
+            }
+        
+            .messages {
+                height: calc(100vh - 580px); /* Hoogte aanpassen voor de beperkte verticale ruimte */
+            }
+        
+            .message-form {
+                flex-wrap: wrap; /* Laat het formulier zich aanpassen bij weinig breedte */
+            }
+        
+            .message-form textarea {
+                width: 100%; /* Zorg dat het tekstvak de volledige breedte heeft */
+                margin-bottom: 10px; /* Ruimte onder het tekstvak */
+            }
+        
+            .message-form button {
+                width: 100%; /* Knop vult de breedte */
+            }
+            .user-item img {
+                width: 30px; /* Kleiner op smalle schermen */
+                height: 30px;
+            }
+        }        
     </style>
     <script>
         // Globale variabele om de huidige geselecteerde gebruiker op te slaan

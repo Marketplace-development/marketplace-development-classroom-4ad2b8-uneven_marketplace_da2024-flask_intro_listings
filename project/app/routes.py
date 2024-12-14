@@ -1585,7 +1585,7 @@ def verwijder_reis():
         # Markeer de reis als verwijderd
         reis.is_deleted = True
         db.session.commit()
-        flash('Reis succesvol verwijderd.', 'success')
+        #flash('Reis succesvol verwijderd.', 'success')
         return redirect(url_for('main.reisverwijderd'))
 
     flash('Reis kon niet worden gevonden of verwijderd.', 'error')
@@ -1754,5 +1754,5 @@ def verwijder_account():
     except Exception as e:
         db.session.rollback()
         print(f"Fout bij het verwijderen van het account: {e}")
-        flash('Er ging iets mis bij het verwijderen van je account. Probeer het opnieuw.', 'error')
+        #flash('Er ging iets mis bij het verwijderen van je account. Probeer het opnieuw.', 'error')
         return redirect(url_for('main.userpage'))

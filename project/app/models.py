@@ -14,7 +14,6 @@ class Users(db.Model):
     # User information
     firstname = db.Column(db.String, nullable=False)
     lastname = db.Column(db.String, nullable=False)
-    birthdate = db.Column(db.Date, default="")
     country = db.Column(db.String, default="")
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)

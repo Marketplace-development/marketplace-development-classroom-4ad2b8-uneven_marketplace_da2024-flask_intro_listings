@@ -50,6 +50,8 @@
 
         .travel-list {
             margin-top: 20px;
+            color: #2e5f3d; /* Groene kleur voor de titel */
+        
         }
 
         .travel-item {
@@ -62,6 +64,7 @@
 
         .travel-item h3 {
             margin: 0;
+            color: #2e5f3d; /* Groene kleur voor de titel */
         }
 
         .action-buttons {
@@ -167,10 +170,6 @@
                             <strong>Nationaliteit:</strong> {{ user.nationality or 'Niet opgegeven' }}
                         </div>
                         <div class="mb-3">
-                            <span class="icon">🏙️</span>
-                            <strong>Stad:</strong> {{ user.city or 'Niet opgegeven' }}
-                        </div>
-                        <div class="mb-3">
                             <span class="icon">🌍</span>
                             <strong>Land:</strong> {{ user.country or 'Niet opgegeven' }}
                         </div>
@@ -197,7 +196,7 @@
                         {% for reis in reizen %}
                         <div class="col-md-6">
                             <div class="travel-item">
-                                <h3><a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}">{{ reis.titleofitinerary }}</a></h3>
+                                <h3 style="color: #2e5f3d;"><a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}">{{ reis.titleofitinerary }}</a></h3>
                                 <p>{{ reis.descriptionofitinerary }}</p>
                                 <p><strong>Prijs:</strong> €{{ reis.price }}</p>
                             </div>

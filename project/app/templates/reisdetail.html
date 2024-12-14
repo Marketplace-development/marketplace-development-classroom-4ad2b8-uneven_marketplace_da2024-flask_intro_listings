@@ -151,7 +151,7 @@
         <h1>{{ reis.titleofitinerary }}</h1>
         <p style="color: #666; margin-bottom: 15px; text-align: center;">
             Gepost door 
-            <a href="{{ url_for('main.user_profile', userid=eigenaar.userid) }}">
+            <a href="{{ url_for('main.user_profile', userid=eigenaar.userid) }}"style="color: #2e5f3d;">
                 {{ eigenaar.firstname }} {{ eigenaar.lastname }}
             </a> 
             uit {{ eigenaar.country }}

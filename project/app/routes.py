@@ -1539,3 +1539,63 @@ def vul_saldo_aan():
     return render_template('vul_saldo_aan.html', user=user)
 
 
+@main.route('/api/travelssearch', methods=['GET'])
+def get_user_travelssearch():
+    if 'userid' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+
+    user = Users.query.get(session['userid'])
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    zoekterm = request.args.get('zoekterm', '').strip()
+    min_price = request.args.get('min_price', type=float)
+    max_price = request.args.get('max_price', type=float)
+    city = request.args.get('city', '').strip().lower()
+    selected_categories = request.args.getlist('category_id')  # Zorgt voor een lijst
+    min_rating = request.args.get('min_rating', type=int)
+
+    print(selected_categories)
+
+
+    query = DigitalGoods.query.filter_by(is_deleted=False).order_by(DigitalGoods.createdat.desc())
+
+    if zoekterm:
+        query = query.filter(DigitalGoods.titleofitinerary.ilike(f'%{zoekterm}%'))
+    if min_price is not None:
+        query = query.filter(DigitalGoods.price >= min_price)
+    if max_price is not None:
+        query = query.filter(DigitalGoods.price <= max_price)
+    if city:
+        query = query.filter(DigitalGoods.start_city.ilike(city))
+    if selected_categories:
+        # Controleer of er categorieën zijn; sla over als de lijst leeg is
+        query = query.join(digitalgoods_categories).join(Category).filter(
+            Category.categoryid.in_(selected_categories)
+        )
+    if min_rating is not None:
+        query = query.filter(
+            (db.session.query(db.func.avg(Feedback.rating))
+             .filter(Feedback.targetgoodid == DigitalGoods.goodid)
+             .correlate(DigitalGoods)
+             .label('average_rating')) >= min_rating
+        )
+
+    reizen = query.all()
+
+    print("Titels van reizen:")
+    for reis in reizen:
+        print(reis.titleofitinerary)
+
+    reizen_data = [
+        {
+            'titleofitinerary': reis.titleofitinerary,
+            'descriptionofitinerary': reis.descriptionofitinerary,
+            'latitude': reis.latitude,
+            'longitude': reis.longitude,
+            'goodid': reis.goodid
+        } for reis in reizen
+    ]
+
+    return jsonify(reizen_data)
+

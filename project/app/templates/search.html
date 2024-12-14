@@ -170,15 +170,15 @@
         }
 
         .review-count {
-            color: black; /* Zwart maken van het aantal reviews */
+            color: black;
         }
 
         .star-rating {
-            color: #ffa500; /* Behoud de sterkleur */
+            color: #ffa500;
         }
 
         .star-rating span {
-            color: black; /* Specifieke stijl voor tekst zoals 'Nog geen beoordelingen' */
+            color: black;
         }
 
         .price-tag {
@@ -196,7 +196,32 @@
             text-decoration: none;
         }
 
+        #map {
+            width: 100%;
+            height: 500px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            display: none;
+        }
+        #toggle-map {
+            background-color: #2e5f3d; /* Groen */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        
     </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     {% include 'header.html' %}
@@ -245,14 +270,16 @@
                 {% endif %}
             </div>
         </div>
+
+        <button id="toggle-map" class="filter-bar button">Toon Kaart</button>
+
+        <div id="map"></div>
         <div class="travel-list">
             {% if reizen %}
                 {% for reis in reizen %}
                 <div class="travel-item">
                     <a class="travel-item-link" href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}"></a>
                     <img src="{{ reis.image_urls[0] if reis.image_urls else '/static/default_image.jpg' }}" alt="Reis afbeelding">
-                    
-                    <!-- Form for favorite button -->
                     <form action="{{ url_for('main.toggle_favoriet') }}" method="POST" style="position: absolute; top: 10px; right: 10px;">
                         <input type="hidden" name="goodid" value="{{ reis.goodid }}">
                         <button type="submit" class="favorite-button" title="Favoriet">
@@ -290,5 +317,84 @@
             {% endif %}
         </div>
     </div>
+    <script>
+        // Initialiseer een Leaflet-kaart variabele buiten de functie
+        let mapInstance = null;
+    
+        document.getElementById('toggle-map').addEventListener('click', function () {
+            const mapElement = document.getElementById('map');
+            const travelList = document.querySelector('.travel-list');
+    
+            if (mapElement.style.display === 'none' || !mapElement.style.display) {
+                mapElement.style.display = 'block';
+                travelList.style.display = 'none';
+                this.textContent = 'Verberg Kaart';
+    
+                if (!mapInstance) {
+                    mapInstance = L.map('map').setView([0, 0], 2);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: 'Kaartgegevens © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    }).addTo(mapInstance);
+    
+                    // Voeg filters toe aan de kaart
+                    function getFilters() {
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const filters = {
+                            zoekterm: urlParams.get('zoekterm') || '',
+                            min_price: urlParams.get('min_price') || '',
+                            max_price: urlParams.get('max_price') || '',
+                            city: urlParams.get('city') || '',
+                            min_rating: urlParams.get('min_rating') || ''
+                        };
+                    
+                        // Haal alle categorieën op als array
+                        const selectedCategories = urlParams.getAll('category_id') || [];
+                        return { ...filters, selected_category_names: selectedCategories };
+                    }
+                    
+                    // Correcte manier om filters naar een querystring te converteren
+                    const filters = getFilters();
+                    const queryString = new URLSearchParams();
+                    
+                    // Voeg reguliere filters toe
+                    Object.keys(filters).forEach(key => {
+                        if (key !== 'selected_category_names' && filters[key]) {
+                            queryString.append(key, filters[key]);
+                        }
+                    });
+                    
+                    // Voeg geselecteerde categorieën toe (meerdere key-value paren)
+                    filters.selected_category_names.forEach(category => {
+                        queryString.append('category_id', category);
+                    });
+                    
+                    // Fetch reizen data met filters
+                    fetch(`/api/travelssearch?${queryString.toString()}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.forEach(reis => {
+                                if (reis.latitude && reis.longitude) {
+                                    L.marker([reis.latitude, reis.longitude])
+                                        .addTo(mapInstance)
+                                        .bindPopup(`
+                                            <b>${reis.titleofitinerary}</b><br>
+                                            ${reis.descriptionofitinerary}<br>
+                                            <a href="/reis/${reis.goodid}">Bekijk reis</a>
+                                        `);
+                                }
+                            });
+                        })
+                        .catch(error => console.error('Error fetching travel data:', error));
+                    
+                }
+            } else {
+                mapElement.style.display = 'none';
+                travelList.style.display = 'flex';
+                this.textContent = 'Toon Kaart';
+            }
+        });
+    </script>
+    
 </body>
 </html>

@@ -933,7 +933,7 @@ def profile():
         return redirect(url_for('main.logout'))  # Log uit als de gebruiker niet bestaat
 
     # Haal de geüploade reizen van de gebruiker op
-    reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
+    reizen = DigitalGoods.query.filter_by(userid=user.userid, is_deleted=False).all()
 
     # Render de profielpagina met de gebruiker en reizen
     return render_template('profile.html', user=user, reizen=reizen)
@@ -959,7 +959,7 @@ def user_profile(userid):
     ).first() is not None
 
     # Haal de geüploade reizen van deze gebruiker op
-    reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
+    reizen = DigitalGoods.query.filter_by(userid=user.userid, is_deleted=False).all()
 
     # Render de profielpagina met de gegevens van de gebruiker, reizen en volgstatus
     return render_template(

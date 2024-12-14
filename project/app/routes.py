@@ -1184,18 +1184,27 @@ def verkochte_reizen():
                     'date': aankoop.createdat  # Datum van aankoop
                 })
 
-
+    # Voeg aankopen (inclusief administratieve kosten) toe aan de geschiedenis
     gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
     for aankoop in gekochte_reizen:
+        reis = DigitalGoods.query.filter_by(goodid=aankoop.goodid).first()
+        if reis:
+            administratieve_kost = Decimal(reis.price) * Decimal('0.10')  # Bereken 10% administratieve kost met Decimal
+            totaal_uitgegeven += Decimal(reis.price) + administratieve_kost  # Inclusief administratieve kost
+            geschiedenis.append({
+                'description': f"{reis.titleofitinerary} (inclusief 10% administratie)",
+                'amount': -round(Decimal(reis.price) + administratieve_kost, 2),
+                'date': aankoop.createdat  # Datum van aankoop
+            })
+
+        # Voeg boostkosten toe als relevant
         if aankoop.goodid is None and not aankoop.is_saldo_aanvulling:
-            totaal_uitgegeven += Decimal(aankoop.amount)  # Voeg de €1.00 toe aan de uitgaven
-
-
+            totaal_uitgegeven += Decimal(aankoop.amount)  # Voeg de boostkosten toe aan de uitgaven
             geschiedenis.append({
                 'description': 'Boostkosten',
                 'amount': -round(Decimal(aankoop.amount), 2),
                 'date': aankoop.createdat
-                })
+            })
 
     # Sorteer de geschiedenis op datum (nieuwste eerst)
     geschiedenis.sort(key=lambda x: x['date'], reverse=True)

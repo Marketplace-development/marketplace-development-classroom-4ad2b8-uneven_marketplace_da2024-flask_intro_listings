@@ -321,10 +321,9 @@ def userpage():
         user.firstname = request.form.get('firstname')
         user.lastname = request.form.get('lastname')
         user.email = request.form.get('email')
-        user.address = request.form.get('address')
-        user.city = request.form.get('city')
-        user.postalcode = request.form.get('postalcode')
         user.country = request.form.get('country')
+        user.nationality = request.form.get('nationality')
+
         
         print(f"Aanwezig in request.files: {list(request.files.keys())}")
 

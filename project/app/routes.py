@@ -1634,3 +1634,58 @@ def get_user_travelssearch():
 
     return jsonify(reizen_data)
 
+@main.route('/verwijder_account', methods=['POST'])
+def verwijder_account():
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))  # Verwijs naar login als de gebruiker niet is ingelogd
+
+    user_id = session['userid']
+    user = Users.query.get(user_id)
+
+    if not user:
+        return redirect(url_for('main.logout'))  # Log uit als de gebruiker niet bestaat
+
+    try:
+        # Verwijder reizen van de gebruiker
+        reizen = DigitalGoods.query.filter_by(userid=user_id).all()
+        for reis in reizen:
+            db.session.delete(reis)  # Verwijder reizen uit de database
+        db.session.commit()
+
+        # Verwijder favorieten van de gebruiker
+        Favoriet.query.filter_by(userid=user_id).delete()
+        db.session.commit()
+
+        # Verwijder connecties van en naar de gebruiker
+        Connections.query.filter_by(follower_id=user_id).delete()
+        Connections.query.filter_by(followed_id=user_id).delete()
+        db.session.commit()
+
+        # Verwijder meldingen voor en door de gebruiker
+        Meldingen.query.filter_by(recipient_id=user_id).delete()
+        Meldingen.query.filter_by(sender_id=user_id).delete()
+        db.session.commit()
+
+        # Verwijder berichten van en naar de gebruiker
+        Messages.query.filter_by(sender_id=user_id).delete()
+        Messages.query.filter_by(receiver_id=user_id).delete()
+        db.session.commit()
+
+        # Verwijder aankopen en saldo-aanvullingen van de gebruiker
+        Gekocht.query.filter_by(userid=user_id).delete()
+        db.session.commit()
+
+        # Verwijder de gebruiker zelf
+        db.session.delete(user)
+        db.session.commit()
+
+        # Verwijder sessie en log uit
+        session.pop('userid', None)
+        flash('Je account en bijbehorende gegevens zijn succesvol verwijderd.', 'success')
+        return redirect(url_for('main.index'))
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Fout bij het verwijderen van het account: {e}")
+        flash('Er ging iets mis bij het verwijderen van je account. Probeer het opnieuw.', 'error')
+        return redirect(url_for('main.userpage'))

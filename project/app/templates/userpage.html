@@ -120,46 +120,34 @@
                 <button type="submit" class="save-button">Wijzigingen opslaan</button>
             </div>
         </form>
-        <script>
-            document.getElementById('profile-form').onsubmit = function(e) {
-                const fileInput = document.getElementById('profilePicture');
-                if (!fileInput.files || fileInput.files.length === 0) {
-                    alert("Selecteer een bestand voordat je verdergaat!");
-                    e.preventDefault(); // Voorkom verzending van het formulier
-                }
-            };
-        </script>
 
         <h1>Wachtwoord aanpassen</h1>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <div class="flashes">
-                    {% for category, message in messages %}
-                        <div class="alert {{ category }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
+        <div class="section">
+            <form method="POST" action="/change_password">
+                <div class="form-group">
+                    <label for="current_password">Huidig wachtwoord:</label>
+                    <input type="password" id="current_password" name="current_password" placeholder="Voer je huidige wachtwoord in" required>
+                </div>
+                <div class="form-group">
+                    <label for="new_password">Nieuw wachtwoord:</label>
+                    <input type="password" id="new_password" name="new_password" placeholder="Voer een nieuw wachtwoord in" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Bevestig nieuw wachtwoord:</label>
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Bevestig je nieuwe wachtwoord" required>
+                </div>
+                <button type="submit" class="save-button">Wachtwoord opslaan</button>
+            </form>
+        </div>
 
-            <div class="section">
-                <form method="POST" action="/change_password">
-                    <div class="form-group">
-                        <label for="current_password">Huidig wachtwoord:</label>
-                        <input type="password" id="current_password" name="current_password" placeholder="Voer je huidige wachtwoord in" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="new_password">Nieuw wachtwoord:</label>
-                        <input type="password" id="new_password" name="new_password" placeholder="Voer een nieuw wachtwoord in" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirm_password">Bevestig nieuw wachtwoord:</label>
-                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Bevestig je nieuwe wachtwoord" required>
-                    </div>
-                    <button type="submit" class="save-button">Wachtwoord opslaan</button>
-                </form>
-            </div>
+        <h1>Account beheren</h1>
+        <div class="section">
+            <form id="delete-account-form" method="POST" action="/verwijder_account">
+                <div class="form-row">
+                    <button type="submit" class="save-button" style="background-color: #d9534f;">Account verwijderen</button>
+                </div>
+            </form>
+        </div>
     </main>
 </body>
 </html>

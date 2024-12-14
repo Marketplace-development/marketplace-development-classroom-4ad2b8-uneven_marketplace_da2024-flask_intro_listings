@@ -196,7 +196,7 @@
                         {% for reis in reizen %}
                         <div class="col-md-6">
                             <div class="travel-item">
-                                <h3 style="color: #2e5f3d;"><a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}">{{ reis.titleofitinerary }}</a></h3>
+                                <h3><a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" style="color: #2e5f3d;">{{ reis.titleofitinerary }}</a></h3>
                                 <p>{{ reis.descriptionofitinerary }}</p>
                                 <p><strong>Prijs:</strong> €{{ reis.price }}</p>
                             </div>

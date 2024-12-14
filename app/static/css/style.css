@@ -1402,6 +1402,8 @@ form button {
     text-decoration: none;
     padding: 10px 20px;
     font-size: 16px;
+    font-family: 'Arial', sans-serif; /* Consistent lettertype */
+    font-weight: bold; 
     color: #fff;
     background-color: #007bff;
     border: none;
@@ -1420,6 +1422,13 @@ form button:hover {
 
 .form-navigation a:hover {
     background-color: #5a6268;
+}
+
+.form-navigation {
+    display: flex;
+    justify-content: space-between; /* Plaatst de knoppen aan beide uiteinden */
+    margin-top: 20px;
+    width: 170%; /* Zorgt ervoor dat de knoppen zich aanpassen aan de breedte van het formulier */
 }
 
 

@@ -911,7 +911,7 @@ def get_user_travels():
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
-    travels = DigitalGoods.query.filter_by(userid=user.userid).all()
+    travels = DigitalGoods.query.filter_by(userid=user.userid, is_deleted=False).all()
     return jsonify([
         {
             'titleofitinerary': t.titleofitinerary,

@@ -861,7 +861,7 @@ def verwijder_aankoop():
     if aankoop and aankoop.userid == session['userid']:
         aankoop.is_archived = True  # Markeer als gearchiveerd
         db.session.commit()
-        flash('Aankoop succesvol verborgen uit de lijst.', 'success')
+        #flash('Aankoop succesvol verborgen uit de lijst.', 'success')
     else:
         flash('Er is iets misgegaan bij het verwijderen.', 'error')
 

@@ -48,23 +48,87 @@
             color: #2e5f3d;
         }
 
+        .container {
+            padding: 20px 40px;
+            width: 100%;
+            max-width: 2000px;
+            margin: 20px auto;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #24452e;
+        }
+
         .travel-list {
-            margin-top: 20px;
-            color: #2e5f3d; /* Groene kleur voor de titel */
-        
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
         }
 
         .travel-item {
+            width: 300px;
             background: #e9f5e9;
             padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            position: relative;
         }
 
-        .travel-item h3 {
-            margin: 0;
-            color: #2e5f3d; /* Groene kleur voor de titel */
+        .travel-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .travel-item h2 {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #24452e;
+            text-align: left;
+        }
+
+        .travel-item .description {
+            font-style: italic;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+
+        .favorite-button {
+            background: none;
+            border: none;
+            color: red;
+            font-size: 24px;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+        }
+
+        .favorite-button:hover {
+            color: darkred;
+        }
+
+        .price-tag {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: #24452e;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
         }
 
         .action-buttons {
@@ -189,24 +253,33 @@
                     <a href="{{ url_for('main.zoekconnecties') }}" class="btn btn-success connect-btn">Connecties Zoeken</a>
                 </div>
             </div>
-            <h2>Geüploade Reizen:</h2>
-            <div class="travel-list">
-                <div class="row g-3">
-                    {% if reizen %}
-                        {% for reis in reizen %}
-                        <div class="col-md-6">
-                            <div class="travel-item">
-                                <h3><a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" style="color: #2e5f3d;">{{ reis.titleofitinerary }}</a></h3>
-                                <p>{{ reis.descriptionofitinerary }}</p>
-                                <p><strong>Prijs:</strong> €{{ reis.price }}</p>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        <p>Geen reizen gevonden.</p>
-                    {% endif %}
-                </div>
-            </div>            
+            <div class="container">
+                <h2>Geüploade Reizen:</h2>
+                {% if reizen %}
+                    {% for reis in reizen %}
+                    <div class="travel-item">
+                        <a class="travel-item-link" href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}"></a>
+                        {% if reis.image_urls[0] %}
+                            <img src="{{ reis.image_urls[0] }}" alt="foto">
+                        {% endif %}
+                        <form action="{{ url_for('main.toggle_favoriet') }}" method="POST" style="position: absolute; top: 10px; right: 10px;">
+                            <input type="hidden" name="goodid" value="{{ reis.goodid }}">
+                            <input type="hidden" name="referer" value="favoriet">
+                            <button type="submit" class="favorite-button" title="Verwijder favoriet">❤️</button>
+                        </form>
+                        <h2>
+                            <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" style="color: #24452e;">
+                                {{ reis.titleofitinerary }}
+                            </a>
+                        </h2>
+                        <p class="description">{{ reis.descriptionofitinerary }}</p>
+                        <div class="price-tag">€{{ reis.price }}</div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Geen reizen gevonden.</p>
+                {% endif %}
+            </div>          
             <a href="{{ url_for('main.search') }}" class="back-button btn btn-outline-secondary mt-3">Terug naar zoekpagina</a>
         </div>
     </main>

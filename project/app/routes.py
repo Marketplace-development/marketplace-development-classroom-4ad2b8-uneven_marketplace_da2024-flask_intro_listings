@@ -970,7 +970,10 @@ def user_profile(userid):
     ).first() is not None
 
     # Haal de geüploade reizen van deze gebruiker op
-    reizen = DigitalGoods.query.filter_by(userid=user.userid, is_deleted=False).all()
+    reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
+    for reis in reizen:
+        if reis.image_urls:
+            reis.image_urls = json.loads(reis.image_urls)
 
     # Render de profielpagina met de gegevens van de gebruiker, reizen en volgstatus
     return render_template(

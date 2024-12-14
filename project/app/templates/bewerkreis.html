@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Tales - Post een Reis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <link rel="icon" type="image/x-icon" href="static/img/favicon.ico">
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: #1f3d2b; /* Donkergroene achtergrond */
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            padding: 20px 40px;
+            width: 80%;
+            max-width: 2000px;
+            margin: 20px auto;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-family: 'Georgia', serif;
+            color: #24452e;
+        }
+
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        form label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            color: #24452e;
+        }
+        .search-bar, .filter-bar {
+            width: calc(100% - 80px);
+            margin: 0 auto;
+            margin-bottom: 20px;
+        }
+        
+        .search-bar input, .filter-bar input, .filter-bar select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            font-family: 'Georgia', serif;
+            background: #fff;
+            color: #24452e;
+        }
+
+        .filter-bar form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-bar label {
+            font-size: 16px;
+        }
+
+        .filter-bar button {
+            padding: 5px 15px;
+            border: none;
+            border-radius: 5px;
+            background: #2e5f3d;
+            color: white;
+            cursor: pointer;
+        }
+        .filter-categories {
+            display: flex;
+            flex-direction: column; /* Zorgt ervoor dat de elementen verticaal worden uitgelijnd */
+            gap: 10px; /* Voeg ruimte toe tussen de categorieën */
+            margin-top: 10px;
+        }
+        form input,
+        form textarea {
+            width: calc(100% - 80px); /* Korter dan de container */
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            font-family: 'Georgia', serif;
+            background: #fff;
+            color: #24452e;
+        }
+
+        form textarea {
+            resize: none;
+        }
+
+        form button {
+            width: calc(100% - 80px); /* Knop is even breed als de velden */
+            padding: 10px;
+            background: #24452e;
+            color: #fff;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            display: block;
+            margin: 0 auto; /* Centraal plaatsen */
+        }
+
+        form button:hover {
+            background: #3c764b;
+        }
+
+        #category-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* Ruimte tussen de categorieën */
+            margin-bottom: 15px;
+        }
+
+        .category-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Georgia', serif;
+            font-size: 16px;
+            color: #24452e;
+            cursor: pointer;
+        }
+
+        .category-option input {
+            width: 25px; /* Maak het vierkantje groter */
+            height: 25px;
+            margin: 0;
+            cursor: pointer;
+            appearance: none; /* Verberg de standaard checkbox-styling */
+            border: 2px solid #ccc;
+            border-radius: 3px; /* Vierkantje */
+            display: inline-block;
+            position: relative;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .category-option input:checked {
+            background: #24452e; /* Donkergroen bij selectie */
+            border-color: #24452e;
+        }
+
+        .category-option input:checked::before {
+            content: "✔";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centreer het vinkje */
+            color: #fff;
+            font-size: 18px; /* Maak het vinkje groter */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    <div class="container">
+        <h1>Bewerk Reis</h1>
+        <form action="{{ url_for('main.bewerkreis', goodid=reis.goodid) }}" method="POST" enctype="multipart/form-data">
+            <label for="titleofitinerary">Titel van de Reis</label>
+            <input type="text" id="titleofitinerary" name="titleofitinerary" value="{{ reis.titleofitinerary }}" required>
+
+            <label for="descriptionofitinerary">Beschrijving</label>
+            <textarea id="descriptionofitinerary" name="descriptionofitinerary" rows="5" required>{{ reis.descriptionofitinerary }}</textarea>
+
+            <label for="start_city">Stad</label>
+            <input type="text" id="start_city" name="start_city" value="{{ reis.start_city }}" required>
+
+            <label for="price">Prijs (€)</label>
+            <input type="number" id="price" name="price" value="{{ reis.price }}" step="0.01" min="0" required>
+
+            <label for="category">Categorie</label>
+            <div id="category-container">
+                {% for category in categories %}
+                <label class="category-option">
+                    <input type="checkbox" name="category_id" value="{{ category.categoryid }}"
+                           {% if category in reis.categories %}checked{% endif %}>
+                    {{ category.name }}
+                </label>
+                {% endfor %}
+            </div>
+
+            <label for="file">Upload een nieuwe PDF (optioneel)</label>
+            <input type="file" id="file" name="file" accept=".pdf">
+            <small id="fileError" style="color: red; display: none; margin-top: 10px; margin-bottom: 20px;">Ongeldig bestandstype. Upload een PDF-bestand.</small>
+
+            <label for="images">Upload nieuwe foto('s) (optioneel)</label>
+            <input type="file" id="images" name="images[]" accept=".jpg, .jpeg, .png, .gif" multiple>
+            <small id="fileError" style="color: red; display: none; margin-top: 10px; margin-bottom: 20px;">Ongeldig bestandstype. Upload een PDF-bestand.</small>
+            <small id="imageError" style="color: red; display: none; margin-top: 10px; margin-bottom: 20px;">Upload alleen geldige afbeeldingsbestanden (JPG, JPEG, PNG, GIF).</small>
+
+            {% if error_message %}
+            <p style="color: red;">{{ error_message }}</p>
+            {% endif %}
+
+            <button type="submit">Wijzig Reis</button>
+        </form>
+    </div>
+</body>
+</html>

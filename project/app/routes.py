@@ -227,6 +227,85 @@ def post():
     categories = Category.query.all()
     return render_template('post.html', error_message=error_message, user=user, categories=categories)
 
+@main.route('/bewerkreis/<string:goodid>', methods=['GET', 'POST'])
+def bewerkreis(goodid):
+    if 'userid' not in session:
+        return redirect(url_for('main.login'))
+
+    # Haal de huidige gebruiker op
+    user = Users.query.get(session['userid'])
+    if not user:
+        return redirect(url_for('main.logout'))
+
+    # Haal de bestaande reis op
+    reis = DigitalGoods.query.filter_by(goodid=goodid, userid=user.userid).first()
+    if not reis:
+        return redirect(url_for('main.gepost'))  # Terug naar geposte reizen als de reis niet bestaat
+
+    categories = Category.query.all()  # Alle beschikbare categorieën ophalen
+    error_message = None
+
+    if request.method == 'POST':
+        try:
+            # Werk de reis bij met gegevens uit het formulier
+            reis.titleofitinerary = request.form['titleofitinerary']
+            reis.descriptionofitinerary = request.form['descriptionofitinerary']
+            reis.start_city = request.form['start_city']
+            
+            # Valideer prijs
+            try:
+                price = Decimal(request.form['price'])
+                if price < 0:
+                    raise ValueError("De prijs mag niet negatief zijn.")
+            except (InvalidOperation, ValueError):
+                raise ValueError("Voer een geldige prijs in. Gebruik een punt als decimale scheidingsteken (bijv. 10.50).")
+
+            reis.price = price
+
+            # Werk de categorieën bij
+            selected_categories = request.form.getlist('category_id')
+            reis.categories = []  # Verwijder bestaande categorieën
+            for category_id in selected_categories:
+                category = Category.query.get(category_id)
+                if category:
+                    reis.categories.append(category)
+
+            # Werk de PDF bij indien een nieuwe is geüpload
+            pdf_file = request.files.get('file')
+            if pdf_file and pdf_file.filename.endswith('.pdf'):
+                filename = secure_filename(pdf_file.filename)
+                unique_filename = f"{uuid.uuid4()}_{filename}"
+                pdf_data = pdf_file.read()
+                supabase.storage.from_("pdf_files").upload(f"pdfs/{unique_filename}", pdf_data)
+                reis.pdf_url = supabase.storage.from_("pdf_files").get_public_url(f"pdfs/{unique_filename}")
+
+            # Werk de afbeeldingen bij indien nieuwe zijn geüpload
+            image_files = request.files.getlist('images[]')
+            if image_files:
+                image_urls = []
+                for image_file in image_files:
+                    if image_file.filename.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
+                        image_filename = secure_filename(image_file.filename)
+                        unique_image_filename = f"{uuid.uuid4()}_{image_filename}"
+                        image_data = image_file.read()
+                        supabase.storage.from_("travel_images").upload(f"images/{unique_image_filename}", image_data)
+                        image_public_url = supabase.storage.from_("travel_images").get_public_url(f"images/{unique_image_filename}")
+                        image_urls.append(image_public_url)
+                reis.image_urls = json.dumps(image_urls)  # Opslaan als JSON string
+
+            db.session.commit()
+            return redirect(url_for('main.gepost'))
+
+        except ValueError as ve:
+            error_message = str(ve)
+        except Exception as e:
+            print(f"Error: {e}")
+            db.session.rollback()
+            error_message = "Er ging iets mis bij het opslaan van de wijzigingen."
+
+    # RENDER MET BESTAANDE WAARDEN
+    return render_template('bewerkreis.html', reis=reis, categories=categories, error_message=error_message)
+
 
 @main.route('/userpage', methods=['GET', 'POST'])
 def userpage():
@@ -338,37 +417,25 @@ def download_pdf(goodid):
             return "PDF niet gevonden of niet gekoppeld aan deze reis.", 404
     else:
         return "Reis niet gevonden.", 404
-
-@main.route('/gepost', methods=['GET', 'POST'])
+@main.route('/gepost', methods=['GET'])
 def gepost():
     if 'userid' not in session:
-        return redirect(url_for('main.login'))  # Verwijzen naar login als gebruiker niet is ingelogd
+        return redirect(url_for('main.login')) 
 
-    user = Users.query.get(session['userid'])  # Huidige gebruiker ophalen
+    user = Users.query.get(session['userid'])
     if not user:
-        return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
+        return redirect(url_for('main.logout'))
 
-    # Geposte reizen van de ingelogde gebruiker ophalen, gesorteerd op nieuwste eerst
-    geposte_reizen = DigitalGoods.query.filter_by(userid=user.userid, is_deleted=False).order_by(DigitalGoods.createdat.desc()).all()
+    geposte_reizen = (
+        DigitalGoods.query
+        .filter_by(userid=user.userid, is_deleted=False)
+        .order_by(DigitalGoods.createdat.desc())
+        .all()
+    )
 
-    # Voeg het aantal aankopen toe aan elke reis
     for reis in geposte_reizen:
-        reis.aantal_aankopen = Gekocht.query.filter_by(goodid=reis.goodid).count()
-
-    if request.method == 'POST':
-        # Update een specifieke reis
-        goodid = request.form.get('goodid')  # ID van het item dat wordt bewerkt
-        reis = DigitalGoods.query.filter_by(goodid=goodid, userid=user.userid).first()
-
-        if reis:
-            # Gegevens updaten vanuit het formulier
-            reis.titleofitinerary = request.form.get('titleofitinerary')
-            reis.descriptionofitinerary = request.form.get('descriptionofitinerary')
-            reis.price = request.form.get('price')
-
-            db.session.commit()  # Wijzigingen opslaan
-
-            return redirect(url_for('main.gepost'))
+        if reis.image_urls:
+            reis.image_urls = json.loads(reis.image_urls)
 
     return render_template('gepost.html', user=user, geposte_reizen=geposte_reizen)
 

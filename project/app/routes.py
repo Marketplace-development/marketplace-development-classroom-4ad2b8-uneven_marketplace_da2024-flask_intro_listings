@@ -454,15 +454,24 @@ def favoriet():
     if not user:
         return redirect(url_for('main.logout'))
 
-    # Haal favorieten op voor de huidige gebruiker
-    favorieten = Favoriet.query.filter_by(userid=user.userid).all()
+    # Haal favorieten op voor de huidige gebruiker, exclusief verwijderde reizen en reizen van de gebruiker zelf
+    favorieten = (
+        Favoriet.query
+        .join(DigitalGoods, Favoriet.goodid == DigitalGoods.goodid)  # Verbind met DigitalGoods
+        .filter(
+            Favoriet.userid == user.userid,  # Favorieten van de ingelogde gebruiker
+            DigitalGoods.is_deleted == False,  # Alleen niet-verwijderde reizen
+            DigitalGoods.userid != user.userid  # Sluit reizen van de gebruiker zelf uit
+        )
+        .all()
+    )
 
     # Voeg eigenaarinformatie en andere benodigde gegevens toe aan elk favoriet object
     uitgebreide_favorieten = []
     for favoriet in favorieten:
-        good = DigitalGoods.query.get(favoriet.goodid)
+        good = favoriet.good  # Haal gekoppelde DigitalGoods op
+        eigenaar = Users.query.get(good.userid) if good else None
         if good:
-            eigenaar = Users.query.get(good.userid)
             uitgebreide_favorieten.append({
                 "good": {
                     "goodid": good.goodid,
@@ -479,6 +488,8 @@ def favoriet():
             })
 
     return render_template('favoriet.html', user=user, favorieten=uitgebreide_favorieten)
+
+
 
 
 @main.route('/search', methods=['GET'])

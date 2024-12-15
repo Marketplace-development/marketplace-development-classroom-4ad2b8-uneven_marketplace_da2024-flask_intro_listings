@@ -1590,61 +1590,64 @@ form button:hover {
 
 
 /* Edit Profile Form */
+/* Form Styling */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .form-group label {
     display: block;
+    font-size: 1rem;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 .form-group input {
     width: 100%;
-    padding: 8px;
-    font-size: 1rem;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    box-sizing: border-box;
 }
 
-.form-buttons {
-    margin-top: 20px;
+.btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: white;
+    background-color: #f0a500;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #d48e00;
+}
+
+/* Avatar Selection */
+.avatar-options {
     display: flex;
     gap: 10px;
+    margin-top: 10px;
 }
 
-.btn-save {
-    background-color: #f0a500;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
+.avatar-options label {
     cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
 }
 
-.btn-save:hover {
-    background-color: #e59400;
+.avatar-options img {
+    width: 50px;
+    height: 50px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    transition: border-color 0.3s ease;
 }
 
-.btn-cancel {
-    background-color: #ddd;
-    color: black;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-.btn-cancel:hover {
-    background-color: #bbb;
+.avatar-options input[type="radio"]:checked + img {
+    border-color: #f0a500;
 }
 
 /* Algemene styling voor de body */

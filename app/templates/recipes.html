@@ -10,11 +10,11 @@ recipes
         Your browser does not support the video tag.
     </video>
     <div class="hero-content">
-        <h1>Culinary Heritage</h1>
-        <p>"Get a Taste of Tradition"</p>
-        <div class="hero-buttons">
-            <a href="/upload" class="btn-light">Upload</a>
-            <a href="/search" class="btn-dark">Search</a>
+        <h1>Share Your Culinary Heritage</h1>
+        <p>Post your favorite recipes and discover new ones</p>
+        <div class="header-buttons">
+            <a href="{{ url_for('routes.add_recipe_title') }}" class="btn-primary">Add Recipes</a>
+            <a href="{{ url_for('routes.list_recipes') }}" class="btn-secondary">Discover</a>
         </div>
     </div>
 </section>

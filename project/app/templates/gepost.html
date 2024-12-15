@@ -208,6 +208,19 @@
             background-color: #cce6ff; /* Iets donkerder lichtblauw bij hover */
             border-color: #99ccff;
         }
+        .boost-button {
+            background-color: #24452e;
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            transition: background 0.3s ease;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
 
         #map {
             width: 100%;
@@ -238,7 +251,163 @@
             background-color: #3c764b; /* Lichtere groene kleur bij hover */
             transform: scale(1.05); /* Iets groter bij hover */
         }
+        .title-link {
+            color: inherit; /* Zorg dat de link dezelfde kleur heeft als de tekst */
+            text-decoration: none; /* Verwijder de standaard onderstreping van de link */
+        }
         
+        .title-link:hover {
+            color: #3c764b; /* Optioneel: Verander de kleur bij hover */
+            text-decoration: underline; /* Optioneel: Onderstreep bij hover */
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            background: #ffffff;
+            color: #1f3d2b;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px 30px;
+            max-width: 1200px;
+            margin: auto;
+            background: #ffffff;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #24452e;
+            text-align: center;
+        }
+
+        .travel-item {
+            display: flex;
+            flex-wrap: wrap;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .travel-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .travel-image {
+            flex: 1;
+            max-width: 300px;
+            margin-right: 20px;
+        }
+
+        .travel-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .travel-details {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .travel-details h2 {
+            color: #24452e;
+            margin-bottom: 15px;
+        }
+
+        .categories ul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0;
+            list-style-type: none;
+            margin: 0;
+        }
+
+        .categories li {
+            background: #e9f5e9;
+            padding: 6px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        .travel-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .add-button, .delete-button, .edit-button {
+            display: block;
+            width: 200px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .add-button {
+            background-color: #24452e;
+            color: white;
+        }
+
+        .add-button:hover {
+            background-color: #3c764b;
+        }
+
+        .delete-button {
+            background-color: #d3d3d3;
+            color: black;
+        }
+
+        .delete-button:hover {
+            background-color: #bfbfbf;
+        }
+
+        .edit-button {
+            background-color: #e0f3ff;
+            color: #0056b3;
+        }
+
+        .edit-button:hover {
+            background-color: #cce6ff;
+        }
+
+        .boost-button {
+            position: absolute;
+            top: 10px;
+            left: 25px;
+            background-color: #f0f0f0;
+            color: #24452e;
+            border: 1px solid #24452e;
+            border-radius: 5px;
+            font-size: 14px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .boost-button:hover {
+            background-color: #e9e9e9;
+            color: #3c764b;
+        }
+
         
         
     </style>
@@ -269,8 +438,14 @@
                 <img src="{{ reis.image_urls[0] if reis.image_urls else '/static/default_image.jpg' }}" alt="Reis afbeelding">
             </div>
             <div class="travel-details">
-                <h2>{{ reis.titleofitinerary }}</h2>
+                <h2>
+                    <a href="{{ url_for('main.reisdetail', goodid=reis.goodid) }}" class="title-link">
+                        {{ reis.titleofitinerary }}
+                    </a>
+                </h2>
+                <a href="{{ url_for('main.boost_payment', goodid=reis.goodid) }}" class="boost-button">Reis Boosten</a>
                 <p><strong>Beschrijving:</strong> {{ reis.descriptionofitinerary }}</p>
+                <p></p> 
                 <p><strong>Prijs:</strong> €{{ reis.price }}</p>
                 <p><strong>Startstad:</strong> {{ reis.start_city if reis.start_city else 'Niet gespecificeerd' }}</p>
                 <div class="categories">
@@ -351,3 +526,5 @@
     
 </body>
 </html>
+
+

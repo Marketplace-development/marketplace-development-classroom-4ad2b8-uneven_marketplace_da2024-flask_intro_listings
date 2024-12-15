@@ -1747,3 +1747,84 @@ p:first-of-type {
     font-size: 1.2em;
     margin-top: 10px;
 }
+
+/* Cart Page Styling */
+.cart-page {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cart-container h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cart-image img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 20px;
+}
+
+.cart-details h3 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.cart-details p {
+    color: #666;
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+.remove-btn {
+    margin-left: auto;
+    background: none;
+    border: 1px solid red;
+    color: red;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.remove-btn:hover {
+    background-color: red;
+    color: white;
+}
+
+.btn-purchase-all {
+    margin-top: 20px;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: green;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-purchase-all:hover {
+    background-color: darkgreen;
+}

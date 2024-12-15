@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}
+Purchased Recipes
+{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="dashboard-sidebar">
+            <div class="profile-section">
+                <img src="{{ url_for('static', filename='images/profile-placeholder.png') }}" alt="Profile Picture" class="profile-picture">
+                <h3>{{ user.username }}</h3>
+                <p>{{ user.email }}</p>
+            </div>
+            <ul>
+                <li><a href="{{ url_for('routes.dashboard') }}">Personal Information</a></li>
+                <li><a href="{{ url_for('routes.submitted_recipes') }}">Submitted Recipes</a></li>
+                <li><a href="{{ url_for('routes.favorites') }}">Favorites</a></li>
+                <li class="active"><a href="{{ url_for('routes.purchased_recipes') }}">Purchased Recipes</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="dashboard-content">
+            <h2>Purchased Recipes</h2>
+            <p>View all the recipes you've purchased.</p>
+            <section class="purchased-recipes">
+                <div class="submitted-recipes-container">
+                    {% for recipe in purchased_items %}
+                    <div class="recipe-box">
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">{{ recipe.title }}</h2>
+                            <p class="recipe-description">{{ recipe.description }}</p>
+                            <p class="recipe-region">Region: {{ recipe.region or 'Unknown' }}</p>
+                        </div>
+                        <div class="recipe-image">
+                            <img src="{{ recipe.image_url or url_for('static', filename='images/default-recipe.png') }}" alt="{{ recipe.title }}">
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Review for {{ recipe.title }}
+{% endblock %}
+
+{% block content %}
+<h1>Leave a Review for {{ recipe.title }}</h1>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    
+    <div>
+        {{ form.rating.label }}
+        {{ form.rating(class_="form-control") }}
+        {% for error in form.rating.errors %}
+            <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+    </div>
+    
+    <div>
+        {{ form.review.label }}
+        {{ form.review(class_="form-control", rows=5) }}
+        {% for error in form.review.errors %}
+            <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+</form>
+{% endblock %}

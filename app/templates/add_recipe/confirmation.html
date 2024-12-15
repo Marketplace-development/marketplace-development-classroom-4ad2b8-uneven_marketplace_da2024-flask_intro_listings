@@ -15,14 +15,17 @@ Recipe Confirmation
             <div class="confirmation-container">
                 <!-- Linker sectie: Informatie -->
                 <div class="confirmation-details">
-                    <h2>{{ title }}</h2>
+                    <h2>{{ title.capitalize() }}</h2>
+                    <p><strong>Region:</strong> {{ region.capitalize() }}</p>
+                    <p><strong>Duration:</strong> {{ duration }} minutes</p>
                     <p class="price">€{{ price }}</p>
+                    <h3>Description:</h3>
                     <p>{{ description }}</p>
                     <h3>Ingredients:</h3>
                     <p>{{ ingredients }}</p>
                     <h3>Steps:</h3>
                     <p>{{ steps }}</p>
-                    <form method="POST" action="{{ url_for('routes.submitted_recipes') }}">
+                    <form method="POST" action="{{ url_for('routes.add_recipe_confirmation') }}">
                         <button type="submit" class="btn-submit">Submit Recipe</button>
                     </form>
                 </div>

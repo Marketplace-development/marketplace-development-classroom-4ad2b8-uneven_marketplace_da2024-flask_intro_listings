@@ -423,25 +423,34 @@ def add_recipe_price():
         return redirect(url_for('routes.add_recipe_confirmation'))
     return render_template('add_recipe/price.html', form=form)
 
-@bp.route('/add-recipe/confirmation')
+@bp.route('/add-recipe/confirmation', methods=['GET', 'POST'])
 def add_recipe_confirmation():
+    # Haal alle gegevens op uit de sessie
     title = session.get('title')
     description = session.get('description')
     ingredients = session.get('ingredients')
     steps = session.get('steps')
     price = session.get('price')
-    image_url = session.get('image_url')  # Dit moet worden ingesteld als de afbeelding wordt opgeslagen
+    image_url = session.get('image_url')
 
-    return render_template(
-        'add_recipe/confirmation.html',
-        title=title,
-        description=description,
-        ingredients=ingredients,
-        steps=steps,
-        price=price,
-        image_url=image_url
+    if request.method == 'POST':
+        # Opslaan van recept in de database (voorbeeldcode)
+        new_recipe = UserRecipe(
+            title=title,
+            description=description,
+            price=price,
+            steps=steps,
+            ingredients=ingredients,
+            image_url=image_url
         )
+        db.session.add(new_recipe)
+        db.session.commit()
 
+        # Reset de sessie
+        session.clear()
+        return redirect(url_for('routes.submitted_recipes'))
+
+    return render_template('add_recipe/confirmation.html', title=title, description=description, ingredients=ingredients, steps=steps, price=price, image_url=image_url)
 
 @bp.route('/recipe/<int:recipe_id>', methods=['GET'])
 def recipe_page(recipe_id):

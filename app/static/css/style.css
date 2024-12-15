@@ -1646,3 +1646,101 @@ form button:hover {
 .btn-cancel:hover {
     background-color: #bbb;
 }
+
+/* Algemene styling voor de body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+/* Center the recipe container */
+.recipe-container {
+    display: flex;
+    flex-direction: column; /* Zorgt dat items verticaal onder elkaar staan */
+    align-items: center; /* Centreer horizontaal */
+    justify-content: center; /* Optioneel: centreer verticaal binnen de pagina */
+    text-align: center; /* Zorgt voor gecentreerde tekst */
+    margin: 0 auto; /* Zorgt dat de container horizontaal in het midden staat */
+    max-width: 800px; /* Optioneel: beperking van de breedte voor betere leesbaarheid */
+    padding: 20px; /* Voegt wat ruimte toe rond de content */
+}
+
+/* Extra styling voor de lijst */
+.recipe-container h2 {
+    font-size: 2rem; /* Grote koptekst voor "All Recipes" */
+    margin-bottom: 20px; /* Voegt ruimte onder de titel toe */
+}
+
+.recipe-container ul {
+    list-style-type: none; /* Verwijdert standaard bolletjes */
+    padding: 0;
+    margin: 0;
+}
+
+.recipe-container li {
+    background-color: #f9f9f9; /* Achtergrondkleur */
+    margin: 15px 0;
+    padding: 15px;
+    border: 1px solid #ddd; /* Lichtgrijze rand */
+    border-radius: 10px; /* Afgeronde hoeken */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Schaduw */
+    width: 100%; /* Laat de lijst volledig vullen */
+    max-width: 600px; /* Optionele limiet */
+}
+
+
+/* Specifieke styling voor lijsten BUITEN de navbar */
+.styled-list ul {
+    list-style-type: none; /* Geen standaard bolletjes */
+    padding: 0;
+    margin: 0 auto;
+    max-width: 800px; /* Maak de lijst smaller */
+}
+
+.styled-list li {
+    background-color: #fff; /* Witte achtergrond */
+    margin: 15px 0;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Voeg een lichte schaduw toe */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.styled-list li:hover {
+    transform: translateY(-5px); /* Laat de kaart omhoog komen bij hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Verhoogde schaduw bij hover */
+}
+
+/* Styling voor paragrafen en prijzen */
+h2 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: #555;
+    font-weight: bold;
+}
+
+p {
+    margin: 5px 0;
+    line-height: 1.6;
+    color: #666;
+}
+
+p:first-of-type {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.price {
+    color: #27ae60; /* Maak de prijs groen */
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-top: 10px;
+}

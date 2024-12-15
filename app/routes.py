@@ -488,5 +488,14 @@ def recipe_page(recipe_id):
         is_favorite=is_favorite,
     )
 
+from flask import render_template, request
+from app.models import Recipe
 
-
+@bp.route('/recipe/<int:recipe_id>', methods=['GET'])
+def recipe_detail(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)  # Haal het recept op uit de database
+    creator = recipe.creator  # Creator van het recept
+    reviews = recipe.reviews  # Reviews voor dit recept
+    is_favorite = False  # Voeg logica toe voor favoriete recepten
+    
+    return render_template('recipe_detail.html', recipe=recipe, creator=creator, reviews=reviews, is_favorite=is_favorite)

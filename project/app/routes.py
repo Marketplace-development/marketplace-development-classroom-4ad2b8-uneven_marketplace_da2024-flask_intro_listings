@@ -1626,7 +1626,7 @@ def vul_saldo_aan():
             # Haal het ingevoerde bedrag op
             bedrag = float(request.form.get('bedrag'))
             if bedrag <= 0:
-                flash('Voer een geldig bedrag in.', 'error')
+                #flash('Voer een geldig bedrag in.', 'error')
                 return redirect(url_for('main.vul_saldo_aan'))
 
             # Voeg een saldo-aanvulling toe aan de "gekocht"-tabel
@@ -1646,7 +1646,8 @@ def vul_saldo_aan():
             #flash(f'Saldo succesvol aangevuld met €{bedrag:.2f}', 'success')
             return redirect(url_for('main.verkochte_reizen'))  # Verwijs terug naar portefeuillepagina
         except ValueError:
-            flash('Voer een geldig bedrag in.', 'error')
+            #flash('Voer een geldig bedrag in.', 'error')
+            return redirect(url_for('main.vul_saldo_aan'))
 
     return render_template('vul_saldo_aan.html', user=user)
 

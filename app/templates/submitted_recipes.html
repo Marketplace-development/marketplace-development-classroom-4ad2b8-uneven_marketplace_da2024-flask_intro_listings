@@ -26,14 +26,46 @@ Submitted Recipes
         <div class="dashboard-content">
             <h2>Submitted Recipes</h2>
             <p>Browse all the recipes you've submitted. Share your creativity with the world!</p>
+            
+            <!-- Search and Filter Section -->
+            <form method="GET" action="{{ url_for('routes.submitted_recipes') }}" class="filter-form">
+                <input
+                    type="text"
+                    id="search-bar"
+                    name="search"
+                    placeholder="Search recipes..."
+                    value="{{ request.args.get('search', '') }}"
+                />
+                <select id="filter-region" name="region">
+                    <option value="">All Regions</option>
+                    {% for region in unique_regions %}
+                    <option
+                        value="{{ region }}"
+                        {% if request.args.get('region') == region %}selected{% endif %}
+                    >
+                        {{ region.capitalize() }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <button type="button" class="btn-reset-filters" onclick="resetFilters()">Reset</button>
+            </form>
+
+            <!-- Submitted Recipes -->
             <section class="submitted-recipes">
-                <div class="submitted-recipes-container">
+                <div id="submitted-recipes-container" class="submitted-recipes-container">
                     {% for recipe in recipes %}
-                    <div class="recipe-box">
+                    <div class="recipe-box" data-title="{{ recipe.title }}" data-region="{{ recipe.region.lower() }}">
                         <div class="recipe-content">
                             <h2 class="recipe-title">{{ recipe.title }}</h2>
                             <p class="recipe-description">{{ recipe.description }}</p>
                             <p class="recipe-region">Region: {{ recipe.region or 'Unknown' }}</p>
+                            <div class="recipe-actions">
+                                <button 
+                                    class="favorite-button {% if recipe.is_favorite %}favorited{% endif %}" 
+                                    data-recipe-id="{{ recipe.recipe_id }}">
+                                    {{ "❤️" if recipe.is_favorite else "🤍" }}
+                                </button>
+                            </div>
                         </div>
                         <div class="recipe-image">
                             <img src="{{ recipe.image_url or url_for('static', filename='images/default-recipe.png') }}" alt="{{ recipe.title }}">
@@ -45,4 +77,9 @@ Submitted Recipes
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='javascript/submitted_recipes.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/favorites.js') }}"></script>
 {% endblock %}

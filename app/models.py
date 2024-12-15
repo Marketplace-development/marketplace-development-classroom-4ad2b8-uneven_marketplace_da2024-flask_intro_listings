@@ -25,6 +25,7 @@ class Recipe(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     steps = db.Column(db.Text, nullable=False)
     region = db.Column(db.String(50), nullable=True)
+    duration = db.Column(db.Integer)
 
 class Rating(db.Model):
     __tablename__ = 'ratings'

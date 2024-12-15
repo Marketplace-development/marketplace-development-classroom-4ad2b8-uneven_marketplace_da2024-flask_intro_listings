@@ -25,31 +25,46 @@ Edit Profile
         <!-- Main Content -->
         <div class="dashboard-content">
             <h2>Edit Profile</h2>
-            <p>Update your personal information below:</p>
-
-            <!-- Profile Edit Form -->
-            <form action="{{ url_for('routes.edit_profile') }}" method="POST">
-                <div>
-                    <label for="username">Name:</label>
-                    <input type="text" name="username" id="username" value="{{ user.username }}" required>
+            <p>Update your personal information below.</p>
+            <form method="POST" action="{{ url_for('routes.edit_profile') }}">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="{{ user.username }}" required>
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" name="email" id="email" value="{{ user.email }}" required>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" required>
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="date_of_birth">Date of Birth:</label>
-                    <input type="date" name="date_of_birth" id="date_of_birth" value="{{ user.date_of_birth }}">
+                    <input type="date" id="date_of_birth" name="date_of_birth" value="{{ user.date_of_birth }}" required>
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="country">Country:</label>
-                    <input type="text" name="country" id="country" value="{{ user.country }}">
+                    <input type="text" id="country" name="country" value="{{ user.country }}" required>
                 </div>
-                <div>
+                <div class="form-group">
                     <label for="language">Language:</label>
-                    <input type="text" name="language" id="language" value="{{ user.language }}">
+                    <input type="text" id="language" name="language" value="{{ user.language }}" required>
                 </div>
-                <button type="submit" class="btn-black">Update Profile</button>
+                
+                <!-- Avatar Selection -->
+                <div class="form-group">
+                    <label for="avatar">Choose Your Avatar:</label>
+                    <div class="avatar-options">
+                        <label>
+                            <input type="radio" name="avatar" value="avatar1.png" {% if user.avatar == "avatar1.png" %}checked{% endif %}>
+                            <img src="{{ url_for('static', filename='avatars/user4.jpg') }}" alt="Avatar 1">
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" value="avatar2.png" {% if user.avatar == "avatar2.png" %}checked{% endif %}>
+                            <img src="{{ url_for('static', filename='avatars/user3.jpg') }}" alt="Avatar 2">
+                        </label>
+                        <!-- Add more avatar options as needed -->
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Save Changes</button>
             </form>
         </div>
     </div>

@@ -784,7 +784,9 @@ def bevestig_koop(goodid):
     # Bereken het saldo van de gebruiker
     totaal_verdiend = 15  # Start met het welkomstcadeau
     saldo_aanvullingen = Gekocht.query.filter_by(userid=user.userid, goodid=None).all()
-    totaal_verdiend += sum(aanvulling.amount for aanvulling in saldo_aanvullingen)
+    totaal_verdiend += sum(aanvulling.amount for aanvulling in saldo_aanvullingen if aanvulling.amount is not None)
+    
+
 
     totaal_uitgegeven = sum(
         aankoop.good.price for aankoop in Gekocht.query.filter_by(userid=user.userid).all() if aankoop.good
@@ -801,11 +803,14 @@ def bevestig_koop(goodid):
 
     # Voeg de aankoop toe aan de database
     nieuwe_aankoop = Gekocht(
-        gekochtid=str(uuid.uuid4()),  # Unieke ID voor gekochtid
+        gekochtid=str(uuid.uuid4()),  # Unieke ID
         userid=user.userid,
         goodid=reis.goodid,
-        createdat=datetime.datetime.utcnow()  # Dit wordt standaard gebruikt
-    )
+        amount=Decimal(totaal_prijs),  # Zorg ervoor dat het bedrag correct wordt opgeslagen
+        createdat=datetime.datetime.utcnow(),
+        is_saldo_aanvulling=False
+        )
+    
     db.session.add(nieuwe_aankoop)
     db.session.commit()
 
@@ -1250,13 +1255,15 @@ def verkochte_reizen():
     # Haal saldo-aanvullingen op
     saldo_aanvullingen = Gekocht.query.filter_by(userid=user.userid, goodid=None, is_saldo_aanvulling=True).all()
     for aanvulling in saldo_aanvullingen:
-        if aanvulling.amount:  # Controleer of amount niet None is
+        if aanvulling.amount is not None:  # Controleer of amount niet None is
             totaal_verdiend += Decimal(aanvulling.amount)
             geschiedenis.append({
                 'description': 'Saldo aanvulling',
                 'amount': round(Decimal(aanvulling.amount), 2),
                 'date': aanvulling.createdat
             })
+        else:
+            print(f"Saldo aanvulling met ID {aanvulling.gekochtid} heeft een NoneType 'amount'.")
 
     # Voeg verkopen toe aan de geschiedenis
     reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
@@ -1288,12 +1295,15 @@ def verkochte_reizen():
 
         # Voeg boostkosten toe als relevant
         if aankoop.goodid is None and not aankoop.is_saldo_aanvulling:
-            totaal_uitgegeven += Decimal(aankoop.amount)  # Voeg de boostkosten toe aan de uitgaven
-            geschiedenis.append({
-                'description': 'Boostkosten',
-                'amount': -round(Decimal(aankoop.amount), 2),
-                'date': aankoop.createdat
-            })
+            if aankoop.amount is not None:  # Controleer of amount niet None is
+                totaal_uitgegeven += Decimal(aankoop.amount)  # Voeg de boostkosten toe aan de uitgaven
+                geschiedenis.append({
+                    'description': 'Boostkosten',
+                    'amount': -round(Decimal(aankoop.amount), 2),
+                    'date': aankoop.createdat
+                })
+            else:
+                print(f"Boostkosten met ID {aankoop.gekochtid} heeft een NoneType 'amount'.")
 
     # Sorteer de geschiedenis op datum (nieuwste eerst)
     geschiedenis.sort(key=lambda x: x['date'], reverse=True)
@@ -1306,6 +1316,7 @@ def verkochte_reizen():
         geschiedenis=geschiedenis,
         user=user
     )
+
 
 @main.route('/totaal_prijs/<goodid>', methods=['GET'])
 def totaal_prijs(goodid):

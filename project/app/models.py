@@ -77,7 +77,7 @@ class Gekocht(db.Model):
     userid = db.Column(db.String, db.ForeignKey('users.userid'), nullable=False)
     goodid = db.Column(db.String, db.ForeignKey('digitalgoods.goodid'), nullable=True)
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    amount = db.Column(db.Numeric, nullable=True)
+    amount = db.Column(db.Numeric, nullable=True, default=0.00)
     is_saldo_aanvulling = db.Column(Boolean, default=False)
     is_archived = db.Column(db.Boolean, default=False)  # Markering voor verwijderde aankopen
 

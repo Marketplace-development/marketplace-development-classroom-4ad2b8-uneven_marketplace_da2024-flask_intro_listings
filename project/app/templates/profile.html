@@ -36,11 +36,12 @@
         }
 
         .profile-card {
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
             margin-bottom: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #24452e;
         }
 
         .profile-img2 {
@@ -118,64 +119,62 @@
             font-weight: bold;
         }
 
-        /* Specifieke stijl voor de knoppen op mobiele apparaten */
-@media (max-width: 768px) {
-    .profile-card .btn {
-        margin-bottom: 10px; /* Zorg voor extra ruimte tussen de knoppen */
-        display: block; /* Zet knoppen onder elkaar */
-        width: 100%; /* Knoppen nemen volledige breedte in */
-    }
-}
+                /* Specifieke stijl voor de knoppen op mobiele apparaten */
+        @media (max-width: 768px) {
+            .profile-card .btn {
+                margin-bottom: 10px; /* Zorg voor extra ruimte tussen de knoppen */
+                display: block; /* Zet knoppen onder elkaar */
+                width: 100%; /* Knoppen nemen volledige breedte in */
+            }
+        }
 
-/* Algemene stijl voor knoppen (desktop en mobiel) */
-.profile-card .btn {
-    margin: 5px; /* Zorg voor een kleine marge rondom de knoppen */
-    padding: 10px 20px; /* Maak de knoppen groter voor betere interactie */
-}
+        /* Algemene stijl voor knoppen (desktop en mobiel) */
+        .profile-card .btn {
+            margin: 5px; /* Zorg voor een kleine marge rondom de knoppen */
+            padding: 10px 20px; /* Maak de knoppen groter voor betere interactie */
+        }
 
     </style>
 </head>
 <body>
     {% include 'header.html' %}
     <main class="content">
-        <div class="section">
-            <h1>Profiel van {{ user.firstname }} {{ user.lastname }}</h1>
+        <h1>Profiel van {{ user.firstname }} {{ user.lastname }}</h1>
 
-            <div class="profile-card">
-                <div class="row align-items-center">
-                    <div class="col-md-4 text-center">
-                        {% if user.profilepicture %}
-                            <img src="{{ user.profilepicture }}" alt="Profielfoto" class="profile-img2 img-fluid">
-                        {% endif %}
+        <div class="profile-card">
+            <div class="row align-items-center">
+                <div class="col-md-4 text-center">
+                    {% if user.profilepicture %}
+                        <img src="{{ user.profilepicture }}" alt="Profielfoto" class="profile-img2 img-fluid">
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <span class="icon">📧</span>
+                        <strong>Email:</strong> {{ user.email }}
                     </div>
-                    <div class="col-md-8">
-                        <div class="mb-3">
-                            <span class="icon">📧</span>
-                            <strong>Email:</strong> {{ user.email }}
-                        </div>
-                        <div class="mb-3">
-                            <span class="icon">🆔</span>
-                            <strong>Nationaliteit:</strong> {{ user.nationality or 'Niet opgegeven' }}
-                        </div>
-                        <div class="mb-3">
-                            <span class="icon">🌍</span>
-                            <strong>Land:</strong> {{ user.country or 'Niet opgegeven' }}
-                        </div>
+                    <div class="mb-3">
+                        <span class="icon">🆔</span>
+                        <strong>Nationaliteit:</strong> {{ user.nationality or 'Niet opgegeven' }}
+                    </div>
+                    <div class="mb-3">
+                        <span class="icon">🌍</span>
+                        <strong>Land:</strong> {{ user.country or 'Niet opgegeven' }}
                     </div>
                 </div>
+            </div>
 
-                <div class="action-buttons mt-3">
-                    <form action="{{ url_for('main.toggle_follow') }}" method="POST" class="d-inline">
-                        <input type="hidden" name="followed_id" value="{{ user.userid }}">
-                        <input type="hidden" name="referer" value="{{ request.path }}"> <!-- Verwijzing naar huidige pagina -->
-                        {% if is_following %}
-                            <button type="submit" class="btn btn-secondary">Ontvolgen</button>
-                        {% else %}
-                            <button type="submit" class="btn btn-success">Volgen</button>
-                        {% endif %}
-                    </form>
-                    <a href="{{ url_for('main.zoekconnecties') }}" class="btn btn-success connect-btn">Connecties Zoeken</a>
-                </div>
+            <div class="action-buttons mt-3">
+                <form action="{{ url_for('main.toggle_follow') }}" method="POST" class="d-inline">
+                    <input type="hidden" name="followed_id" value="{{ user.userid }}">
+                    <input type="hidden" name="referer" value="{{ request.path }}"> <!-- Verwijzing naar huidige pagina -->
+                    {% if is_following %}
+                        <button type="submit" class="btn btn-secondary">Ontvolgen</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-success">Volgen</button>
+                    {% endif %}
+                </form>
+                <a href="{{ url_for('main.zoekconnecties') }}" class="btn btn-success connect-btn">Connecties Zoeken</a>
             </div>
         </div>
         <div class="container">

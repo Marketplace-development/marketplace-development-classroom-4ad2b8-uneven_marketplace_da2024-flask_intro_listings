@@ -36,6 +36,43 @@
             text-align: center;
         }
 
+        .container {
+            padding: 20px 40px;
+            width: 80%;
+            max-width: 2000px;
+            margin: 20px auto;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #24452e;
+        }
+        .kaart-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .kaart-bar form {
+            display: flex;
+            gap: 10px;
+        }
+
+
+        .kaart-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #2e5f3d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .kaart-button:hover {
+            background-color: #24452e;
+        }
+
         .travel-item {
             display: flex;
             flex-wrap: wrap;
@@ -79,20 +116,35 @@
         .travel-details p {
             margin: 5px 0;
         }
-
+        
         .categories ul {
-            list-style-type: none;
+            display: flex; /* Gebruik Flexbox */
+            flex-wrap: wrap; /* Laat items naar een nieuwe rij gaan als de limiet is bereikt */
+            gap: 8px; /* Ruimte tussen categorieën */
             padding: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            list-style-type: none; /* Geen opsommingstekens */
+            margin: 0;
         }
-
+        
         .categories li {
-            background: #e9f5e9;
-            padding: 8px 12px;
-            border-radius: 5px;
+            background: #e9f5e9; /* Lichte achtergrondkleur */
+            padding: 6px 10px; /* Maak de padding kleiner */
+            font-size: 14px; /* Kleinere tekst */
+            border-radius: 5px; /* Ronde hoeken */
+            text-align: center;
+            white-space: nowrap; /* Voorkom dat tekst over meerdere regels gaat */
+            overflow: hidden; /* Verberg te lange tekst */
+            text-overflow: ellipsis; /* Voeg '...' toe bij lange tekst */
         }
+        
+        .travel-actions {
+            display: flex;
+            flex-direction: column; /* Zet knoppen onder elkaar */
+            align-items: flex-end; /* Uitlijnen naar rechts */
+            gap: 10px; /* Ruimte tussen de knoppen */
+        }
+        
+        
 
         .travel-item {
             position: relative; /* Zorgt ervoor dat de knoppen absoluut binnen dit kader worden gepositioneerd */
@@ -156,13 +208,57 @@
             background-color: #cce6ff; /* Iets donkerder lichtblauw bij hover */
             border-color: #99ccff;
         }
+
+        #map {
+            width: 100%;
+            height: 500px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            display: none;
+        }
+        
+        #toggle-map {
+            background-color: #2e5f3d; /* Groen */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        } 
+
+        
+        
+        .toggle-map-button:hover {
+            background-color: #3c764b; /* Lichtere groene kleur bij hover */
+            transform: scale(1.05); /* Iets groter bij hover */
+        }
+        
         
         
     </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     {% include 'header.html' %}
     {% include 'navbar.html' %}
+
+    <div class="container">
+
+        <div class="kaart-bar">
+
+            <button id="toggle-map" class="kaart-button">Bekijk waar je bent geweest op de kaart!</button>
+            <div id="map"></div>
+
+        </div>
+    </div>
+
 
     <main class="content">
         <h1>Mijn Geposte Reizen</h1>
@@ -178,7 +274,6 @@
                 <p><strong>Prijs:</strong> €{{ reis.price }}</p>
                 <p><strong>Startstad:</strong> {{ reis.start_city if reis.start_city else 'Niet gespecificeerd' }}</p>
                 <div class="categories">
-                    <p><strong>Prijs:</strong> €{{ reis.price }}</p>
                     <strong>Categorieën:</strong>
                     <ul>
                         {% for category in reis.categories %}
@@ -199,7 +294,9 @@
                     </form>
                     
                 </div>
+
             </div>
+            
         </div>
         {% endfor %}
         {% else %}
@@ -207,5 +304,50 @@
         {% endif %}
         <a href="{{ url_for('main.post') }}" class="add-button">Nieuwe reis toevoegen</a>
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleMapButton = document.getElementById('toggle-map');
+            const mapElement = document.getElementById('map');
+            const contentContainer = document.querySelector('main.content');
+        
+            // Maak de kaart met Leaflet
+            const map = L.map('map').setView([0, 0], 2); // Centraal op de wereld
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: 'Kaartgegevens © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+        
+            // Voeg markers toe aan de kaart
+            fetch('/api/travels')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(reis => {
+                        if (reis.latitude && reis.longitude) {
+                            L.marker([reis.latitude, reis.longitude])
+                                .addTo(map)
+                                .bindPopup(`<b>${reis.titleofitinerary}</b><br>${reis.descriptionofitinerary}`);
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching travel data:', error));
+        
+            // Toggle-functie voor de kaart
+            toggleMapButton.addEventListener('click', () => {
+                if (mapElement.style.display === 'none' || mapElement.style.display === '') {
+                    mapElement.style.display = 'block'; // Toon de kaart
+                    contentContainer.style.display = 'none'; // Verberg de inhoud
+                    toggleMapButton.textContent = 'Verberg kaart'; // Pas knoptekst aan
+                    map.invalidateSize(); // Herbereken kaartgrootte
+                } else {
+                    mapElement.style.display = 'none'; // Verberg de kaart
+                    contentContainer.style.display = 'block'; // Toon de inhoud
+                    toggleMapButton.textContent = 'Bekijk waar je bent geweest op de kaart!'; // Pas knoptekst aan
+                }
+            });
+        });
+        
+    </script>
+    
 </body>
 </html>

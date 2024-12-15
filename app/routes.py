@@ -1,7 +1,7 @@
 # app/routes.py
 from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify, flash
-from app.models import Customer, Recipe, Favorite, UserRecipe, Ingredient, Rating
-from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm, PriceForm
+from app.models import Customer, Recipe, Favorite, Ingredient, Rating
+from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm, PriceForm, RecipeRegionForm, RecipeDurationForm, RatingForm
 from .models import db, Customer
 from flask import current_app
 
@@ -425,22 +425,28 @@ def add_recipe_price():
 
 @bp.route('/add-recipe/confirmation', methods=['GET', 'POST'])
 def add_recipe_confirmation():
+    print("Session values:", dict(session))
+    
     # Haal alle gegevens op uit de sessie
     title = session.get('title')
     description = session.get('description')
     ingredients = session.get('ingredients')
     steps = session.get('steps')
+    region = session.get('region') 
+    duration = session.get('duration')
     price = session.get('price')
     image_url = session.get('image_url')
 
     if request.method == 'POST':
         # Opslaan van recept in de database (voorbeeldcode)
-        new_recipe = UserRecipe(
+        new_recipe = Recipe(
             title=title,
             description=description,
             price=price,
             steps=steps,
             ingredients=ingredients,
+            region=region,
+            duration=duration,
             image_url=image_url
         )
         db.session.add(new_recipe)
@@ -448,9 +454,29 @@ def add_recipe_confirmation():
 
         # Reset de sessie
         session.clear()
-        return redirect(url_for('routes.submitted_recipes'))
+        return redirect(url_for('routes.recipe_success'))
 
-    return render_template('add_recipe/confirmation.html', title=title, description=description, ingredients=ingredients, steps=steps, price=price, image_url=image_url)
+    return render_template('add_recipe/confirmation.html', title=title, description=description, ingredients=ingredients, steps=steps, region=region, duration=duration, price=price, image_url=image_url)
+
+@bp.route('/add-recipe/region', methods=['GET', 'POST'])
+def add_recipe_region():
+    form = RecipeRegionForm()
+    if form.validate_on_submit():
+        session['region'] = form.region.data
+        return redirect(url_for('routes.add_recipe_duration'))
+    return render_template('add_recipe/region.html', form=form)
+
+@bp.route('/add-recipe/duration', methods=['GET', 'POST'])
+def add_recipe_duration():
+    form = RecipeDurationForm()
+    if form.validate_on_submit():
+        session['duration'] = form.duration.data
+        return redirect(url_for('routes.add_recipe_price'))
+    return render_template('add_recipe/duration.html', form=form)
+
+@bp.route('/add-recipe/success', methods=['GET'])
+def recipe_success():
+    return render_template('add_recipe/success.html')
 
 @bp.route('/recipe/<int:recipe_id>', methods=['GET'])
 def recipe_page(recipe_id):
@@ -488,21 +514,39 @@ def recipe_page(recipe_id):
         is_favorite=is_favorite,
     )
 
+@bp.route('/recipe/<int:recipe_id>/add-review', methods=['GET', 'POST'])
+def add_review(recipe_id):
+    form = RatingForm()
+    recipe = Recipe.query.get_or_404(recipe_id)
+    customer_id = session.get('customer_id')  # Haal de ingelogde klant-ID op
+    if not customer_id:
+        flash('You need to log in to add a review.', 'danger')
+        return redirect(url_for('routes.login'))  # Verwijs naar een inlogpagina
 
+    
+    if form.validate_on_submit():
+        # Controleer of de gebruiker al een beoordeling heeft gegeven (optioneel)
+        existing_rating = Rating.query.filter_by(recipe_id=recipe_id, customer_id=customer_id).first()  # Gebruik de echte klant-ID
+        if existing_rating:
+            flash('You have already reviewed this recipe!', 'warning')
+            return redirect(url_for('routes.view_recipe', recipe_id=recipe_id))
+        
+        # Voeg een nieuwe beoordeling toe
+        new_rating = Rating(
+            recipe_id=recipe_id,
+            customer_id=1,  # Vervang dit door de echte ingelogde gebruiker-ID
+            rating=form.rating.data,
+            review=form.review.data
+        )
+        db.session.add(new_rating)
+        db.session.commit()
+        flash('Your review has been added!', 'success')
+        return redirect(url_for('routes.view_recipe', recipe_id=recipe_id))
+    
+    return render_template('reviews/add_review.html', form=form, recipe=recipe)
 
-@bp.route('/toggle-favorite/<int:recipe_id>', methods=['POST'])
-def toggle_favorite(recipe_id):
-    if 'user_id' not in session:
-        return redirect(url_for('routes.login'))
-
-    user_id = session['user_id']
-    favorite = Favorite.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
-
-    if favorite:
-        db.session.delete(favorite)
-    else:
-        new_favorite = Favorite(user_id=user_id, recipe_id=recipe_id)
-        db.session.add(new_favorite)
-
-    db.session.commit()
-    return redirect(url_for('routes.recipe_page', recipe_id=recipe_id))
+@bp.route('/recipe/<int:recipe_id>')
+def view_recipe(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+    ratings = Rating.query.filter_by(recipe_id=recipe_id).all()
+    return render_template('recipes/view_recipe.html', recipe=recipe, ratings=ratings)

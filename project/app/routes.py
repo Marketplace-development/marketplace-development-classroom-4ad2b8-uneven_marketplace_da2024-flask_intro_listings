@@ -1109,7 +1109,7 @@ def boost_payment(goodid):
             db.session.add(nieuwe_uitgave)
             db.session.commit()
 
-            flash(f'Reis "{reis.titleofitinerary}" is succesvol geboost!', 'success')
+            #flash(f'Reis "{reis.titleofitinerary}" is succesvol geboost!', 'success')
             return redirect(url_for('main.boost_confirm', goodid=goodid))
         else:
             flash('Betaling mislukt. Probeer het opnieuw.', 'error')
@@ -1598,7 +1598,7 @@ def verwijder_reis():
         #flash('Reis succesvol verwijderd.', 'success')
         return redirect(url_for('main.reisverwijderd'))
 
-    flash('Reis kon niet worden gevonden of verwijderd.', 'error')
+    #flash('Reis kon niet worden gevonden of verwijderd.', 'error')
     return redirect(url_for('main.gepost'))
 
 @main.route('/saldo_ontoereikend', methods=['GET'])
@@ -1643,7 +1643,7 @@ def vul_saldo_aan():
             # Sla de wijzigingen op
             db.session.commit()
 
-            flash(f'Saldo succesvol aangevuld met €{bedrag:.2f}', 'success')
+            #flash(f'Saldo succesvol aangevuld met €{bedrag:.2f}', 'success')
             return redirect(url_for('main.verkochte_reizen'))  # Verwijs terug naar portefeuillepagina
         except ValueError:
             flash('Voer een geldig bedrag in.', 'error')
@@ -1758,7 +1758,7 @@ def verwijder_account():
 
         # Verwijder sessie en log uit
         session.pop('userid', None)
-        flash('Je account en bijbehorende gegevens zijn succesvol verwijderd.', 'success')
+        #flash('Je account en bijbehorende gegevens zijn succesvol verwijderd.', 'success')
         return redirect(url_for('main.index'))
 
     except Exception as e:

@@ -118,6 +118,24 @@
             border-radius: 4px;
             font-weight: bold;
         }
+        .add-button {
+            display: inline-block;
+            margin: 10px 5px 0 0;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            background-color: #24452e;
+            color: white;
+        }
+
+        .add-button:hover {
+            background-color: #3c764b;
+        }
+
     </style>
 </head>
 <body>
@@ -146,11 +164,9 @@
                             </a>
                         </h2>
                         <p class="description">{{ favoriet.good.descriptionofitinerary }}</p>
-                        <p>
-                            <span class="star-rating">
-                                <span>Nog geen beoordelingen</span>
-                            </span>
-                        </p>
+                        <p></p>
+                        <p></p>
+                        
                         <div class="price-tag">€{{ favoriet.good.price }}</div>
                     </div>
                     {% endfor %}
@@ -158,6 +174,7 @@
                     <p>Je hebt nog geen favorieten toegevoegd.</p>
                 {% endif %}
             </div>
+            <a href="{{ url_for('main.search') }}" class="add-button">Terug naar zoeken</a>
         </div>
     </main>
 </body>

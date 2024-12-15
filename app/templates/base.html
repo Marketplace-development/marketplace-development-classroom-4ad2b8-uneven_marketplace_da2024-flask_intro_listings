@@ -84,6 +84,12 @@
             </div>
         </div>
     </footer>
-{% block scripts %}{% endblock %}
+
+    <!-- Include Scripts -->
+    {% block scripts %}
+    <script src="{{ url_for('static', filename='javascript/favorites-filters.js') }}"></script>
+    <script src="{{ url_for('static', filename='javascript/favorites.js') }}"></script>
+    <script src="{{ url_for('static', filename='javascript/submitted_recipes.js') }}"></script>
+    {% endblock %}
 </body>
 </html>

@@ -24,6 +24,7 @@ class Recipe(db.Model):
     image_url = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     steps = db.Column(db.Text, nullable=False)
+    region = db.Column(db.String(50), nullable=True)
 
 class Rating(db.Model):
     __tablename__ = 'ratings'

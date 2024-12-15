@@ -1,9 +1,7 @@
 # app/routes.py
-from flask import Blueprint, request, redirect, url_for, render_template, session, flash, jsonify
+from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify, flash
 from app.models import Customer, Recipe, Favorite, UserRecipe, Ingredient, Rating
 from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm, PriceForm
-from flask import render_template, redirect, url_for, session, request
-from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify
 from .models import db, Customer
 from flask import current_app
 
@@ -210,24 +208,52 @@ def list_recipes():
     recipes = Recipe.query.all()  # Fetch all recipes from the database
     return render_template('recipes.html', recipes=recipes)
 
+from sqlalchemy import func  # Import SQLAlchemy's func
+
 @bp.route('/submitted-recipes')
 def submitted_recipes():
     # Ensure the user is logged in
     if 'user_id' not in session:
         return redirect(url_for('routes.login'))
 
-    # Get the user ID from the session
     user_id = session['user_id']
 
-    # Query the user
+    # Fetch the logged-in user
     user = db.session.query(Customer).filter_by(customer_id=user_id).first()
     if not user:
         return "User not found", 404
 
-    # Query the recipes submitted by the user
-    recipes = db.session.query(Recipe).filter_by(user_id=user_id).all()
+    # Handle search and region filters
+    search_term = request.args.get('search', '').strip().lower()
+    selected_region = request.args.get('region', '').strip().lower()
 
-    return render_template('submitted_recipes.html', user=user, recipes=recipes)
+    # Base query: filter recipes by the logged-in user
+    query = db.session.query(Recipe).filter_by(user_id=user_id)
+
+    if search_term:
+        query = query.filter(func.lower(Recipe.title).contains(search_term))  # Case-insensitive search
+
+    if selected_region:
+        # Use func.lower on both sides to ensure case-insensitive matching
+        query = query.filter(func.lower(Recipe.region) == selected_region)
+
+    # Fetch recipes with favorite status
+    recipes = query.all()
+    favorite_recipe_ids = {fav.recipe_id for fav in db.session.query(Favorite).filter_by(user_id=user_id).all()}
+
+    # Mark each recipe with its favorite status
+    for recipe in recipes:
+        recipe.is_favorite = recipe.recipe_id in favorite_recipe_ids
+
+    # Fetch unique regions for the filter dropdown (convert to lowercase for consistency)
+    unique_regions = [row[0] for row in db.session.query(func.distinct(func.lower(Recipe.region))).all() if row[0]]
+
+    return render_template(
+        'submitted_recipes.html',
+        user=user,
+        recipes=recipes,
+        unique_regions=unique_regions
+    )
 
 @bp.route('/favorites', methods=['GET'])
 def favorites():
@@ -237,20 +263,94 @@ def favorites():
     user_id = session['user_id']
 
     # Fetch user information
-    user = Customer.query.filter_by(customer_id=user_id).first()
-
+    user = db.session.query(Customer).filter_by(customer_id=user_id).first()
     if not user:
-        return redirect(url_for('routes.login'))  # If the user is not found, redirect to login
+        return "User not found", 404
 
-    # Fetch favorite recipes
-    favorite_recipes = (
+    # Get search and region filters
+    search_term = request.args.get('search', '').lower()
+    selected_region = request.args.get('region', '').lower()
+
+    # Query the user's favorite recipes
+    query = (
         db.session.query(Recipe)
         .join(Favorite, Recipe.recipe_id == Favorite.recipe_id)
         .filter(Favorite.user_id == user_id)
-        .all()
     )
 
-    return render_template('favorites.html', favorites=favorite_recipes, user=user)
+    if search_term:
+        query = query.filter(func.lower(Recipe.title).contains(search_term))  # Case-insensitive search
+
+    if selected_region:
+        query = query.filter(func.lower(Recipe.region) == selected_region)  # Ensure case-insensitive comparison
+
+    favorite_recipes = query.all()
+
+    # Fetch unique regions for the filter dropdown
+    unique_regions = [
+        row[0].capitalize()
+        for row in db.session.query(func.distinct(func.lower(Recipe.region))).all()
+    ]
+
+    return render_template(
+        'favorites.html',
+        user=user,
+        favorites=favorite_recipes,
+        unique_regions=unique_regions
+    )
+
+@bp.route('/favorites/toggle', methods=['POST'])
+def toggle_favorite():
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "User not logged in"}), 401
+
+    user_id = session['user_id']
+    recipe_id = request.json.get('recipe_id')
+
+    if not recipe_id:
+        return jsonify({"success": False, "message": "Invalid recipe ID"}), 400
+
+    # Check if the recipe is already a favorite
+    favorite = Favorite.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
+
+    if favorite:
+        # Remove from favorites
+        db.session.delete(favorite)
+        db.session.commit()
+        return jsonify({"success": True, "message": "Removed from favorites", "is_favorite": False}), 200
+    else:
+        # Add to favorites
+        new_favorite = Favorite(user_id=user_id, recipe_id=recipe_id)
+        db.session.add(new_favorite)
+        db.session.commit()
+        return jsonify({"success": True, "message": "Added to favorites", "is_favorite": True}), 201
+
+@bp.route('/edit-profile', methods=['GET', 'POST'])
+def edit_profile():
+    # Ensure the user is logged in
+    if 'user_id' not in session:
+        return redirect(url_for('routes.login'))
+
+    user_id = session['user_id']
+    user = db.session.query(Customer).filter_by(customer_id=user_id).first()
+
+    if request.method == 'POST':
+        # Update user information
+        user.username = request.form['username']
+        user.email = request.form['email']
+        user.date_of_birth = request.form['date_of_birth']
+        user.country = request.form['country']
+        user.language = request.form['language']
+
+        try:
+            db.session.commit()
+            flash('Profile updated successfully!', 'success')
+            return redirect(url_for('routes.dashboard'))
+        except Exception as e:
+            db.session.rollback()
+            flash('An error occurred while updating your profile.', 'error')
+
+    return render_template('edit_profile.html', user=user)
 
 import os
 from werkzeug.utils import secure_filename

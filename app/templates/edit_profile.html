@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Profile
+{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="dashboard-sidebar">
+            <div class="profile-section">
+                <img src="{{ url_for('static', filename='images/profile-placeholder.png') }}" alt="Profile Picture" class="profile-picture">
+                <h3>{{ user.username }}</h3>
+                <p>{{ user.email }}</p>
+            </div>
+            <ul>
+                <li><a href="{{ url_for('routes.dashboard') }}">Personal Information</a></li>
+                <li><a href="{{ url_for('routes.submitted_recipes') }}">Submitted Recipes</a></li>
+                <li><a href="{{ url_for('routes.favorites') }}">Favorites</a></li>
+                <li><a href="#">Billing & Payments</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="dashboard-content">
+            <h2>Edit Profile</h2>
+            <p>Update your personal information below.</p>
+            <form method="POST" action="{{ url_for('routes.edit_profile') }}">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="{{ user.username }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="date_of_birth">Date of Birth:</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth" value="{{ user.date_of_birth }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="country">Country:</label>
+                    <input type="text" id="country" name="country" value="{{ user.country }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="language">Language:</label>
+                    <input type="text" id="language" name="language" value="{{ user.language }}" required>
+                </div>
+                
+                <!-- Avatar Selection -->
+                <div class="form-group">
+                    <label for="avatar">Choose Your Avatar:</label>
+                    <div class="avatar-options">
+                        <label>
+                            <input type="radio" name="avatar" value="avatar1.png" {% if user.avatar == "avatar1.png" %}checked{% endif %}>
+                            <img src="{{ url_for('static', filename='avatars/user4.jpg') }}" alt="Avatar 1">
+                        </label>
+                        <label>
+                            <input type="radio" name="avatar" value="avatar2.png" {% if user.avatar == "avatar2.png" %}checked{% endif %}>
+                            <img src="{{ url_for('static', filename='avatars/user3.jpg') }}" alt="Avatar 2">
+                        </label>
+                        <!-- Add more avatar options as needed -->
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

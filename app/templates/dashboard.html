@@ -26,6 +26,12 @@ User Dashboard
         <div class="dashboard-content">
             <h2>Personal Information</h2>
             <p>Manage your personal information, including phone numbers and email addresses where you can be contacted.</p>
+            
+            <!-- Add Edit Profile Button -->
+            <div style="margin-bottom: 20px;">
+                <a href="{{ url_for('routes.edit_profile') }}" class="btn-black">Edit Profile</a>
+            </div>
+            
             <div class="info-cards">
                 <div class="info-card">
                     <h3>Name</h3>

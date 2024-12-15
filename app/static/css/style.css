@@ -1050,6 +1050,37 @@
     object-fit: cover;
 }
 
+.recipe-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-start; /* Align the heart button to the left */
+    gap: 10px; /* Add space if additional actions are added later */
+}
+
+.favorite-button {
+    width: 40px; /* Fixed width */
+    height: 40px; /* Fixed height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    color: grey;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%; /* Makes the button circular */
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.favorite-button.favorited {
+    color: red;
+}
+
+.favorite-button:hover {
+    transform: scale(1.2); /* Add hover effect */
+    background-color: rgba(0, 0, 0, 0.1); /* Light background for hover */
+}
+
 /* favorites section */
 .dashboard-sidebar {
     flex: 1;
@@ -1134,12 +1165,14 @@
     margin-bottom: 20px;
 }
 
-/* Favorites Container */
-.favorites-container {
+.favorites-recipes-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin-top: 20px;
 }
 
 /* Recipe Box Styling */
@@ -1191,8 +1224,8 @@
 
 /* Recipe Image */
 .recipe-image {
-    flex: 0 0 200px; /* Fixed width */
-    height: 150px; /* Fixed height for consistency */
+    flex: 0 0 200px;
+    height: 150px;
     background-color: #f8f8f8;
     display: flex;
     justify-content: center;
@@ -1208,6 +1241,43 @@
     object-fit: cover; /* Ensures the image fits and maintains aspect ratio */
 }
 
+/* Heart Button */
+.recipe-actions {
+    margin-top: auto; /* Push to the bottom of the container */
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* Heart Button Styling */
+.favorite-button {
+    width: 40px; /* Fixed width */
+    height: 40px; /* Fixed height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    color: grey;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%; /* Makes the button circular */
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.favorite-button.favorited {
+    color: red;
+}
+
+.favorite-button:not(.favorited) {
+    color: grey;
+}
+
+.favorite-button:hover {
+    transform: scale(1.2);
+}
+
+/* Recipe Page */
 .recipe-page .recipe-header {
     text-align: center;
     margin-bottom: 1em;
@@ -1277,6 +1347,90 @@
     text-align: center;
     color: #264653;
 }
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.form-section h1 {
+    margin-bottom: 30px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+form {
+    width: 100%;
+    max-width: 600px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+form p {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+form input, form textarea, form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.form-navigation a,
+form button {
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: 'Arial', sans-serif; /* Consistent lettertype */
+    font-weight: bold; 
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-navigation a:hover,
+form button:hover {
+    background-color: #0056b3;
+}
+
+.form-navigation a {
+    background-color: #6c757d;
+}
+
+.form-navigation a:hover {
+    background-color: #5a6268;
+}
+
+.form-navigation {
+    display: flex;
+    justify-content: space-between; /* Plaatst de knoppen aan beide uiteinden */
+    margin-top: 20px;
+    width: 170%; /* Zorgt ervoor dat de knoppen zich aanpassen aan de breedte van het formulier */
+}
+
 
 /* Confirmation Page */
 .confirmation-section {
@@ -1369,4 +1523,227 @@
     height: auto;
     border-radius: 8px;
     object-fit: cover;
+}
+
+/* Search bar and filter */
+.search-filter-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    flex: 2;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.filter-dropdown {
+    flex: 1;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.filter-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-form input,
+.filter-form select {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Style for the Apply and Reset Buttons */
+.btn-apply-filters,
+.btn-reset-filters {
+    background-color: #f0a500; /* Orange background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px; /* Padding around the button */
+    font-size: 1rem; /* Adjust font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-apply-filters:hover,
+.btn-reset-filters:hover {
+    background-color: #d48800; /* Darker orange on hover */
+    transform: scale(1.05); /* Slight scaling effect */
+}
+
+.btn-reset-filters {
+    margin-left: 10px; /* Add space between Apply and Reset */
+}
+
+
+/* Edit Profile Form */
+/* Form Styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.btn-primary {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: white;
+    background-color: #f0a500;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #d48e00;
+}
+
+/* Avatar Selection */
+.avatar-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.avatar-options label {
+    cursor: pointer;
+}
+
+.avatar-options img {
+    width: 50px;
+    height: 50px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    transition: border-color 0.3s ease;
+}
+
+.avatar-options input[type="radio"]:checked + img {
+    border-color: #f0a500;
+}
+
+/* Algemene styling voor de body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+/* Center the recipe container */
+.recipe-container {
+    display: flex;
+    flex-direction: column; /* Zorgt dat items verticaal onder elkaar staan */
+    align-items: center; /* Centreer horizontaal */
+    justify-content: center; /* Optioneel: centreer verticaal binnen de pagina */
+    text-align: center; /* Zorgt voor gecentreerde tekst */
+    margin: 0 auto; /* Zorgt dat de container horizontaal in het midden staat */
+    max-width: 800px; /* Optioneel: beperking van de breedte voor betere leesbaarheid */
+    padding: 20px; /* Voegt wat ruimte toe rond de content */
+}
+
+/* Extra styling voor de lijst */
+.recipe-container h2 {
+    font-size: 2rem; /* Grote koptekst voor "All Recipes" */
+    margin-bottom: 20px; /* Voegt ruimte onder de titel toe */
+}
+
+.recipe-container ul {
+    list-style-type: none; /* Verwijdert standaard bolletjes */
+    padding: 0;
+    margin: 0;
+}
+
+.recipe-container li {
+    background-color: #f9f9f9; /* Achtergrondkleur */
+    margin: 15px 0;
+    padding: 15px;
+    border: 1px solid #ddd; /* Lichtgrijze rand */
+    border-radius: 10px; /* Afgeronde hoeken */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Schaduw */
+    width: 100%; /* Laat de lijst volledig vullen */
+    max-width: 600px; /* Optionele limiet */
+}
+
+
+/* Specifieke styling voor lijsten BUITEN de navbar */
+.styled-list ul {
+    list-style-type: none; /* Geen standaard bolletjes */
+    padding: 0;
+    margin: 0 auto;
+    max-width: 800px; /* Maak de lijst smaller */
+}
+
+.styled-list li {
+    background-color: #fff; /* Witte achtergrond */
+    margin: 15px 0;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Voeg een lichte schaduw toe */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.styled-list li:hover {
+    transform: translateY(-5px); /* Laat de kaart omhoog komen bij hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Verhoogde schaduw bij hover */
+}
+
+/* Styling voor paragrafen en prijzen */
+h2 {
+    margin-top: 0;
+    font-size: 1.5em;
+    color: #555;
+    font-weight: bold;
+}
+
+p {
+    margin: 5px 0;
+    line-height: 1.6;
+    color: #666;
+}
+
+p:first-of-type {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.price {
+    color: #27ae60; /* Maak de prijs groen */
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-top: 10px;
 }

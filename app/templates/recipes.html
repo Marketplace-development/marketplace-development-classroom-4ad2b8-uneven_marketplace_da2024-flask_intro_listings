@@ -10,32 +10,41 @@ recipes
         Your browser does not support the video tag.
     </video>
     <div class="hero-content">
-        <h1>Culinary Heritage</h1>
-        <p>"Get a Taste of Tradition"</p>
-        <div class="hero-buttons">
-            <a href="/upload" class="btn-light">Upload</a>
-            <a href="/search" class="btn-dark">Search</a>
+        <h1>Share Your Culinary Heritage</h1>
+        <p>Post your favorite recipes and discover new ones</p>
+        <div class="header-buttons">
+            <a href="{{ url_for('routes.add_recipe_title') }}" class="btn-primary">Add Recipes</a>
+            <a href="{{ url_for('routes.list_recipes') }}" class="btn-secondary">Discover</a>
         </div>
     </div>
 </section>
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Recipes</title>
-</head>
-<body>
-    <h1>All Recipes</h1>
-    <ul>
-    {% for recipe in recipes %}
-        <li>
-            <h2>{{ recipe.title }}</h2>
-            <p>{{ recipe.description }}</p>
-            <p>Ingredients: {{ recipe.ingredients }}</p>
-            <p>Price: ${{ recipe.price }}</p>
-        </li>
-    {% endfor %}
-    </ul>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Recipes</title>
+        <!-- Link naar je CSS-bestand -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <!-- Wrapper voor de receptenlijst -->
+        <div class="recipe-container">
+            <h1>All Recipes</h1>
+            <ul>
+            {% for recipe in recipes %}
+                <li>
+                    <h2>{{ recipe.title }}</h2>
+                    <p>{{ recipe.description }}</p>
+                    <p>Ingredients: {{ recipe.ingredients }}</p>
+                    <p>Price: ${{ recipe.price }}</p>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </body>
 </html>
+
+
 {% endblock %}

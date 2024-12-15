@@ -815,6 +815,13 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.contact-form textarea {
+    width: 100%;
+    box-sizing: border-box; /* Zorgt ervoor dat padding en border bij de breedte inbegrepen zijn */
 }
 
 .contact-form .submit-btn {
@@ -1747,3 +1754,12 @@ p:first-of-type {
     font-size: 1.2em;
     margin-top: 10px;
 }
+
+.success-container p:last-of-type {
+    margin-bottom: 50px;
+}
+
+.success-container .btn {
+    margin-bottom: 20px;
+}
+

@@ -14,8 +14,8 @@
         <div class="recipe-content">
             <!-- Recipe Image -->
             <div class="recipe-image">
-                <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}">
-            </div>
+                <img src="{{ url_for('static', filename='uploads/' + recipe.image_url) }}" alt="{{ recipe.title }}">
+            </div>            
 
             <!-- Recipe Details -->
             <div class="recipe-details">
@@ -55,3 +55,4 @@
     </div>
 </section>
 {% endblock %}
+

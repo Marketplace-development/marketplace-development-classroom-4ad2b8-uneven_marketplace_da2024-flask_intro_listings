@@ -34,12 +34,16 @@ recipes
             <h1>All Recipes</h1>
             <ul>
             {% for recipe in recipes %}
-                <li>
-                    <h2>{{ recipe.title }}</h2>
-                    <p>{{ recipe.description }}</p>
-                    <p>Ingredients: {{ recipe.ingredients }}</p>
-                    <p>Price: ${{ recipe.price }}</p>
-                </li>
+            <li>
+                <h2>
+                    <a href="{{ url_for('routes.recipe_detail', recipe_id=recipe.recipe_id) }}">
+                        {{ recipe.title }}
+                    </a>
+                </h2>
+                <p>{{ recipe.description }}</p>
+                <p>Ingredients: {{ recipe.ingredients }}</p>
+                <p>Price: ${{ recipe.price }}</p>
+            </li>
             {% endfor %}
             </ul>
         </div>

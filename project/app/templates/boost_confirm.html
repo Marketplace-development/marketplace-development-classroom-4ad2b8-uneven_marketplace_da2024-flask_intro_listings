@@ -17,47 +17,6 @@
             min-height: 100vh;
         }
 
-        .main-header {
-            background: #24452e;
-            padding: 20px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo-container .globe {
-            width: 50px;
-            height: 50px;
-            background-color: #24452e;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-        }
-
-        .logo-container .globe img {
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
-        }
-
-        .main-header .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffffff;
-            text-decoration: none;
-        }
-
         .container {
             padding: 20px 40px;
             width: 80%;
@@ -103,14 +62,7 @@
     </style>
 </head>
 <body>
-    <header class="main-header">
-        <div class="logo-container">
-            <div class="globe">
-                <img src="https://i.postimg.cc/LXcTXH1S/fototo.png" alt="Wereldbol">
-            </div>
-            <a href="{{ url_for('main.index') }}" class="logo">Travel Tales</a>
-        </div>
-    </header>
+    {% include 'header.html' %}
 
     <div class="container">
         <h1>Je reis is geboost!</h1>

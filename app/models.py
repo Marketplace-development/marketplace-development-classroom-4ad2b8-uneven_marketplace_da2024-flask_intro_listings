@@ -14,6 +14,7 @@ class Customer(db.Model):
 
 class Recipe(db.Model):
     __tablename__ = 'recipes'
+    
     recipe_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String)
@@ -25,25 +26,18 @@ class Recipe(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     steps = db.Column(db.Text, nullable=False)
     region = db.Column(db.String(50), nullable=True)
-
+    duration = db.Column(db.Numeric)
+    ratings = db.relationship('Rating', backref='recipe', lazy=True)
+  
 class Rating(db.Model):
     __tablename__ = 'ratings'
+
     rating_id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'), nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
     review = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-
-class UserRecipe(db.Model):
-    __tablename__ = 'user_recipes'
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-
-    # Relatie naar ingrediënten
-    ingredients = db.relationship('Ingredient', backref='user_recipe', lazy=True)
 
 class Ingredient(db.Model):
     __tablename__ = 'ingredients'

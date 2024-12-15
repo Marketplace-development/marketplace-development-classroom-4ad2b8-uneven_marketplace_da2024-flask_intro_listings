@@ -36,6 +36,20 @@
             text-align: center;
         }
 
+        main.content {
+            text-align: left; /* Zorg dat alles links wordt uitgelijnd */
+            padding-left: 20px; /* Voeg ruimte toe aan de linkerkant */
+        }
+
+        main.content p {
+            margin-left: 20px; /* Verplaats de paragraaf naar rechts */
+        }
+
+        main.content .add-button {
+            margin-left: 20px; /* Verplaats de knop naar rechts */
+        }
+
+
         .container {
             padding: 20px 40px;
             width: 80%;
@@ -430,7 +444,7 @@
 
 
     <main class="content">
-        <h1>Mijn Geposte Reizen</h1>
+        <h1>Mijn Geüploade Reizen</h1>
         {% if geposte_reizen %}
         {% for reis in geposte_reizen %}
         <div class="travel-item">

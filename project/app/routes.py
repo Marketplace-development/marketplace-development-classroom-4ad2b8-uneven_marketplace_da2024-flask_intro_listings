@@ -280,10 +280,9 @@ def bewerkreis(goodid):
                 reis.pdf_url = supabase.storage.from_("pdf_files").get_public_url(f"pdfs/{unique_filename}")
 
             # Werk de afbeeldingen bij indien nieuwe zijn geüpload
-            
             image_files = request.files.getlist('images[]')
             if image_files and any(file.filename for file in image_files):  # Controleer of er nieuwe bestanden zijn geüpload
-                image_urls = json.loads(reis.image_urls) if reis.image_urls else []  # Behoud bestaande afbeeldingen
+                image_urls = []  # Begin met een lege lijst (vervang de oude afbeeldingen)
                 for image_file in image_files:
                     if image_file.filename.lower().endswith(('.jpg', '.jpeg', '.png', '.gif')):
                         image_filename = secure_filename(image_file.filename)
@@ -292,7 +291,7 @@ def bewerkreis(goodid):
                         supabase.storage.from_("travel_images").upload(f"images/{unique_image_filename}", image_data)
                         image_public_url = supabase.storage.from_("travel_images").get_public_url(f"images/{unique_image_filename}")
                         image_urls.append(image_public_url)
-                reis.image_urls = json.dumps(image_urls)  
+                reis.image_urls = json.dumps(image_urls)  # Overschrijf de bestaande afbeeldingen
 
             db.session.commit()
             return redirect(url_for('main.gepost'))

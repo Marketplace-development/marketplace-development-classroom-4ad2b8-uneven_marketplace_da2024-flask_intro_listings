@@ -1485,7 +1485,7 @@ def messages():
         create_notification(
             recipient_id=receiver_id,
             sender_id=current_user_id,
-            message=f"Gebruiker {current_user.firstname} {current_user.lastname} heeft je een bericht gestuurd."
+            message=f" {current_user.firstname} {current_user.lastname} heeft je een bericht gestuurd."
         )
 
         return redirect(url_for('main.messages', chat_with=receiver_id))

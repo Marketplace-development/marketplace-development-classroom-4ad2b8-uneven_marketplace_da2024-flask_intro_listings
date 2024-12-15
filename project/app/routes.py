@@ -321,10 +321,9 @@ def userpage():
         user.firstname = request.form.get('firstname')
         user.lastname = request.form.get('lastname')
         user.email = request.form.get('email')
-        user.address = request.form.get('address')
-        user.city = request.form.get('city')
-        user.postalcode = request.form.get('postalcode')
         user.country = request.form.get('country')
+        user.nationality = request.form.get('nationality')
+
         
         print(f"Aanwezig in request.files: {list(request.files.keys())}")
 
@@ -861,7 +860,7 @@ def verwijder_aankoop():
     if aankoop and aankoop.userid == session['userid']:
         aankoop.is_archived = True  # Markeer als gearchiveerd
         db.session.commit()
-        flash('Aankoop succesvol verborgen uit de lijst.', 'success')
+        #flash('Aankoop succesvol verborgen uit de lijst.', 'success')
     else:
         flash('Er is iets misgegaan bij het verwijderen.', 'error')
 
@@ -1585,7 +1584,7 @@ def verwijder_reis():
         # Markeer de reis als verwijderd
         reis.is_deleted = True
         db.session.commit()
-        flash('Reis succesvol verwijderd.', 'success')
+        #flash('Reis succesvol verwijderd.', 'success')
         return redirect(url_for('main.reisverwijderd'))
 
     flash('Reis kon niet worden gevonden of verwijderd.', 'error')
@@ -1754,5 +1753,5 @@ def verwijder_account():
     except Exception as e:
         db.session.rollback()
         print(f"Fout bij het verwijderen van het account: {e}")
-        flash('Er ging iets mis bij het verwijderen van je account. Probeer het opnieuw.', 'error')
+        #flash('Er ging iets mis bij het verwijderen van je account. Probeer het opnieuw.', 'error')
         return redirect(url_for('main.userpage'))

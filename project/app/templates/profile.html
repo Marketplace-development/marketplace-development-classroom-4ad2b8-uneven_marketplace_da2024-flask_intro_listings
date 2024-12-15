@@ -117,6 +117,22 @@
             border-radius: 4px;
             font-weight: bold;
         }
+
+        /* Specifieke stijl voor de knoppen op mobiele apparaten */
+@media (max-width: 768px) {
+    .profile-card .btn {
+        margin-bottom: 10px; /* Zorg voor extra ruimte tussen de knoppen */
+        display: block; /* Zet knoppen onder elkaar */
+        width: 100%; /* Knoppen nemen volledige breedte in */
+    }
+}
+
+/* Algemene stijl voor knoppen (desktop en mobiel) */
+.profile-card .btn {
+    margin: 5px; /* Zorg voor een kleine marge rondom de knoppen */
+    padding: 10px 20px; /* Maak de knoppen groter voor betere interactie */
+}
+
     </style>
 </head>
 <body>

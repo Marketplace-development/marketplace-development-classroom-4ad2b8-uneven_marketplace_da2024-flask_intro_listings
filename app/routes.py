@@ -347,21 +347,16 @@ def add_recipe_confirmation():
 def recipe_page(recipe_id):
     # Haal het recept op uit de database
     recipe = Recipe.query.get(recipe_id)
-    
     if not recipe:
-        # Als het recept niet bestaat, geef een 404-pagina
         return render_template('404.html', message="Recipe not found"), 404
 
     # Haal de gebruiker op die het recept heeft gemaakt
     creator = Customer.query.get(recipe.user_id)
+    if not creator:
+        return render_template('404.html', message="Creator not found"), 404
 
     # Haal de reviews en ratings van het recept op
-    reviews = (
-        db.session.query(Rating)
-        .filter_by(recipe_id=recipe_id)
-        .join(Customer, Rating.customer_id == Customer.customer_id)
-        .all()
-    )
+    reviews = db.session.query(Rating).filter_by(recipe_id=recipe_id).all()
 
     # Controleer of een gebruiker is ingelogd
     user = None
@@ -369,12 +364,10 @@ def recipe_page(recipe_id):
         user = Customer.query.get(session['user_id'])
 
     # Controleer of het recept favoriet is van de ingelogde gebruiker
-    is_favorite = False
-    if user:
-        is_favorite = (
-            Favorite.query.filter_by(user_id=user.customer_id, recipe_id=recipe_id).first()
-            is not None
-        )
+    is_favorite = (
+        bool(Favorite.query.filter_by(user_id=user.customer_id, recipe_id=recipe_id).first())
+        if user else False
+    )
 
     # Render de `recipe_page.html` template met de opgehaalde data
     return render_template(
@@ -385,6 +378,8 @@ def recipe_page(recipe_id):
         user=user,
         is_favorite=is_favorite,
     )
+
+
 
 @bp.route('/toggle-favorite/<int:recipe_id>', methods=['POST'])
 def toggle_favorite(recipe_id):

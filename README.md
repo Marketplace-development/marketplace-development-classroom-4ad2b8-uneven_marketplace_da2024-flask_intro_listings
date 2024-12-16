@@ -33,10 +33,12 @@ Clone de repository vanuit GitHub naar je lokale machine:
 
 ```bash
 git clone https://github.com/Marketplace-development/uneven-marketplace-da2024-group21.git
+```bash
 
 ### 2. Ga naar je project map
 ```bash
 cd uneven-marketplace-da2024-group21
+```bash
 
 ### 3. Installeer een virtuele omgeving: 
 ```bash

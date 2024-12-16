@@ -97,14 +97,17 @@
 .hero-content h1 {
     font-size: 2.8rem;
     margin-bottom: 10px;
+    color: white !important;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .hero-content p {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     margin-bottom: 20px;
+    color: white !important;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
+
 
 .header-buttons a {
     display: inline-block;
@@ -139,10 +142,11 @@
 }
 
 /* Hero Section for Video */
+/* Hero Section for Video */
 .hero.video {
     position: relative;
     width: 100%;
-    height: 600px; /* Zorg ervoor dat de hoogte van de video past */
+    height: 600px;
     overflow: hidden;
 }
 
@@ -152,16 +156,81 @@
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Zorg dat de video de hele sectie vult */
-    z-index: 1; /* Plaats de video op de achtergrond */
+    object-fit: cover; /* Video vult de gehele container */
+    z-index: 1; /* Plaats de video achter de tekst */
 }
 
 .hero-content {
     position: relative;
-    z-index: 2; /* Zorg dat de content bovenop de video ligt */
+    z-index: 2; /* Zorg dat de tekst boven de video komt */
+    text-align: center;
+    color: white;
+    padding: 50px 20px;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+    letter-spacing: 2px;
+}
+
+.hero-content p {
+    font-size: 1.8rem;
+    font-style: italic;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+ /* Hero Section for Image */
+.hero.image {
+    position: relative;
+    width: 100%; /* Volledige breedte */
+    height: 600px; /* Hoogte van de sectie */
+    background: url('../images/cooking.jpg') no-repeat center center/cover; /* Achtergrondafbeelding */
+    overflow: hidden; /* Voorkomt extra witruimte */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     color: white;
 }
+
+.hero.image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); /* Donkere overlay voor betere leesbaarheid */
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2; /* Zorg dat tekst boven de overlay staat */
+    text-align: center;
+    color: white;
+    padding: 50px 20px;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+    letter-spacing: 2px;
+}
+
+.hero-content p {
+    font-size: 1.8rem;
+    font-style: italic;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+
 
 /* Feature Highlights Section */
 .features {
@@ -173,7 +242,7 @@
 .features h2 {
     font-size: 2.5rem;
     margin-bottom: 40px;
-    color: #333;
+    color: #faf8f8;
 }
 
 .feature-container {
@@ -1088,7 +1157,7 @@
     background-color: rgba(0, 0, 0, 0.1); /* Light background for hover */
 }
 
-/* Submitted Recipes / Favorites / Purchased Recipes Shared Styles */
+/* favorites section */
 .dashboard-sidebar {
     flex: 1;
     background-color: transparent;
@@ -1222,27 +1291,11 @@
     margin-bottom: 20px;
 }
 
-.recipe-price {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #f0a500; /* Highlight the price in a nice color */
-    margin-top: 10px;
-}
-
 .recipe-region {
     font-size: 0.9rem;
     color: #555;
     font-weight: bold;
     margin-top: auto;
-}
-
-.recipe-link {
-    text-decoration: none; /* Remove underline */
-    color: inherit; /* Ensure text retains the original color */
-}
-
-.recipe-link:hover {
-    text-decoration: none; /* Remove underline on hover as well */
 }
 
 /* Recipe Image */
@@ -1301,27 +1354,14 @@
 }
 
 /* Recipe Page */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
-}
-
-/* Recipe Header */
-.recipe-header {
+.recipe-page .recipe-header {
     text-align: center;
-    margin: 20px 0;
+    margin-bottom: 1em;
 }
 
-.recipe-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
+.recipe-page .recipe-header h1 {
+    font-size: 2rem;
+    color: #264653;
 }
 
 .recipe-header p {
@@ -1462,7 +1502,7 @@ form {
     background: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08), 0 6px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 form p {
@@ -1517,6 +1557,14 @@ form button:hover {
 .form-navigation a:hover {
     background-color: #5a6268;
 }
+
+.form-navigation {
+    display: flex;
+    justify-content: space-between; /* Plaatst de knoppen aan beide uiteinden */
+    margin-top: 20px;
+    width: 170%; /* Zorgt ervoor dat de knoppen zich aanpassen aan de breedte van het formulier */
+}
+
 
 /* Confirmation Page */
 .confirmation-section {

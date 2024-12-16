@@ -14,6 +14,7 @@ class Customer(db.Model):
 
 class Recipe(db.Model):
     __tablename__ = 'recipes'
+    
     recipe_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String)
@@ -25,6 +26,7 @@ class Recipe(db.Model):
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     steps = db.Column(db.Text, nullable=False)
     region = db.Column(db.String(50), nullable=True)
+    duration = db.Column(db.Integer)
 
 class Rating(db.Model):
     __tablename__ = 'ratings'
@@ -35,19 +37,8 @@ class Rating(db.Model):
     review = db.Column(db.String)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
-class UserRecipe(db.Model):
-    __tablename__ = 'user_recipes'
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-
-    # Relatie naar ingrediënten
-    ingredients = db.relationship('Ingredient', backref='user_recipe', lazy=True)
-
 class Ingredient(db.Model):
     __tablename__ = 'ingredients'
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     quantity = db.Column(db.String(50), nullable=False)
@@ -61,3 +52,17 @@ class Favorite(db.Model):
 
     user = db.relationship('Customer', backref='favorites', lazy=True)
     recipe = db.relationship('Recipe', backref='favorites', lazy=True)
+
+class ShoppingCart(db.Model):
+    __tablename__ = 'shopping_cart'
+    cart_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'))
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
+    added_at = db.Column(db.DateTime, default=db.func.now())
+
+class PurchasedRecipe(db.Model):
+    __tablename__ = 'purchased_recipes'
+    purchase_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'))
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
+    purchased_at = db.Column(db.DateTime, default=db.func.now())

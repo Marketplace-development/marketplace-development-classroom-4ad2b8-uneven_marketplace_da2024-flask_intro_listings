@@ -1,58 +1,65 @@
 {% extends "base.html" %}
 
+{% block title %}
+{{ recipe.title }} - Culinary Heritage
+{% endblock %}
+
 {% block content %}
-<!-- Recipe Page Content -->
-<section class="recipe-page">
-    <div class="container">
-        <!-- Recipe Title and Creator -->
-        <header class="recipe-header">
-            <h1>{{ recipe.title }}</h1>
-            <p class="creator">Created by: <strong>{{ creator.username }}</strong></p>
-        </header>
+<!-- Recipe Header Section -->
+<section class="recipe-header">
+    <h1 id="recipe-title">{{ recipe.title }}</h1>
+    <p class="recipe-creator">Created by: <span id="creator-name">{{ creator.username }}</span></p>
+    <p class="recipe-price">Price: $<span id="recipe-price">{{ recipe.price or 'N/A' }}</span></p>
+</section>
 
-        <!-- Recipe Content -->
-        <div class="recipe-content">
-            <!-- Recipe Image -->
-            <div class="recipe-image">
-                <img src="{{ url_for('static', filename='uploads/' + recipe.image_url) }}" alt="{{ recipe.title }}">
-            </div>            
-
-            <!-- Recipe Details -->
-            <div class="recipe-details">
-                <p><strong>Price:</strong> ${{ recipe.price }}</p>
-                <p><strong>Description:</strong> {{ recipe.description }}</p>
-                <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
-                <p><strong>Category:</strong> {{ recipe.category_id }}</p>
-
-                <!-- Add/Remove Favorite Button -->
-                {% if user %}
-                <form action="{{ url_for('routes.toggle_favorite', recipe_id=recipe.recipe_id) }}" method="POST">
-                    <button type="submit" class="btn-favorite">
-                        {% if is_favorite %}Remove from Favorites{% else %}Add to Favorites{% endif %}
-                    </button>
-                </form>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Recipe Reviews -->
-        <section class="recipe-reviews">
-            <h2>Reviews</h2>
-            {% if reviews %}
-            <ul>
-                {% for review in reviews %}
-                <li>
-                    <strong>{{ review.customer.username }}:</strong>
-                    <p>Rating: {{ review.rating }} / 5</p>
-                    <p>{{ review.review }}</p>
-                </li>
+<!-- Recipe Body Section -->
+<section class="recipe-body">
+    <div class="recipe-image">
+        <img id="recipe-img" src="{{ recipe.image_url or url_for('static', filename='images/default-recipe.png') }}" alt="Image of {{ recipe.title }}">
+    </div>
+    <div class="recipe-details">
+        <p id="recipe-description">{{ recipe.description }}</p>
+        
+        <h3>Ingredients</h3>
+        <ul id="ingredients-list">
+            {% if recipe.ingredients %}
+                {% for ingredient in recipe.ingredients.split(',') %}
+                    <li>{{ ingredient.strip() }}</li>
                 {% endfor %}
-            </ul>
             {% else %}
-            <p>No reviews yet. Be the first to review this recipe!</p>
+                <li>No ingredients listed.</li>
             {% endif %}
-        </section>
+        </ul>
+        
+        <h3>Instructions</h3>
+        <ol id="instructions-list">
+            {% if recipe.steps %}
+                {% for step in recipe.steps.split('.') %}
+                    {% if step.strip() %}
+                        <li>{{ step.strip() }}</li>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <li>No instructions provided.</li>
+            {% endif %}
+        </ol>
+    </div>
+</section>
+
+<!-- Reviews Section -->
+<section class="reviews">
+    <h3>Reviews</h3>
+    <div id="reviews-container">
+        {% if reviews %}
+            {% for review in reviews %}
+                <div class="review">
+                    <p><strong>{{ review.author }}</strong> says:</p>
+                    <p>"{{ review.comment }}"</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No reviews yet. Be the first to review this recipe!</p>
+        {% endif %}
     </div>
 </section>
 {% endblock %}
-

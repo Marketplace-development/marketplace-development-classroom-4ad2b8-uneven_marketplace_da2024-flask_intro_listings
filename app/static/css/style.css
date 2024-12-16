@@ -815,6 +815,13 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.contact-form textarea {
+    width: 100%;
+    box-sizing: border-box; /* Zorgt ervoor dat padding en border bij de breedte inbegrepen zijn */
 }
 
 .contact-form .submit-btn {
@@ -1081,7 +1088,7 @@
     background-color: rgba(0, 0, 0, 0.1); /* Light background for hover */
 }
 
-/* favorites section */
+/* Submitted Recipes / Favorites / Purchased Recipes Shared Styles */
 .dashboard-sidebar {
     flex: 1;
     background-color: transparent;
@@ -1215,11 +1222,27 @@
     margin-bottom: 20px;
 }
 
+.recipe-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #f0a500; /* Highlight the price in a nice color */
+    margin-top: 10px;
+}
+
 .recipe-region {
     font-size: 0.9rem;
     color: #555;
     font-weight: bold;
     margin-top: auto;
+}
+
+.recipe-link {
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Ensure text retains the original color */
+}
+
+.recipe-link:hover {
+    text-decoration: none; /* Remove underline on hover as well */
 }
 
 /* Recipe Image */
@@ -1779,4 +1802,185 @@ p:first-of-type {
     font-weight: bold;
     font-size: 1.2em;
     margin-top: 10px;
+}
+
+/* Cart Page Styling */
+.cart-page {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cart-container h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cart-image img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 20px;
+}
+
+.cart-details h3 {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.cart-details p {
+    color: #666;
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+.remove-btn {
+    margin-left: auto;
+    background: none;
+    border: 1px solid red;
+    color: red;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.remove-btn:hover {
+    background-color: red;
+    color: white;
+}
+
+.btn-purchase-all {
+    margin-top: 20px;
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: green;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-purchase-all:hover {
+    background-color: darkgreen;
+}
+.success-container p:last-of-type {
+    margin-bottom: 50px;
+}
+
+.success-container .btn {
+    margin-bottom: 20px;
+}
+
+/* Sterren reviews */
+.star-rating {
+    display: flex;
+    align-items: center; /* Horizontaal centreren */
+    justify-content: center; /* Verticaal centreren */
+    margin: 10px 0; /* Ruimte boven en onder de sterren */
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    font-size: 3rem !important; /* Vergroot de sterren met !important */
+    color: lightgray;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: gold !important;
+}
+
+
+/* add_review */
+.center-container {
+    display: flex;
+    justify-content: center; /* Horizontaal centreren */
+    align-items: center; /* Verticaal centreren */
+    height: 100%; /* Hoogte gelijk aan de buitenste container */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Buitenste container (buitenbox centraal maken) */
+.outer-container {
+    display: flex;
+    justify-content: center; /* Horizontaal centreren */
+    align-items: center; /* Verticaal centreren */
+    min-height: 80vh;
+    padding: 40px; /* Optionele padding rondom */
+    background-color: #f8f9fa;
+}
+
+/* Binnenste container (formulier) */
+.form-container {
+    background-color: #fff;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Volledige breedte */
+    max-width: 700px;
+    box-sizing: border-box;
+    text-align: center;
+
+    display: flex; /* Flexbox om inhoud te centreren */
+    flex-direction: column; /* Stapel inhoud verticaal */
+    justify-content: center; /* Verticaal centreren */
+    align-items: center; /* Horizontaal centreren */
+    margin: 0 auto; /* Midden van de pagina */
+}
+
+/* Centraal uitlijnen van de textarea */
+.form-group textarea {
+    display: block; /* Zorgt ervoor dat de tekstarea als blok werkt */
+    margin: 10px auto; /* Horizontaal centreren met automatische marges */
+    width: 100%; /* Breder maken, maar niet de volle breedte */
+    max-width: 600px; /* Maximale breedte behouden */
+    min-width: 600px;
+    box-sizing: border-box; /* Inclusief padding */
+}
+
+/* Algemene stijl voor formuliervelden */
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Alles centraal uitlijnen in de container */
+}
+
+.form-container label {
+    text-align: left; /* Labels netjes links uitlijnen */
+    width: 90%; /* Evenredige breedte met de formuliervelden */
+    max-width: 600px;
+    min-width: 25px;
+}
+
+.form-container button {
+    width: 100%; /* Volledige breedte van de container */
+    margin-top: 20px; /* Ruimte boven de knop */
 }

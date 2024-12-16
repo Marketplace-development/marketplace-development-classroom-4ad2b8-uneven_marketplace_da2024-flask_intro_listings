@@ -41,4 +41,35 @@ document.addEventListener("DOMContentLoaded", () => {
     if (resetButton) {
         resetButton.addEventListener("click", resetFilters);
     }
+
+    // New code: Prevent event propagation for the favorite button
+    const favoriteButtons = document.querySelectorAll(".favorite-button");
+
+    favoriteButtons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+            event.stopPropagation(); // Stop click from bubbling to parent elements
+            const recipeId = button.getAttribute("data-recipe-id");
+
+            fetch(`/toggle-favorite`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ recipe_id: recipeId }),
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    // Toggle the heart icon
+                    button.textContent = data.is_favorite ? "❤️" : "🤍";
+                } else {
+                    alert("Failed to update favorites. Please try again.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error toggling favorite:", error);
+                alert("An error occurred while updating favorites.");
+            });
+        });
+    });
 });

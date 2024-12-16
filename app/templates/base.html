@@ -31,6 +31,10 @@
                 <!-- Sign-In or Log-Out Button -->
                 <div class="auth-buttons">
                     {% if session.get('user_id') %}
+                        <!-- Shopping Cart Button -->
+                        <a href="{{ url_for('routes.view_cart') }}">
+                            🛒 <span id="cart-count">{{ cart_count }}</span>
+                        </a>
                         <!-- Log Out Button -->
                         <form action="{{ url_for('routes.logout') }}" method="POST" style="display:inline;">
                             <button type="submit" class="btn-black">Log Out</button>

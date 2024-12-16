@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}
+Shopping Cart
+{% endblock %}
+
+{% block content %}
+<section class="cart-page">
+    <div class="cart-container">
+        <h2>Your Shopping Cart</h2>
+        {% if cart_items %}
+        <div class="cart-items">
+            {% for recipe in cart_items %}
+            <div class="cart-item">
+                <div class="cart-image">
+                    <img src="{{ recipe.image_url or url_for('static', filename='images/default-recipe.png') }}" alt="{{ recipe.title }}">
+                </div>
+                <div class="cart-details">
+                    <h3>{{ recipe.title }}</h3>
+                    <p>{{ recipe.description }}</p>
+                    <p>Price: ${{ recipe.price or 'N/A' }}</p>
+                </div>
+                <button 
+                class="btn-remove-from-cart" 
+                data-recipe-id="{{ recipe.recipe_id }}" 
+                onclick="removeFromCart(this)">
+                ❌ Remove
+            </button>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="btn-purchase-all" onclick="purchaseAll()">Purchase All</button>
+        {% else %}
+        <p>Your cart is empty. Add some recipes!</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='javascript/recipes_cart.js') }}"></script>
+{% endblock %}

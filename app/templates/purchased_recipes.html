@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}
+Purchased Recipes
+{% endblock %}
+
+{% block content %}
+<section class="dashboard">
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <nav class="dashboard-sidebar">
+            <div class="profile-section">
+                <img src="{{ url_for('static', filename='images/profile-placeholder.png') }}" alt="Profile Picture" class="profile-picture">
+                <h3>{{ user.username }}</h3>
+                <p>{{ user.email }}</p>
+            </div>
+            <ul>
+                <li><a href="{{ url_for('routes.dashboard') }}">Personal Information</a></li>
+                <li><a href="{{ url_for('routes.submitted_recipes') }}">Submitted Recipes</a></li>
+                <li><a href="{{ url_for('routes.favorites') }}">Favorites</a></li>
+                <li class="active"><a href="{{ url_for('routes.purchased_recipes') }}">Purchased Recipes</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="dashboard-content">
+            <h2>Purchased Recipes</h2>
+            <p>These are the recipes you have purchased. Enjoy your cooking!</p>
+
+            <!-- Display Purchased Recipes -->
+            <section class="submitted-recipes">
+                <div class="submitted-recipes-container">
+                    {% for recipe in purchased_items %}
+                    <div class="recipe-box">
+                        <div class="recipe-content">
+                            <h2 class="recipe-title">{{ recipe.title }}</h2>
+                            <p class="recipe-description">{{ recipe.description }}</p>
+                            <p class="recipe-price">Price: ${{ recipe.price or 'N/A' }}</p>
+                            <p class="recipe-region">Region: {{ recipe.region or 'Unknown' }}</p>
+                        </div>
+                        <div class="recipe-image">
+                            <img src="{{ url_for('static', filename=recipe.image_url) }}" alt="{{ recipe.title }}">
+                        </div>
+                    </div>
+                    {% else %}
+                    <p>No recipes purchased yet.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+{% endblock %}

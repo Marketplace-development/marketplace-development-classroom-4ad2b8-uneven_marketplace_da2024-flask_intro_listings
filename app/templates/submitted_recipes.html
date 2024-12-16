@@ -18,7 +18,7 @@ Submitted Recipes
                 <li><a href="{{ url_for('routes.dashboard') }}">Personal Information</a></li>
                 <li class="active"><a href="{{ url_for('routes.submitted_recipes') }}">Submitted Recipes</a></li>
                 <li><a href="{{ url_for('routes.favorites') }}">Favorites</a></li>
-                <li><a href="#">Billing & Payments</a></li>
+                <li><a href="{{ url_for('routes.purchased_recipes') }}">Purchased Recipes</a></li>
             </ul>
         </nav>
 
@@ -54,23 +54,26 @@ Submitted Recipes
             <section class="submitted-recipes">
                 <div id="submitted-recipes-container" class="submitted-recipes-container">
                     {% for recipe in recipes %}
-                    <div class="recipe-box" data-title="{{ recipe.title }}" data-region="{{ recipe.region.lower() }}">
-                        <div class="recipe-content">
-                            <h2 class="recipe-title">{{ recipe.title }}</h2>
-                            <p class="recipe-description">{{ recipe.description }}</p>
-                            <p class="recipe-region">Region: {{ recipe.region or 'Unknown' }}</p>
-                            <div class="recipe-actions">
-                                <button 
-                                    class="favorite-button {% if recipe.is_favorite %}favorited{% endif %}" 
-                                    data-recipe-id="{{ recipe.recipe_id }}">
-                                    {{ "❤️" if recipe.is_favorite else "🤍" }}
-                                </button>
+                    <a href="{{ url_for('routes.recipe_page', recipe_id=recipe.recipe_id) }}" class="recipe-link">
+                        <div class="recipe-box" data-title="{{ recipe.title }}" data-region="{{ recipe.region.lower() }}">
+                            <div class="recipe-content">
+                                <h2 class="recipe-title">{{ recipe.title }}</h2>
+                                <p class="recipe-description">{{ recipe.description }}</p>
+                                <p class="recipe-price">Price: ${{ recipe.price or 'N/A' }}</p>
+                                <p class="recipe-region">Region: {{ recipe.region or 'Unknown' }}</p>
+                                <div class="recipe-actions">
+                                    <button 
+                                        class="favorite-button {% if recipe.is_favorite %}favorited{% endif %}" 
+                                        data-recipe-id="{{ recipe.recipe_id }}">
+                                        {{ "❤️" if recipe.is_favorite else "🤍" }}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="recipe-image">
+                                <img src="{{ recipe.image_url or url_for('static', filename='images/default-recipe.png') }}" alt="{{ recipe.title }}">
                             </div>
                         </div>
-                        <div class="recipe-image">
-                            <img src="{{ recipe.image_url or url_for('static', filename='images/default-recipe.png') }}" alt="{{ recipe.title }}">
-                        </div>
-                    </div>
+                    </a>
                     {% endfor %}
                 </div>
             </section>

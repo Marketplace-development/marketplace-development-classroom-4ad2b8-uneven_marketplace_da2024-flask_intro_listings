@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add a Review for {{ recipe.title }}
+{% endblock %}
+
+{% block content %}
+<div class="outer-container">
+    <div class="form-container">
+        <h1>Add a Review for {{ recipe.title }}</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+        
+            <!-- Sterrensysteem voor Rating -->
+             <div class="form-group">
+                <label for="rating">Rating (1-5)</label>
+                <div class="star-rating">
+                    <input type="radio" name="rating" id="star5" value="5">
+                    <label for="star5" class="star">&#9733;</label>
+            
+                    <input type="radio" name="rating" id="star4" value="4">
+                    <label for="star4" class="star">&#9733;</label>
+        
+                    <input type="radio" name="rating" id="star3" value="3">
+                    <label for="star3" class="star">&#9733;</label>
+            
+                    <input type="radio" name="rating" id="star2" value="2">
+                    <label for="star2" class="star">&#9733;</label>
+            
+                    <input type="radio" name="rating" id="star1" value="1">
+                    <label for="star1" class="star">&#9733;</label>
+                </div>
+            </div>
+        
+            <!-- Tekstveld voor Review -->
+            <div class="form-group">
+                <label for="review">Review (optional)</label>
+                {{ form.review(class_="form-control", rows="3") }}
+            </div>
+
+        
+            <!-- Submit Button -->
+             <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const stars = document.querySelectorAll('.star-rating input');
+
+        stars.forEach(star => {
+            star.addEventListener('change', () => {
+                console.log(`Rating selected: ${star.value}`);
+            });
+        });
+    });
+</script>

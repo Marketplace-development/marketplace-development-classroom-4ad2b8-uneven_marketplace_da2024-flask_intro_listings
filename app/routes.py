@@ -1,9 +1,8 @@
 # app/routes.py
-from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify, flash
-from app.models import Customer, Recipe, Favorite, UserRecipe, Ingredient, Rating
-from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm, PriceForm
+from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify, flash, current_app
+from app.models import Customer, Recipe, Favorite, Ingredient, Rating, ShoppingCart, PurchasedRecipe
+from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm, PriceForm, RecipeRegionForm, RecipeDurationForm, RatingForm
 from .models import db, Customer
-from flask import current_app
 
 main = Blueprint('main', __name__)
 
@@ -224,8 +223,8 @@ def submitted_recipes():
         return "User not found", 404
 
     # Handle search and region filters
-    search_term = request.args.get('search', '').strip().lower()
-    selected_region = request.args.get('region', '').strip().lower()
+    search_term = request.args.get('search', '').lower()
+    selected_region = request.args.get('region', '').lower()
 
     # Base query: filter recipes by the logged-in user
     query = db.session.query(Recipe).filter_by(user_id=user_id)
@@ -234,35 +233,35 @@ def submitted_recipes():
         query = query.filter(func.lower(Recipe.title).contains(search_term))  # Case-insensitive search
 
     if selected_region:
-        # Use func.lower on both sides to ensure case-insensitive matching
-        query = query.filter(func.lower(Recipe.region) == selected_region)
+        query = query.filter(func.lower(Recipe.region) == selected_region)  # Case-insensitive region filter
 
     # Fetch recipes with favorite status
     recipes = query.all()
     favorite_recipe_ids = {fav.recipe_id for fav in db.session.query(Favorite).filter_by(user_id=user_id).all()}
 
-    # Mark each recipe with its favorite status
+    # Ensure image_url is included for each recipe and mark favorite status
     for recipe in recipes:
         recipe.is_favorite = recipe.recipe_id in favorite_recipe_ids
 
-    # Fetch unique regions for the filter dropdown (convert to lowercase for consistency)
-    unique_regions = [row[0] for row in db.session.query(func.distinct(func.lower(Recipe.region))).all() if row[0]]
+    # Fetch unique regions for the filter dropdown
+    unique_regions = [row[0] for row in db.session.query(func.distinct(func.lower(Recipe.region))).all()]
 
     return render_template(
         'submitted_recipes.html',
         user=user,
-        recipes=recipes,
+        recipes=recipes,  # Ensure `image_url` is part of recipes
         unique_regions=unique_regions
     )
 
 @bp.route('/favorites', methods=['GET'])
 def favorites():
+    # Ensure the user is logged in
     if 'user_id' not in session:
         return redirect(url_for('routes.login'))
 
     user_id = session['user_id']
 
-    # Fetch user information
+    # Fetch the user object
     user = db.session.query(Customer).filter_by(customer_id=user_id).first()
     if not user:
         return "User not found", 404
@@ -282,16 +281,14 @@ def favorites():
         query = query.filter(func.lower(Recipe.title).contains(search_term))  # Case-insensitive search
 
     if selected_region:
-        query = query.filter(func.lower(Recipe.region) == selected_region)  # Ensure case-insensitive comparison
+        query = query.filter(func.lower(Recipe.region) == selected_region)  # Case-insensitive region filter
 
     favorite_recipes = query.all()
 
     # Fetch unique regions for the filter dropdown
-    unique_regions = [
-        row[0].capitalize()
-        for row in db.session.query(func.distinct(func.lower(Recipe.region))).all()
-    ]
+    unique_regions = [row[0] for row in db.session.query(func.distinct(func.lower(Recipe.region))).all()]
 
+    # Pass the user and favorite recipes to the template
     return render_template(
         'favorites.html',
         user=user,
@@ -305,25 +302,45 @@ def toggle_favorite():
         return jsonify({"success": False, "message": "User not logged in"}), 401
 
     user_id = session['user_id']
-    recipe_id = request.json.get('recipe_id')
+    try:
+        # Ensure JSON payload exists
+        data = request.get_json()
+        if not data or 'recipe_id' not in data:
+            return jsonify({"success": False, "message": "Invalid data provided"}), 400
 
-    if not recipe_id:
-        return jsonify({"success": False, "message": "Invalid recipe ID"}), 400
+        recipe_id = data.get('recipe_id')
 
-    # Check if the recipe is already a favorite
-    favorite = Favorite.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
+        # Check if the recipe exists (optional sanity check)
+        recipe = Recipe.query.get(recipe_id)
+        if not recipe:
+            return jsonify({"success": False, "message": "Recipe not found"}), 404
 
-    if favorite:
-        # Remove from favorites
-        db.session.delete(favorite)
-        db.session.commit()
-        return jsonify({"success": True, "message": "Removed from favorites", "is_favorite": False}), 200
-    else:
-        # Add to favorites
-        new_favorite = Favorite(user_id=user_id, recipe_id=recipe_id)
-        db.session.add(new_favorite)
-        db.session.commit()
-        return jsonify({"success": True, "message": "Added to favorites", "is_favorite": True}), 201
+        # Check if the recipe is already in favorites
+        favorite = Favorite.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
+
+        if favorite:
+            # Remove from favorites
+            db.session.delete(favorite)
+            db.session.commit()
+            return jsonify({
+                "success": True, 
+                "message": "Removed from favorites", 
+                "is_favorite": False
+            }), 200
+        else:
+            # Add to favorites
+            new_favorite = Favorite(user_id=user_id, recipe_id=recipe_id)
+            db.session.add(new_favorite)
+            db.session.commit()
+            return jsonify({
+                "success": True, 
+                "message": "Added to favorites", 
+                "is_favorite": True
+            }), 201
+
+    except Exception as e:
+        print(f"Error in toggle_favorite: {e}")
+        return jsonify({"success": False, "message": "An unexpected error occurred"}), 500
 
 @bp.route('/edit-profile', methods=['GET', 'POST'])
 def edit_profile():
@@ -425,66 +442,291 @@ def add_recipe_price():
 
 @bp.route('/add-recipe/confirmation', methods=['GET', 'POST'])
 def add_recipe_confirmation():
-    # Haal alle gegevens op uit de sessie
+    print("Session values:", dict(session))
+
+    # Fetch user_id from session
+    if 'user_id' not in session:
+        flash("You must be logged in to add a recipe.", "danger")
+        return redirect(url_for('routes.login'))
+
+    user_id = session.get('user_id')  # Fetch the logged-in user's ID
+
+    # Retrieve all data from the session
     title = session.get('title')
     description = session.get('description')
     ingredients = session.get('ingredients')
     steps = session.get('steps')
+    region = session.get('region')
+    duration = session.get('duration')
     price = session.get('price')
     image_url = session.get('image_url')
 
     if request.method == 'POST':
-        # Opslaan van recept in de database (voorbeeldcode)
-        new_recipe = UserRecipe(
+        # Save recipe in the database with user_id
+        new_recipe = Recipe(
             title=title,
             description=description,
             price=price,
             steps=steps,
             ingredients=ingredients,
-            image_url=image_url
+            region=region,
+            duration=duration,
+            image_url=image_url,
+            user_id=user_id  # Assign the logged-in user's ID
         )
         db.session.add(new_recipe)
         db.session.commit()
 
-        # Reset de sessie
-        session.clear()
-        return redirect(url_for('routes.submitted_recipes'))
+        # Clear the session data after saving
+        session.pop('title', None)
+        session.pop('description', None)
+        session.pop('ingredients', None)
+        session.pop('steps', None)
+        session.pop('region', None)
+        session.pop('duration', None)
+        session.pop('price', None)
+        session.pop('image_url', None)
 
-    return render_template('add_recipe/confirmation.html', title=title, description=description, ingredients=ingredients, steps=steps, price=price, image_url=image_url)
+        return redirect(url_for('routes.recipe_success'))
+
+    return render_template(
+        'add_recipe/confirmation.html',
+        title=title,
+        description=description,
+        ingredients=ingredients,
+        steps=steps,
+        region=region,
+        duration=duration,
+        price=price,
+        image_url=image_url
+    )
+
+@bp.route('/add-recipe/region', methods=['GET', 'POST'])
+def add_recipe_region():
+    form = RecipeRegionForm()
+    if form.validate_on_submit():
+        session['region'] = form.region.data
+        return redirect(url_for('routes.add_recipe_duration'))
+    return render_template('add_recipe/region.html', form=form)
+
+@bp.route('/add-recipe/duration', methods=['GET', 'POST'])
+def add_recipe_duration():
+    form = RecipeDurationForm()
+    if form.validate_on_submit():
+        session['duration'] = form.duration.data
+        return redirect(url_for('routes.add_recipe_price'))
+    return render_template('add_recipe/duration.html', form=form)
+
+@bp.route('/add-recipe/success', methods=['GET'])
+def recipe_success():
+    return render_template('add_recipe/success.html')
 
 @bp.route('/recipe/<int:recipe_id>', methods=['GET'])
 def recipe_page(recipe_id):
-    # Haal het recept op uit de database
-    recipe = Recipe.query.get(recipe_id)
+    # Query the database for the recipe
+    recipe = Recipe.query.get_or_404(recipe_id)
+
     if not recipe:
         return render_template('404.html', message="Recipe not found"), 404
 
-    # Haal de gebruiker op die het recept heeft gemaakt
+    # Fetch the creator of the recipe
     creator = Customer.query.get(recipe.user_id)
-    if not creator:
-        return render_template('404.html', message="Creator not found"), 404
 
-    # Haal de reviews en ratings van het recept op
+    # Fetch reviews for the recipe
     reviews = db.session.query(Rating).filter_by(recipe_id=recipe_id).all()
 
-    # Controleer of een gebruiker is ingelogd
+    # Check favorite status for logged-in user
     user = None
+    is_favorite = False
     if 'user_id' in session:
         user = Customer.query.get(session['user_id'])
+        is_favorite = bool(Favorite.query.filter_by(user_id=user.customer_id, recipe_id=recipe_id).first())
 
-    # Controleer of het recept favoriet is van de ingelogde gebruiker
-    is_favorite = (
-        bool(Favorite.query.filter_by(user_id=user.customer_id, recipe_id=recipe_id).first())
-        if user else False
-    )
-
-    # Render de `recipe_page.html` template met de opgehaalde data
     return render_template(
         'recipe_page.html',
         recipe=recipe,
         creator=creator,
         reviews=reviews,
-        user=user,
-        is_favorite=is_favorite,
+        is_favorite=is_favorite
     )
+
+@bp.route('/recipe/<int:recipe_id>/add-review', methods=['GET', 'POST'])
+def add_review(recipe_id):
+    form = RatingForm()
+    recipe = Recipe.query.get_or_404(recipe_id)
+    customer_id = session.get('customer_id')  # Get the logged-in customer ID
+
+    if not customer_id:
+        flash('You need to log in to add a review.', 'danger')
+        return redirect(url_for('routes.login'))
+
+    if form.validate_on_submit():
+        # Check for an existing review
+        existing_rating = Rating.query.filter_by(recipe_id=recipe_id, customer_id=customer_id).first()
+        if existing_rating:
+            flash('You have already reviewed this recipe!', 'warning')
+            return redirect(url_for('routes.view_recipe', recipe_id=recipe_id))
+        
+        # Add the new review
+        new_rating = Rating(
+            recipe_id=recipe_id,
+            customer_id=customer_id,  # Use the logged-in user ID
+            rating=form.rating.data,
+            review=form.review.data
+        )
+        db.session.add(new_rating)
+        db.session.commit()
+        flash('Your review has been added!', 'success')
+        return redirect(url_for('routes.view_recipe', recipe_id=recipe_id))
+    
+    # Fetch existing reviews for the template
+    reviews = (
+        db.session.query(Rating)
+        .join(Customer, Rating.customer_id == Customer.customer_id)
+        .filter(Rating.recipe_id == recipe_id)
+        .all()
+    )
+
+    return render_template('reviews/add_review.html', form=form, recipe=recipe, reviews=reviews)
+
+
+@bp.route('/add-to-cart', methods=['POST'])
+def add_to_cart():
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "User not logged in"}), 401
+
+    data = request.get_json()
+    if not data or 'recipe_id' not in data:
+        return jsonify({"success": False, "message": "Invalid request"}), 400
+
+    user_id = session['user_id']
+    recipe_id = data['recipe_id']
+
+    # Check if recipe already exists in cart
+    existing_item = ShoppingCart.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
+    if existing_item:
+        return jsonify({"success": False, "message": "Recipe already in cart"}), 200
+
+    # Add to cart
+    new_item = ShoppingCart(user_id=user_id, recipe_id=recipe_id)
+    db.session.add(new_item)
+    db.session.commit()
+
+    return jsonify({"success": True, "message": "Recipe added to cart!"}), 200
+
+@bp.route('/cart', methods=['GET'])
+def view_cart():
+    if 'user_id' not in session:
+        return redirect(url_for('routes.login'))
+
+    user_id = session['user_id']
+    cart_items = (
+        db.session.query(Recipe)
+        .join(ShoppingCart, Recipe.recipe_id == ShoppingCart.recipe_id)
+        .filter(ShoppingCart.user_id == user_id)
+        .all()
+    )
+    return render_template('cart.html', cart_items=cart_items)
+
+@bp.route('/remove-from-cart', methods=['POST'])
+def remove_from_cart():
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "Not logged in"}), 401
+
+    user_id = session['user_id']
+    data = request.get_json()
+    recipe_id = data.get("recipe_id")
+
+    if not recipe_id:
+        return jsonify({"success": False, "message": "Invalid recipe ID"}), 400
+
+    # Find and delete the item
+    item = ShoppingCart.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
+    if item:
+        db.session.delete(item)
+        db.session.commit()
+        return jsonify({"success": True, "message": "Recipe removed from cart"}), 200
+    else:
+        return jsonify({"success": False, "message": "Recipe not found in cart"}), 404 
+    
+@bp.route('/cart/purchase', methods=['POST'])
+def purchase_recipes():
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "User not logged in"}), 401
+
+    user_id = session['user_id']
+
+    # Get all items in the cart
+    cart_items = ShoppingCart.query.filter_by(user_id=user_id).all()
+
+    # Move each item to purchased_recipes
+    for item in cart_items:
+        purchased = PurchasedRecipe(user_id=user_id, recipe_id=item.recipe_id)
+        db.session.add(purchased)
+        db.session.delete(item)
+
+    db.session.commit()
+    return jsonify({"success": True, "message": "Purchase successful!"}), 200
+
+@bp.route('/purchase-all', methods=['POST'])
+def purchase_all():
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "Not logged in"}), 401
+
+    user_id = session['user_id']
+
+    # Fetch all cart items for the user
+    cart_items = ShoppingCart.query.filter_by(user_id=user_id).all()
+
+    if not cart_items:
+        return jsonify({"success": False, "message": "Your cart is empty"}), 400
+
+    try:
+        # Move items from ShoppingCart to PurchasedRecipe
+        for cart_item in cart_items:
+            purchased_recipe = PurchasedRecipe(user_id=user_id, recipe_id=cart_item.recipe_id)
+            db.session.add(purchased_recipe)
+            db.session.delete(cart_item)  # Remove from cart
+
+        db.session.commit()
+        return jsonify({"success": True, "message": "All items purchased successfully!"}), 200
+    except Exception as e:
+        db.session.rollback()
+        print(e)
+        return jsonify({"success": False, "message": "An error occurred while processing your purchase."}), 500
+
+@bp.route('/purchased-recipes', methods=['GET'])
+def purchased_recipes():
+    if 'user_id' not in session:
+        return redirect(url_for('routes.login'))
+
+    user_id = session['user_id']
+
+    # Fetch purchased recipes joined with Recipe table
+    purchased_items = (
+        db.session.query(Recipe)
+        .join(PurchasedRecipe, Recipe.recipe_id == PurchasedRecipe.recipe_id)
+        .filter(PurchasedRecipe.user_id == user_id)
+        .all()
+    )
+
+    # Fetch user details for the sidebar
+    user = db.session.query(Customer).filter_by(customer_id=user_id).first()
+
+    return render_template(
+        'purchased_recipes.html',
+        purchased_items=purchased_items,
+        user=user
+    )
+
+# This gives us the cart count
+@bp.route('/cart-count', methods=['GET'])
+def cart_count():
+    if 'user_id' not in session:
+        return jsonify({"success": True, "count": 0})
+
+    user_id = session['user_id']
+    count = ShoppingCart.query.filter_by(user_id=user_id).count()
+    return jsonify({"success": True, "count": count})
+
 

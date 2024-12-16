@@ -56,10 +56,9 @@ pip install flask flask-sqlalchemy flask-migrate sqlalchemy python-ics
 flask run
 ```
 ### 6.Indien foutmelding ("Port in use")
-
-```
 Start de applicatie op een andere poort:
 
+```
 flask run --port=5001
 ```
 ## Links

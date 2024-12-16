@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% block title %}
-recipes
+Recipes
 {% endblock %}
 
-{% block content %}<!-- Hero Section -->
+{% block content %}
+<!-- Hero Section -->
 <section class="hero video">
     <video autoplay muted loop>
         <source src="{{ url_for('static', filename='videos/hero-video.mp4') }}" type="video/mp4">
@@ -19,36 +20,33 @@ recipes
     </div>
 </section>
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Recipes</title>
-        <!-- Link naar je CSS-bestand -->
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    </head>
-    <body>
-        <!-- Wrapper voor de receptenlijst -->
-        <div class="recipe-container">
-            <h1>All Recipes</h1>
-            <ul>
-            {% for recipe in recipes %}
-            <li>
-                <h2>
-                    <a href="{{ url_for('routes.recipe_detail', recipe_id=recipe.recipe_id) }}">
-                        {{ recipe.title }}
-                    </a>
-                </h2>
-                <p>{{ recipe.description }}</p>
-                <p>Ingredients: {{ recipe.ingredients }}</p>
-                <p>Price: ${{ recipe.price }}</p>
-            </li>
-            {% endfor %}
-            </ul>
-        </div>
-    </body>
-</html>
+<div class="recipe-container">
+    <h1>All Recipes</h1>
+    <ul>
+    {% for recipe in recipes %}
+        <li>
+            <h2>
+                <a href="{{ url_for('routes.recipe_detail', recipe_id=recipe.recipe_id) }}">
+                    {{ recipe.title }}
+                </a>
+            </h2>
+            <p>{{ recipe.description }}</p>
+            <p>Ingredients: {{ recipe.ingredients }}</p>
+            <p>Price: ${{ recipe.price }}</p>
+            
+            <!-- Add to Cart Button -->
+            <button 
+                class="btn-add-to-cart" 
+                data-recipe-id="{{ recipe.recipe_id }}"
+                onclick="addToCart(this)">
+                🛒 Add to Cart
+            </button>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}
 
-
+{% block scripts %}
+<script src="{{ url_for('static', filename='javascript/add-to-cart.js') }}"></script>
 {% endblock %}

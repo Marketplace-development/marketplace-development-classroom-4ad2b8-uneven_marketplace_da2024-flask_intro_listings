@@ -1,9 +1,11 @@
 # app/routes.py
+from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify, flash, current_app
+from app.models import Customer, Recipe, Favorite, UserRecipe, Ingredient, Rating, ShoppingCart, PurchasedRecipe
+from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm, PriceForm
 from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify, flash
 from app.models import Customer, Recipe, Favorite, Ingredient, Rating
 from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm, PriceForm, RecipeRegionForm, RecipeDurationForm, RatingForm
 from .models import db, Customer
-from flask import current_app
 
 main = Blueprint('main', __name__)
 
@@ -524,6 +526,85 @@ def add_review(recipe_id):
         #return redirect(url_for('routes.login'))  # Verwijs naar een inlogpagina
 
     
+    return render_template('recipe_detail.html', recipe=recipe, creator=creator, reviews=reviews, is_favorite=is_favorite)
+
+
+@bp.route('/add-to-cart', methods=['POST'])
+def add_to_cart():
+    if 'user_id' not in session:
+        return redirect(url_for('routes.login'))
+
+    user_id = session['user_id']
+    recipe_id = request.form.get('recipe_id')  # Fetch from form data
+
+    if not recipe_id:
+        return jsonify({"success": False, "message": "No recipe ID provided"}), 400
+
+    # Add the recipe to the shopping cart
+    cart_item = ShoppingCart(user_id=user_id, recipe_id=recipe_id)
+    try:
+        db.session.add(cart_item)
+        db.session.commit()
+        return jsonify({"success": True, "message": "Recipe added to cart!"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": "Error adding to cart"}), 500
+
+@bp.route('/cart', methods=['GET'])
+def view_cart():
+    if 'user_id' not in session:
+        return redirect(url_for('routes.login'))
+
+    user_id = session['user_id']
+    cart_items = (
+        db.session.query(Recipe)
+        .join(ShoppingCart, Recipe.recipe_id == ShoppingCart.recipe_id)
+        .filter(ShoppingCart.user_id == user_id)
+        .all()
+    )
+    return render_template('cart.html', cart_items=cart_items)
+
+@bp.route('/cart/purchase', methods=['POST'])
+def purchase_recipes():
+    if 'user_id' not in session:
+        return jsonify({"success": False, "message": "User not logged in"}), 401
+
+    user_id = session['user_id']
+
+    # Get all items in the cart
+    cart_items = ShoppingCart.query.filter_by(user_id=user_id).all()
+
+    # Move each item to purchased_recipes
+    for item in cart_items:
+        purchased = PurchasedRecipe(user_id=user_id, recipe_id=item.recipe_id)
+        db.session.add(purchased)
+        db.session.delete(item)
+
+    db.session.commit()
+    return jsonify({"success": True, "message": "Purchase successful!"}), 200
+
+@bp.route('/purchased-recipes', methods=['GET'])
+def purchased_recipes():
+    if 'user_id' not in session:
+        return redirect(url_for('routes.login'))
+
+    user_id = session['user_id']
+    purchased_items = (
+        db.session.query(Recipe)
+        .join(PurchasedRecipe, Recipe.recipe_id == PurchasedRecipe.recipe_id)
+        .filter(PurchasedRecipe.user_id == user_id)
+        .all()
+    )
+    return render_template('purchased_recipes.html', purchased_items=purchased_items)
+
+# This gives us the cart count
+@bp.context_processor
+def inject_cart_count():
+    cart_count = 0
+    if 'user_id' in session:
+        user_id = session['user_id']
+        cart_count = ShoppingCart.query.filter_by(user_id=user_id).count()
+    return {'cart_count': cart_count}
     if form.validate_on_submit():
         # Controleer of de gebruiker al een beoordeling heeft gegeven (optioneel)
         customer_id = 1  # Gebruik een echte klant-ID als authenticatie beschikbaar is

@@ -52,3 +52,17 @@ class Favorite(db.Model):
 
     user = db.relationship('Customer', backref='favorites', lazy=True)
     recipe = db.relationship('Recipe', backref='favorites', lazy=True)
+
+class ShoppingCart(db.Model):
+    __tablename__ = 'shopping_cart'
+    cart_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'))
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
+    added_at = db.Column(db.DateTime, default=db.func.now())
+
+class PurchasedRecipe(db.Model):
+    __tablename__ = 'purchased_recipes'
+    purchase_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'))
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
+    purchased_at = db.Column(db.DateTime, default=db.func.now())

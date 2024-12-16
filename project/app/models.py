@@ -19,7 +19,6 @@ class Users(db.Model):
     password = db.Column(db.String, nullable=False)
     profilepicture = db.Column(db.String, default="")
     nationality = db.Column(db.String, default="")
-    balance = db.Column(db.Float, default=0.0)
 
     # Metadata
     createdat = db.Column(db.DateTime, default=datetime.datetime.utcnow)

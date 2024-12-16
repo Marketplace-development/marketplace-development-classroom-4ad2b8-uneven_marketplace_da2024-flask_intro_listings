@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{ recipe.title }} - Culinary Heritage
+{{ recipe.title }} by {{ recipe.author }}
 {% endblock %}
 
 {% block content %}
@@ -46,20 +46,22 @@
     </div>
 </section>
 
-<!-- Reviews Section -->
-<section class="reviews">
-    <h3>Reviews</h3>
-    <div id="reviews-container">
-        {% if reviews %}
-            {% for review in reviews %}
-                <div class="review">
-                    <p><strong>{{ review.author }}</strong> says:</p>
-                    <p>"{{ review.comment }}"</p>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No reviews yet. Be the first to review this recipe!</p>
-        {% endif %}
-    </div>
-</section>
+    <!-- Reviews -->
+    <section class="recipe-reviews">
+        <h3>Reviews on {{ recipe.author }}'s dish</h3>
+        <div class="reviews-container">
+            {% if recipe.reviews %}
+                {% for review in recipe.reviews %}
+                    <div class="review-card">
+                        <h4>{{ review.title }}</h4>
+                        <p>"{{ review.comment }}"</p>
+                        <span>{{ review.author }} - {{ review.date }}</span>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No reviews yet. Be the first to review this dish!</p>
+            {% endif %}
+        </div>
+    </section>
+</div>
 {% endblock %}

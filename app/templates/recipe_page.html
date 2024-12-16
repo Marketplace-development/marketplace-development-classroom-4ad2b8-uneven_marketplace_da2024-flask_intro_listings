@@ -5,21 +5,24 @@
 {% endblock %}
 
 {% block content %}
-<!-- Recipe Header Section -->
-<section class="recipe-header">
-    <h1 id="recipe-title">{{ recipe.title }}</h1>
-    <p class="recipe-creator">Created by: <span id="creator-name">{{ creator.username }}</span></p>
-    <p class="recipe-price">Price: $<span id="recipe-price">{{ recipe.price or 'N/A' }}</span></p>
-</section>
-
 <!-- Recipe Body Section -->
 <section class="recipe-body">
     <div class="recipe-image">
+        <!-- Recipe Image -->
         <img id="recipe-img" src="{{ recipe.image_url or url_for('static', filename='images/default-recipe.png') }}" alt="Image of {{ recipe.title }}">
     </div>
     <div class="recipe-details">
-        <p id="recipe-description">{{ recipe.description }}</p>
-        
+        <!-- Recipe Title, Creator, Price, and Description -->
+        <h1 id="recipe-title">{{ recipe.title }}</h1>
+        <p class="recipe-creator">Created by: <span id="creator-name">{{ creator.username }}</span></p>
+        <p class="recipe-description">{{ recipe.description }}</p>
+        <p class="recipe-price">Price: $<span id="recipe-price">{{ recipe.price or 'N/A' }}</span></p>
+    </div>
+</section>
+
+<!-- Ingredients and Steps -->
+<section class="recipe-contents">
+    <div class="recipe-ingredients">
         <h3>Ingredients</h3>
         <ul id="ingredients-list">
             {% if recipe.ingredients %}
@@ -30,7 +33,8 @@
                 <li>No ingredients listed.</li>
             {% endif %}
         </ul>
-        
+    </div>
+    <div class="recipe-steps">
         <h3>Instructions</h3>
         <ol id="instructions-list">
             {% if recipe.steps %}

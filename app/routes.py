@@ -540,7 +540,7 @@ def recipe_page(recipe_id):
 def add_review(recipe_id):
     form = RatingForm()
     recipe = Recipe.query.get_or_404(recipe_id)
-    customer_id = session.get('customer_id')  # Get the logged-in customer ID
+    customer_id = session.get('user_id')  
 
     if not customer_id:
         flash('You need to log in to add a review.', 'danger')
@@ -551,7 +551,7 @@ def add_review(recipe_id):
         existing_rating = Rating.query.filter_by(recipe_id=recipe_id, customer_id=customer_id).first()
         if existing_rating:
             flash('You have already reviewed this recipe!', 'warning')
-            return redirect(url_for('routes.view_recipe', recipe_id=recipe_id))
+            return redirect(url_for('routes.purchased_recipes'))
         
         # Add the new review
         new_rating = Rating(
@@ -563,7 +563,7 @@ def add_review(recipe_id):
         db.session.add(new_rating)
         db.session.commit()
         flash('Your review has been added!', 'success')
-        return redirect(url_for('routes.view_recipe', recipe_id=recipe_id))
+        return redirect(url_for('routes.review_success'))
     
     # Fetch existing reviews for the template
     reviews = (
@@ -574,6 +574,10 @@ def add_review(recipe_id):
     )
 
     return render_template('reviews/add_review.html', form=form, recipe=recipe, reviews=reviews)
+
+@bp.route('/review-success', methods=['GET'])
+def review_success():
+    return render_template('reviews/review_success.html')
 
 
 @bp.route('/add-to-cart', methods=['POST'])

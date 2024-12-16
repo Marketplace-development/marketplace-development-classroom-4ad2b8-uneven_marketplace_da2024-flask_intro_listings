@@ -97,14 +97,17 @@
 .hero-content h1 {
     font-size: 2.8rem;
     margin-bottom: 10px;
+    color: white !important;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .hero-content p {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     margin-bottom: 20px;
+    color: white !important;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
+
 
 .header-buttons a {
     display: inline-block;
@@ -192,7 +195,7 @@
 .features h2 {
     font-size: 2.5rem;
     margin-bottom: 40px;
-    color: #333;
+    color: #faf8f8;
 }
 
 .feature-container {
@@ -1107,7 +1110,7 @@
     background-color: rgba(0, 0, 0, 0.1); /* Light background for hover */
 }
 
-/* Submitted Recipes / Favorites / Purchased Recipes Shared Styles */
+/* favorites section */
 .dashboard-sidebar {
     flex: 1;
     background-color: transparent;
@@ -1241,27 +1244,11 @@
     margin-bottom: 20px;
 }
 
-.recipe-price {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #f0a500; /* Highlight the price in a nice color */
-    margin-top: 10px;
-}
-
 .recipe-region {
     font-size: 0.9rem;
     color: #555;
     font-weight: bold;
     margin-top: auto;
-}
-
-.recipe-link {
-    text-decoration: none; /* Remove underline */
-    color: inherit; /* Ensure text retains the original color */
-}
-
-.recipe-link:hover {
-    text-decoration: none; /* Remove underline on hover as well */
 }
 
 /* Recipe Image */

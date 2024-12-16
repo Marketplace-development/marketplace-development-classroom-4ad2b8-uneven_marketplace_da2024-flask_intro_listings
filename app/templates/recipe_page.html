@@ -59,9 +59,11 @@
                     <li>
                         <strong>{{ review.customer.username }}:</strong>
                         <div class="star-rating">
+                            <!-- Loop om gevulde (goud) sterren te tonen -->
                             {% for _ in range(review.rating) %}
-                                <span>★</span>
+                                <span class="filled">★</span>
                             {% endfor %}
+                            <!-- Loop om lege (lichtgrijs) sterren te tonen -->
                             {% for _ in range(5 - review.rating) %}
                                 <span class="empty">★</span>
                             {% endfor %}

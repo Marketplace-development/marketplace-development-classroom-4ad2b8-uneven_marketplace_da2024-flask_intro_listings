@@ -1974,9 +1974,9 @@ p:first-of-type {
 /* Sterren reviews */
 .star-rating {
     display: flex;
-    align-items: center; /* Horizontaal centreren */
-    justify-content: center; /* Verticaal centreren */
-    margin: 10px 0; /* Ruimte boven en onder de sterren */
+    flex-direction: row; /* Verandert de richting naar links-naar-rechts */
+    justify-content: center;
+    margin: 10px 0;
 }
 
 .star-rating input {

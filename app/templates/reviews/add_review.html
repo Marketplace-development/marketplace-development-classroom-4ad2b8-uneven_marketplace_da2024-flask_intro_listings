@@ -15,20 +15,11 @@ Add a Review for {{ recipe.title }}
              <div class="form-group">
                 <label for="rating">Rating (1-5)</label>
                 <div class="star-rating">
-                    <input type="radio" name="rating" id="star5" value="5">
-                    <label for="star5" class="star">&#9733;</label>
-            
-                    <input type="radio" name="rating" id="star4" value="4">
-                    <label for="star4" class="star">&#9733;</label>
-        
-                    <input type="radio" name="rating" id="star3" value="3">
-                    <label for="star3" class="star">&#9733;</label>
-            
-                    <input type="radio" name="rating" id="star2" value="2">
-                    <label for="star2" class="star">&#9733;</label>
-            
-                    <input type="radio" name="rating" id="star1" value="1">
-                    <label for="star1" class="star">&#9733;</label>
+                    <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+                    <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+                    <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+                    <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+                    <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
                 </div>
             </div>
         
@@ -44,16 +35,22 @@ Add a Review for {{ recipe.title }}
         </form>
     </div>
 </div>
-{% endblock %}
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener("DOMContentLoaded", function() {
         const stars = document.querySelectorAll('.star-rating input');
-
-        stars.forEach(star => {
-            star.addEventListener('change', () => {
-                console.log(`Rating selected: ${star.value}`);
+        stars.forEach(input => {
+            input.addEventListener('change', function() {
+                stars.forEach(star => {
+                    if (star.checked) {
+                        star.nextElementSibling.style.color = 'gold';
+                    } else {
+                        star.nextElementSibling.style.color = 'lightgray';
+                    }
+                });
             });
         });
     });
 </script>
+{% endblock %}
+

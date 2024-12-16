@@ -1301,117 +1301,102 @@
 }
 
 /* Recipe Page */
-.recipe-page .recipe-header {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+/* Recipe Header */
+.recipe-header {
     text-align: center;
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
-.recipe-page .recipe-header h1 {
-    font-size: 3rem; /* Vergroot de titel nog meer */
-    color: #264653; /* Donkergroen */
-    font-weight: bold; 
-    margin-bottom: 0.5em;
+.recipe-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
 }
 
-.recipe-page .recipe-header .creator {
-    font-size: 1.2rem; /* Iets groter voor betere zichtbaarheid */
-    color: #555;
+.recipe-header p {
+    font-size: 1.1rem;
+    color: #777;
 }
 
-.recipe-page .recipe-content {
+/* Recipe Body */
+.recipe-body {
     display: flex;
-    align-items: flex-start; /* Zorgt voor uitlijning bovenaan */
-    gap: 40px; /* Grotere ruimte tussen afbeelding en tekst */
-    justify-content: center;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.recipe-page .recipe-image img {
-    max-width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.recipe-page .recipe-image {
-    flex: 1; /* Beeld neemt ruimte in verhouding */
+.recipe-image {
+    flex: 1;
     max-width: 50%;
 }
 
-.recipe-page .recipe-details {
-    flex: 1; /* Zorgt voor flex layout */
-    max-width: 50%; /* Houd ruimte naast de afbeelding */
-    line-height: 1.8; /* Betere leesbaarheid */
+.recipe-image img {
+    width: 100%;
+    border-radius: 10px;
 }
 
-.recipe-page .recipe-details h2, 
-.recipe-page .recipe-details h3 {
-    color: #2a9d8f; /* Kleurtitels */
-    margin-bottom: 0.5em;
+.recipe-details {
+    flex: 1;
+    padding: 10px;
 }
 
-.recipe-page .recipe-details p {
-    margin: 0.5em 0;
+.recipe-details h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
-.recipe-page .recipe-details ul {
-    display: flex; /* Zet de lijst-items naast elkaar */
-    flex-wrap: wrap; /* Laat ze naar de volgende regel gaan indien nodig */
-    gap: 15px; /* Voegt ruimte toe tussen de items */
-    list-style: none; /* Verwijder de standaard bolletjes */
-    padding: 0; /* Verwijder de standaard padding */
-    margin: 1em 0; /* Ruimte boven en onder de lijst */
+.recipe-details ul,
+.recipe-details ol {
+    margin-left: 20px;
 }
 
-.recipe-page .recipe-details ul li {
-    background-color: #f8f8f8; /* Lichte achtergrondkleur */
-    border: 1px solid #ddd; /* Lichtgrijze rand */
-    border-radius: 5px; /* Afgeronde hoeken */
-    padding: 8px 12px; /* Ruimte binnen elk item */
-    font-size: 1rem; /* Standaard lettergrootte */
-    color: #555; /* Donkergrijze tekstkleur */
-    white-space: nowrap; /* Voorkom afbreken van tekst */
-}
-
-.recipe-page .btn-favorite {
-    background-color: #e76f51;
-    color: #fff;
-    padding: 0.8em 1.5em;
-    border: none;
-    border-radius: 25px;
+.recipe-details p {
     font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    line-height: 1.5;
 }
 
-.recipe-page .btn-favorite:hover {
-    background-color: #d94f2a;
-    transform: scale(1.05); /* Kleinere vergroting bij hover */
+/* Reviews Section */
+.reviews {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.recipe-reviews ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    align-items: flex-start; /* Zorgt voor uitlijning bovenaan */
+.reviews h3 {
+    margin-bottom: 10px;
 }
 
-.recipe-reviews li {
-    background: #fff;
-    padding: 1.5em;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    flex: 1 1 300px; /* Flexibele breedte, minimaal 300px */
-    text-align: center;
+.review {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
 }
 
-.recipe-reviews h2 {
-    text-align: center;
-    color: #264653;
-    margin-bottom: 1em;
+.review p {
+    margin: 5px 0;
 }
 
+/* Form CSS */
 .form-section {
     display: flex;
     flex-direction: column;

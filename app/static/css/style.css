@@ -2155,9 +2155,12 @@ p:first-of-type {
     display: flex;
     justify-content: flex-start; /* Links uitlijnen */
     font-size: 20px; /* Pas grootte aan naar wens */
-    color: gold; /* Kleur voor de sterren */
     margin: 0; /* Verwijder overbodige marges */
     padding: 0; /* Verwijder overbodige padding */
+}
+
+.star-rating .filled {
+    color: gold; /* Goud voor de gevulde sterren */
 }
 
 .star-rating .empty {

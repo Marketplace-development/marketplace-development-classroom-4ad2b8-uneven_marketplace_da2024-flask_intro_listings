@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+Review Submitted Successfully
+{% endblock %}
+
+{% block content %}
+<main class="success-section">
+    <div class="success-container">
+        <h1>🎉 Review Submitted Successfully!</h1>
+        <p>Thank you for leaving a review. Your feedback is greatly appreciated! ✅</p>
+        <a href="{{ url_for('routes.home') }}" class="btn btn-primary">Return to Home</a>
+    </div>
+</main>
+{% endblock %}

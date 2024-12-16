@@ -415,21 +415,7 @@ def add_recipe_steps():
     form = StepsForm()
     if form.validate_on_submit():
         session['steps'] = form.steps.data
-
-        # Opslaan in de database
-        new_recipe = Recipe(
-            title=session.get('title'),
-            description=session.get('description'),
-            ingredients=session.get('ingredients'),
-            steps=session.get('steps')
-        )
-        db.session.add(new_recipe)
-        db.session.commit()
-
-        # Doorsturen naar de bevestigingspagina
-        return redirect(url_for('routes.add_recipe_confirmation'))
-
-    # Als het formulier niet gevalideerd is, blijf op de pagina
+        return redirect(url_for('routes.add_recipe_region'))
     return render_template('add_recipe/steps.html', form=form)
 
 @bp.route('/add-recipe/price', methods=['GET', 'POST'])

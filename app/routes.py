@@ -488,21 +488,3 @@ def recipe_page(recipe_id):
         is_favorite=is_favorite,
     )
 
-
-
-@bp.route('/toggle-favorite/<int:recipe_id>', methods=['POST'])
-def toggle_favorite(recipe_id):
-    if 'user_id' not in session:
-        return redirect(url_for('routes.login'))
-
-    user_id = session['user_id']
-    favorite = Favorite.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
-
-    if favorite:
-        db.session.delete(favorite)
-    else:
-        new_favorite = Favorite(user_id=user_id, recipe_id=recipe_id)
-        db.session.add(new_favorite)
-
-    db.session.commit()
-    return redirect(url_for('routes.recipe_page', recipe_id=recipe_id))

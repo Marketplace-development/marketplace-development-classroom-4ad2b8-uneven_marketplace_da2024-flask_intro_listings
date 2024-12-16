@@ -782,7 +782,7 @@ def bevestig_koop(goodid):
         return redirect(url_for('main.algekocht'))  # Verwijs naar de pagina met gekochte reizen
 
     # Bereken het saldo van de gebruiker
-    totaal_verdiend = 15  # Start met het welkomstcadeau
+    totaal_verdiend = 5  # Start met het welkomstcadeau
     saldo_aanvullingen = Gekocht.query.filter_by(userid=user.userid, goodid=None).all()
     totaal_verdiend += sum(aanvulling.amount for aanvulling in saldo_aanvullingen if aanvulling.amount is not None)
     
@@ -1241,14 +1241,14 @@ def verkochte_reizen():
     if not user:
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
-    totaal_verdiend = Decimal('15.00')  # Start met het welkomstcadeau
+    totaal_verdiend = Decimal('5.00')  # Start met het welkomstcadeau
     totaal_uitgegeven = Decimal('0.00')
     geschiedenis = []
 
     # Voeg het welkomstcadeau toe aan de geschiedenis
     geschiedenis.append({
         'description': 'Welkomscadeau',
-        'amount': round(Decimal('15.00'), 2),
+        'amount': round(Decimal('5.00'), 2),
         'date': user.createdat or datetime.datetime.utcnow()  # Gebruik de aanmaakdatum van de gebruiker
     })
 

@@ -519,7 +519,12 @@ def recipe_page(recipe_id):
     creator = Customer.query.get(recipe.user_id)
 
     # Fetch reviews for the recipe
-    reviews = db.session.query(Rating).filter_by(recipe_id=recipe_id).all()
+    reviews = (
+        db.session.query(Rating)
+        .join(Customer, Rating.customer_id == Customer.customer_id)
+        .filter(Rating.recipe_id == recipe_id)
+        .all()
+        )
 
     # Check favorite status for logged-in user
     user = None

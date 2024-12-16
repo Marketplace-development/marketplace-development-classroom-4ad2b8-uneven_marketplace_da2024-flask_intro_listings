@@ -30,13 +30,15 @@ class Recipe(db.Model):
 
 class Rating(db.Model):
     __tablename__ = 'ratings'
-
     rating_id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'), nullable=False)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'))
     rating = db.Column(db.Integer, nullable=False)
-    review = db.Column(db.String)
-    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    review = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, default=db.func.now())
+
+    # Relationship to Customer
+    customer = db.relationship('Customer', backref='ratings')
 
 class Ingredient(db.Model):
     __tablename__ = 'ingredients'
@@ -68,3 +70,6 @@ class PurchasedRecipe(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
     purchased_at = db.Column(db.DateTime, default=db.func.now())
+
+    # Relationship to access the Recipe details easily
+    recipe = db.relationship('Recipe', backref='purchases')

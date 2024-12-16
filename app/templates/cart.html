@@ -20,7 +20,12 @@ Shopping Cart
                     <p>{{ recipe.description }}</p>
                     <p>Price: ${{ recipe.price or 'N/A' }}</p>
                 </div>
-                <button class="remove-btn" data-recipe-id="{{ recipe.recipe_id }}">Remove</button>
+                <button 
+                class="btn-remove-from-cart" 
+                data-recipe-id="{{ recipe.recipe_id }}" 
+                onclick="removeFromCart(this)">
+                ❌ Remove
+            </button>
             </div>
             {% endfor %}
         </div>
@@ -30,4 +35,8 @@ Shopping Cart
         {% endif %}
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='javascript/recipes_cart.js') }}"></script>
 {% endblock %}

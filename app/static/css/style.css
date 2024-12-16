@@ -1088,7 +1088,7 @@
     background-color: rgba(0, 0, 0, 0.1); /* Light background for hover */
 }
 
-/* favorites section */
+/* Submitted Recipes / Favorites / Purchased Recipes Shared Styles */
 .dashboard-sidebar {
     flex: 1;
     background-color: transparent;
@@ -1222,11 +1222,27 @@
     margin-bottom: 20px;
 }
 
+.recipe-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #f0a500; /* Highlight the price in a nice color */
+    margin-top: 10px;
+}
+
 .recipe-region {
     font-size: 0.9rem;
     color: #555;
     font-weight: bold;
     margin-top: auto;
+}
+
+.recipe-link {
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Ensure text retains the original color */
+}
+
+.recipe-link:hover {
+    text-decoration: none; /* Remove underline on hover as well */
 }
 
 /* Recipe Image */

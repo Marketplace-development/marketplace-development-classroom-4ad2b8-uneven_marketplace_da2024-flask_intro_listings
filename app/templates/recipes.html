@@ -5,11 +5,7 @@ Recipes
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero video">
-    <video autoplay muted loop>
-        <source src="{{ url_for('static', filename='videos/hero-video.mp4') }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+<section class="hero image">
     <div class="hero-content">
         <h1>Share Your Culinary Heritage</h1>
         <p>Post your favorite recipes and discover new ones</p>
@@ -19,6 +15,7 @@ Recipes
         </div>
     </div>
 </section>
+
 
 <div class="recipe-container">
     <h1>All Recipes</h1>

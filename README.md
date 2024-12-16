@@ -1,22 +1,22 @@
 
-#TravelTales
+# TravelTales
 TravelTales is een website voor het uploaden en zoeken van reizen. Het is bedoeld als een alternatief voor dure reisbureaus, waarbij je bij TravelTales een heel groot aanbod hebt van verschillende soorten reizen over bijna alle landen van de wereld voor een zeer betaalbare prijs. Door eenvoudigweg een pdf te uploaden waarin al je tips en tricks staan van je reisbestemming, kan je mensen over de hele werd inspireren. 
 “Share your journey, inspire others” 
 
 
-##Functionaliteiten
+## Functionaliteiten
 Plaatsen van reizen: plaats een pdf van je reis en verdien er zelfs geld aan!
 Zoeken van reizen: Vind reizen die bij je passen en start een transactie. Je kan deze reis dan kopen.
 Reviews schrijven en beheren: Geef feedback over je gekochte reis en draag zo mee aan een meer transparante website!
 Gebruikers zoeken: Zoek andere spelers op gebruikersnaam en bekijk hun profiel en reizen.
 
-##Kaart-integratie
+## Kaart-integratie
 Je kan reizen zoeken op basis van een kaart, daarbij kan je ook bijhouden waar je allemaal op reis bent geweest na het uploaden van je reizen op de kaart.
 
-##Installatie
+## Installatie
 Volg deze stappen om TravelTales lokaal te installeren en ervoor te zorgen dat het correct werkt met Flask:
 
-###Vereisten
+### Vereisten
 Python 3.9+
 Pip (Python Package Installer)
 Virtualenv (optioneel, voor een virtuele omgeving)

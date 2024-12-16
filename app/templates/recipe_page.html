@@ -8,30 +8,40 @@
 <!-- Recipe Header Section -->
 <section class="recipe-header">
     <h1 id="recipe-title">{{ recipe.title }}</h1>
-    <p class="recipe-creator">Created by: <span id="creator-name">{{ recipe.creator }}</span></p>
-    <p class="recipe-price">Price: $<span id="recipe-price">{{ recipe.price }}</span></p>
+    <p class="recipe-creator">Created by: <span id="creator-name">{{ creator.username }}</span></p>
+    <p class="recipe-price">Price: $<span id="recipe-price">{{ recipe.price or 'N/A' }}</span></p>
 </section>
 
 <!-- Recipe Body Section -->
 <section class="recipe-body">
     <div class="recipe-image">
-        <img id="recipe-img" src="{{ recipe.image_url }}" alt="Image of {{ recipe.title }}">
+        <img id="recipe-img" src="{{ recipe.image_url or url_for('static', filename='images/default-recipe.png') }}" alt="Image of {{ recipe.title }}">
     </div>
     <div class="recipe-details">
         <p id="recipe-description">{{ recipe.description }}</p>
         
         <h3>Ingredients</h3>
         <ul id="ingredients-list">
-            {% for ingredient in recipe.ingredients %}
-                <li>{{ ingredient }}</li>
-            {% endfor %}
+            {% if recipe.ingredients %}
+                {% for ingredient in recipe.ingredients.split(',') %}
+                    <li>{{ ingredient.strip() }}</li>
+                {% endfor %}
+            {% else %}
+                <li>No ingredients listed.</li>
+            {% endif %}
         </ul>
         
         <h3>Instructions</h3>
         <ol id="instructions-list">
-            {% for step in recipe.instructions %}
-                <li>{{ step }}</li>
-            {% endfor %}
+            {% if recipe.steps %}
+                {% for step in recipe.steps.split('.') %}
+                    {% if step.strip() %}
+                        <li>{{ step.strip() }}</li>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <li>No instructions provided.</li>
+            {% endif %}
         </ol>
     </div>
 </section>

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, FileField, DecimalField, SelectField, IntegerField
-from wtforms.validators import DataRequired, Length, NumberRange, InputRequired
+from wtforms import StringField, TextAreaField, FileField, DecimalField, SelectField, IntegerField, SubmitField
+from wtforms.validators import DataRequired, Length, NumberRange, InputRequired, Optional
 from .models import db
 
 class TitleForm(FlaskForm):
@@ -73,4 +73,5 @@ class RecipeDurationForm(FlaskForm):
 
 class RatingForm(FlaskForm):
     rating = IntegerField('Rating (1-5)', validators=[DataRequired(), NumberRange(min=1, max=5)])
-    review = TextAreaField('Review', validators=[DataRequired()])
+    review = TextAreaField('Review (optional)', validators=[Optional()])
+    submit = SubmitField('Submit Review')

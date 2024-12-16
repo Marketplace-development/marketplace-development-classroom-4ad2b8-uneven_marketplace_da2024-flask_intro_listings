@@ -30,7 +30,6 @@ class Recipe(db.Model):
 
 class Rating(db.Model):
     __tablename__ = 'ratings'
-
     rating_id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'), nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey('customers.customer_id'), nullable=False)
@@ -40,7 +39,6 @@ class Rating(db.Model):
 
 class Ingredient(db.Model):
     __tablename__ = 'ingredients'
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     quantity = db.Column(db.String(50), nullable=False)

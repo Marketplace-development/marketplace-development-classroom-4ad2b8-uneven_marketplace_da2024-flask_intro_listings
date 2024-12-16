@@ -1,55 +1,63 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{ recipe.title }} - Culinary Heritage
+{{ recipe.title }} by {{ recipe.author }}
 {% endblock %}
 
 {% block content %}
-<!-- Recipe Header Section -->
-<section class="recipe-header">
-    <h1 id="recipe-title">{{ recipe.title }}</h1>
-    <p class="recipe-creator">Created by: <span id="creator-name">{{ recipe.creator }}</span></p>
-    <p class="recipe-price">Price: $<span id="recipe-price">{{ recipe.price }}</span></p>
-</section>
+<div class="recipe-page">
+    <!-- Header -->
+    <section class="recipe-header">
+        <div class="recipe-info">
+            <h1>{{ recipe.title }} by {{ recipe.author }}</h1>
+            {% if recipe.vegetarian %}
+                <span class="badge vegetarian">vegetarian</span>
+            {% endif %}
+            <h2>€{{ recipe.price }}</h2>
+            <p>{{ recipe.description }}</p>
+            <button class="btn-primary">Get recipe!</button>
+        </div>
+        <div class="recipe-image">
+            <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}">
+        </div>
+    </section>
 
-<!-- Recipe Body Section -->
-<section class="recipe-body">
-    <div class="recipe-image">
-        <img id="recipe-img" src="{{ recipe.image_url }}" alt="Image of {{ recipe.title }}">
-    </div>
-    <div class="recipe-details">
-        <p id="recipe-description">{{ recipe.description }}</p>
-        
-        <h3>Ingredients</h3>
-        <ul id="ingredients-list">
-            {% for ingredient in recipe.ingredients %}
-                <li>{{ ingredient }}</li>
-            {% endfor %}
-        </ul>
-        
-        <h3>Instructions</h3>
-        <ol id="instructions-list">
-            {% for step in recipe.instructions %}
-                <li>{{ step }}</li>
-            {% endfor %}
-        </ol>
-    </div>
-</section>
+    <!-- Ingredients & Instructions -->
+    <section class="recipe-details">
+        <div class="ingredients">
+            <h3>Ingredients (for {{ recipe.servings }} persons)</h3>
+            <ul>
+                {% for ingredient in recipe.ingredients %}
+                    <li>{{ ingredient }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="instructions">
+            <h3>Preparation</h3>
+            <ol>
+                {% for step in recipe.instructions %}
+                    <li>{{ step }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </section>
 
-<!-- Reviews Section -->
-<section class="reviews">
-    <h3>Reviews</h3>
-    <div id="reviews-container">
-        {% if reviews %}
-            {% for review in reviews %}
-                <div class="review">
-                    <p><strong>{{ review.author }}</strong> says:</p>
-                    <p>"{{ review.comment }}"</p>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>No reviews yet. Be the first to review this recipe!</p>
-        {% endif %}
-    </div>
-</section>
+    <!-- Reviews -->
+    <section class="recipe-reviews">
+        <h3>Reviews on {{ recipe.author }}'s dish</h3>
+        <div class="reviews-container">
+            {% if recipe.reviews %}
+                {% for review in recipe.reviews %}
+                    <div class="review-card">
+                        <h4>{{ review.title }}</h4>
+                        <p>"{{ review.comment }}"</p>
+                        <span>{{ review.author }} - {{ review.date }}</span>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No reviews yet. Be the first to review this dish!</p>
+            {% endif %}
+        </div>
+    </section>
+</div>
 {% endblock %}

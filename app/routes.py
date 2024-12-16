@@ -518,14 +518,15 @@ def recipe_page(recipe_id):
 def add_review(recipe_id):
     form = RatingForm()
     recipe = Recipe.query.get_or_404(recipe_id)
-    customer_id = session.get('customer_id')  # Haal de ingelogde klant-ID op
-    if not customer_id:
-        flash('You need to log in to add a review.', 'danger')
-        return redirect(url_for('routes.login'))  # Verwijs naar een inlogpagina
+    #customer_id = session.get('customer_id')  # Haal de ingelogde klant-ID op
+    #if not customer_id:
+        #flash('You need to log in to add a review.', 'danger')
+        #return redirect(url_for('routes.login'))  # Verwijs naar een inlogpagina
 
     
     if form.validate_on_submit():
         # Controleer of de gebruiker al een beoordeling heeft gegeven (optioneel)
+        customer_id = 1  # Gebruik een echte klant-ID als authenticatie beschikbaar is
         existing_rating = Rating.query.filter_by(recipe_id=recipe_id, customer_id=customer_id).first()  # Gebruik de echte klant-ID
         if existing_rating:
             flash('You have already reviewed this recipe!', 'warning')
@@ -534,7 +535,7 @@ def add_review(recipe_id):
         # Voeg een nieuwe beoordeling toe
         new_rating = Rating(
             recipe_id=recipe_id,
-            customer_id=1,  # Vervang dit door de echte ingelogde gebruiker-ID
+            customer_id=customer_id,  # Vervang dit door de echte ingelogde gebruiker-ID
             rating=form.rating.data,
             review=form.review.data
         )
@@ -545,8 +546,3 @@ def add_review(recipe_id):
     
     return render_template('reviews/add_review.html', form=form, recipe=recipe)
 
-@bp.route('/recipe/<int:recipe_id>')
-def view_recipe(recipe_id):
-    recipe = Recipe.query.get_or_404(recipe_id)
-    ratings = Rating.query.filter_by(recipe_id=recipe_id).all()
-    return render_template('recipes/view_recipe.html', recipe=recipe, ratings=ratings)

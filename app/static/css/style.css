@@ -1280,25 +1280,26 @@
 /* Recipe Page */
 .recipe-page .recipe-header {
     text-align: center;
-    margin-bottom: 1em;
+    margin-bottom: 20px;
 }
 
 .recipe-page .recipe-header h1 {
-    font-size: 2rem;
-    color: #264653;
+    font-size: 3rem; /* Vergroot de titel nog meer */
+    color: #264653; /* Donkergroen */
+    font-weight: bold; 
+    margin-bottom: 0.5em;
 }
 
 .recipe-page .recipe-header .creator {
-    font-size: 1rem;
+    font-size: 1.2rem; /* Iets groter voor betere zichtbaarheid */
     color: #555;
 }
 
 .recipe-page .recipe-content {
     display: flex;
-    flex-wrap: wrap;
-    gap: 2em;
+    align-items: flex-start; /* Zorgt voor uitlijning bovenaan */
+    gap: 40px; /* Grotere ruimte tussen afbeelding en tekst */
     justify-content: center;
-    margin-bottom: 2em;
 }
 
 .recipe-page .recipe-image img {
@@ -1307,45 +1308,85 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.recipe-page .recipe-image {
+    flex: 1; /* Beeld neemt ruimte in verhouding */
+    max-width: 50%;
+}
+
 .recipe-page .recipe-details {
-    max-width: 400px;
-    line-height: 1.6;
+    flex: 1; /* Zorgt voor flex layout */
+    max-width: 50%; /* Houd ruimte naast de afbeelding */
+    line-height: 1.8; /* Betere leesbaarheid */
+}
+
+.recipe-page .recipe-details h2, 
+.recipe-page .recipe-details h3 {
+    color: #2a9d8f; /* Kleurtitels */
+    margin-bottom: 0.5em;
 }
 
 .recipe-page .recipe-details p {
     margin: 0.5em 0;
 }
 
+.recipe-page .recipe-details ul {
+    display: flex; /* Zet de lijst-items naast elkaar */
+    flex-wrap: wrap; /* Laat ze naar de volgende regel gaan indien nodig */
+    gap: 15px; /* Voegt ruimte toe tussen de items */
+    list-style: none; /* Verwijder de standaard bolletjes */
+    padding: 0; /* Verwijder de standaard padding */
+    margin: 1em 0; /* Ruimte boven en onder de lijst */
+}
+
+.recipe-page .recipe-details ul li {
+    background-color: #f8f8f8; /* Lichte achtergrondkleur */
+    border: 1px solid #ddd; /* Lichtgrijze rand */
+    border-radius: 5px; /* Afgeronde hoeken */
+    padding: 8px 12px; /* Ruimte binnen elk item */
+    font-size: 1rem; /* Standaard lettergrootte */
+    color: #555; /* Donkergrijze tekstkleur */
+    white-space: nowrap; /* Voorkom afbreken van tekst */
+}
+
 .recipe-page .btn-favorite {
-    background-color: #2a9d8f;
-    color: white;
-    padding: 0.5em 1em;
+    background-color: #e76f51;
+    color: #fff;
+    padding: 0.8em 1.5em;
     border: none;
-    border-radius: 5px;
+    border-radius: 25px;
+    font-size: 1rem;
     cursor: pointer;
-    margin-top: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .recipe-page .btn-favorite:hover {
-    background-color: #21867a;
+    background-color: #d94f2a;
+    transform: scale(1.05); /* Kleinere vergroting bij hover */
 }
 
 .recipe-reviews ul {
     list-style: none;
     padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: flex-start; /* Zorgt voor uitlijning bovenaan */
 }
 
 .recipe-reviews li {
-    background: #f4f4f4;
-    margin: 1em 0;
-    padding: 1em;
+    background: #fff;
+    padding: 1.5em;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    flex: 1 1 300px; /* Flexibele breedte, minimaal 300px */
+    text-align: center;
 }
 
 .recipe-reviews h2 {
     text-align: center;
     color: #264653;
+    margin-bottom: 1em;
 }
 
 .form-section {
@@ -1368,7 +1409,7 @@ form {
     background: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08), 0 6px 12px rgba(0, 0, 0, 0.05);
 }
 
 form p {
@@ -1423,14 +1464,6 @@ form button:hover {
 .form-navigation a:hover {
     background-color: #5a6268;
 }
-
-.form-navigation {
-    display: flex;
-    justify-content: space-between; /* Plaatst de knoppen aan beide uiteinden */
-    margin-top: 20px;
-    width: 170%; /* Zorgt ervoor dat de knoppen zich aanpassen aan de breedte van het formulier */
-}
-
 
 /* Confirmation Page */
 .confirmation-section {

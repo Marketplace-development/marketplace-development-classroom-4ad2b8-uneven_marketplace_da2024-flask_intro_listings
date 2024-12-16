@@ -1,58 +1,55 @@
 {% extends "base.html" %}
 
+{% block title %}
+{{ recipe.title }} - Culinary Heritage
+{% endblock %}
+
 {% block content %}
-<!-- Recipe Page Content -->
-<section class="recipe-page">
-    <div class="container">
-        <!-- Recipe Title and Creator -->
-        <header class="recipe-header">
-            <h1>{{ recipe.title }}</h1>
-            <p class="creator">Created by: <strong>{{ creator.username }}</strong></p>
-        </header>
+<!-- Recipe Header Section -->
+<section class="recipe-header">
+    <h1 id="recipe-title">{{ recipe.title }}</h1>
+    <p class="recipe-creator">Created by: <span id="creator-name">{{ recipe.creator }}</span></p>
+    <p class="recipe-price">Price: $<span id="recipe-price">{{ recipe.price }}</span></p>
+</section>
 
-        <!-- Recipe Content -->
-        <div class="recipe-content">
-            <!-- Recipe Image -->
-            <div class="recipe-image">
-                <img src="{{ url_for('static', filename='uploads/' + recipe.image_url) }}" alt="{{ recipe.title }}">
-            </div>            
+<!-- Recipe Body Section -->
+<section class="recipe-body">
+    <div class="recipe-image">
+        <img id="recipe-img" src="{{ recipe.image_url }}" alt="Image of {{ recipe.title }}">
+    </div>
+    <div class="recipe-details">
+        <p id="recipe-description">{{ recipe.description }}</p>
+        
+        <h3>Ingredients</h3>
+        <ul id="ingredients-list">
+            {% for ingredient in recipe.ingredients %}
+                <li>{{ ingredient }}</li>
+            {% endfor %}
+        </ul>
+        
+        <h3>Instructions</h3>
+        <ol id="instructions-list">
+            {% for step in recipe.instructions %}
+                <li>{{ step }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+</section>
 
-            <!-- Recipe Details -->
-            <div class="recipe-details">
-                <p><strong>Price:</strong> ${{ recipe.price }}</p>
-                <p><strong>Description:</strong> {{ recipe.description }}</p>
-                <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
-                <p><strong>Category:</strong> {{ recipe.category_id }}</p>
-
-                <!-- Add/Remove Favorite Button -->
-                {% if user %}
-                <form action="{{ url_for('routes.toggle_favorite', recipe_id=recipe.recipe_id) }}" method="POST">
-                    <button type="submit" class="btn-favorite">
-                        {% if is_favorite %}Remove from Favorites{% else %}Add to Favorites{% endif %}
-                    </button>
-                </form>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Recipe Reviews -->
-        <section class="recipe-reviews">
-            <h2>Reviews</h2>
-            {% if reviews %}
-            <ul>
-                {% for review in reviews %}
-                <li>
-                    <strong>{{ review.customer.username }}:</strong>
-                    <p>Rating: {{ review.rating }} / 5</p>
-                    <p>{{ review.review }}</p>
-                </li>
-                {% endfor %}
-            </ul>
-            {% else %}
+<!-- Reviews Section -->
+<section class="reviews">
+    <h3>Reviews</h3>
+    <div id="reviews-container">
+        {% if reviews %}
+            {% for review in reviews %}
+                <div class="review">
+                    <p><strong>{{ review.author }}</strong> says:</p>
+                    <p>"{{ review.comment }}"</p>
+                </div>
+            {% endfor %}
+        {% else %}
             <p>No reviews yet. Be the first to review this recipe!</p>
-            {% endif %}
-        </section>
+        {% endif %}
     </div>
 </section>
 {% endblock %}
-

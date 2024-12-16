@@ -771,8 +771,8 @@ def bevestig_koop(goodid):
         return redirect(url_for('main.logout'))  # Uitloggen als de gebruiker niet bestaat
 
     # Haal de specifieke reis op uit de database
-    reis = DigitalGoods.query.filter_by(goodid=goodid).first()
-    if not reis:
+    nieuwe_reis = DigitalGoods.query.filter_by(goodid=goodid).first()
+    if not nieuwe_reis:
         flash('Reis niet gevonden.', 'error')
         return redirect(url_for('main.search'))  # Verwijs terug naar de zoekpagina
 
@@ -780,22 +780,45 @@ def bevestig_koop(goodid):
     bestaande_aankoop = Gekocht.query.filter_by(userid=user.userid, goodid=goodid).first()
     if bestaande_aankoop:
         return redirect(url_for('main.algekocht'))  # Verwijs naar de pagina met gekochte reizen
-
-    # Bereken het saldo van de gebruiker
-    totaal_verdiend = 5  # Start met het welkomstcadeau
-    saldo_aanvullingen = Gekocht.query.filter_by(userid=user.userid, goodid=None).all()
-    totaal_verdiend += sum(aanvulling.amount for aanvulling in saldo_aanvullingen if aanvulling.amount is not None)
+    
+    totaal_verdiend = Decimal('5.00')  # Start met het welkomstcadeau
+    totaal_uitgegeven = Decimal('0.00')
     
 
+    # Haal saldo-aanvullingen op
+    saldo_aanvullingen = Gekocht.query.filter_by(userid=user.userid, goodid=None, is_saldo_aanvulling=True).all()
+    for aanvulling in saldo_aanvullingen:
+        if aanvulling.amount is not None:  # Controleer of amount niet None is
+            totaal_verdiend += Decimal(aanvulling.amount)
+    
+    # Voeg verkopen toe aan de geschiedenis
+    reizen = DigitalGoods.query.filter_by(userid=user.userid).all()
+    for reis in reizen:
+        aantal_aankopen = Gekocht.query.filter_by(goodid=reis.goodid, is_archived=False).count()
+        verdiend = Decimal(aantal_aankopen) * Decimal(reis.price)
+        totaal_verdiend += verdiend
 
-    totaal_uitgegeven = sum(
-        aankoop.good.price for aankoop in Gekocht.query.filter_by(userid=user.userid).all() if aankoop.good
-    )
+    # Voeg aankopen (inclusief administratieve kosten) toe aan de geschiedenis
+    gekochte_reizen = Gekocht.query.filter_by(userid=user.userid).all()
+    for aankoop in gekochte_reizen:
+        reis = DigitalGoods.query.filter_by(goodid=aankoop.goodid).first()
+        if reis:
+            administratieve_kost = Decimal(reis.price) * Decimal('0.10')  # Bereken 10% administratieve kost met Decimal
+            totaal_uitgegeven += Decimal(reis.price) + administratieve_kost  # Inclusief administratieve kosten
+    
+
+        # Voeg boostkosten toe als relevant
+        if aankoop.goodid is None and not aankoop.is_saldo_aanvulling:
+            if aankoop.amount is not None:  # Controleer of amount niet None is
+                totaal_uitgegeven += Decimal(aankoop.amount)  # Voeg de boostkosten toe aan de uitgaven
+       
     beschikbaar_saldo = totaal_verdiend - totaal_uitgegeven
 
+    print(beschikbaar_saldo)
+    
     # Controleer of het saldo voldoende is
-    administratieve_kost = Decimal(reis.price) * Decimal('0.10')  # Bereken 10% administratieve kosten
-    totaal_prijs = Decimal(reis.price) + administratieve_kost
+    administratieve_kost = Decimal(nieuwe_reis.price) * Decimal('0.10')  # Bereken 10% administratieve kosten
+    totaal_prijs = Decimal(nieuwe_reis.price) + administratieve_kost
 
     if beschikbaar_saldo < totaal_prijs:
         flash('Saldo ontoereikend. Je kunt deze reis niet aankopen.', 'error')
@@ -805,7 +828,7 @@ def bevestig_koop(goodid):
     nieuwe_aankoop = Gekocht(
         gekochtid=str(uuid.uuid4()),  # Unieke ID
         userid=user.userid,
-        goodid=reis.goodid,
+        goodid=nieuwe_reis.goodid,
         amount=Decimal(totaal_prijs),  # Zorg ervoor dat het bedrag correct wordt opgeslagen
         createdat=datetime.datetime.utcnow(),
         is_saldo_aanvulling=False
@@ -816,10 +839,10 @@ def bevestig_koop(goodid):
 
     # Maak een melding aan voor de verkoper
     create_notification(
-        recipient_id=reis.userid,  # Eigenaar van de reis
+        recipient_id=nieuwe_reis.userid,  # Eigenaar van de reis
         sender_id=user.userid,
         good_id=goodid,
-        message=f"{user.firstname} {user.lastname} heeft je reis '{reis.titleofitinerary}' gekocht!"
+        message=f"{user.firstname} {user.lastname} heeft je reis '{nieuwe_reis.titleofitinerary}' gekocht!"
     )
 
     return redirect(url_for('main.koopbevestiging'))

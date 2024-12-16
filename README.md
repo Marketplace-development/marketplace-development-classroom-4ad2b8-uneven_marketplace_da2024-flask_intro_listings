@@ -29,11 +29,9 @@ Clone de repository vanuit GitHub naar je lokale machine:
 ### 1. Clone de repository
 Clone de repository vanuit GitHub naar je lokale machine:
 
-
-
 ```bash
-git clone https://github.com/Marketplace-development/uneven-marketplace-da2024-group21.git
-```bash
+git clone https://github.com/Marketplace-development/uneven-marketplace-da2024-group21.git ```bash
+
 
 ### 2. Ga naar je project map
 ```bash

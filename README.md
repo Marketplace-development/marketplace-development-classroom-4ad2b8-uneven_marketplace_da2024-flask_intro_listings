@@ -30,29 +30,33 @@ Clone de repository vanuit GitHub naar je lokale machine:
 Clone de repository vanuit GitHub naar je lokale machine:
 
 ```bash
-git clone https://github.com/Marketplace-development/uneven-marketplace-da2024-group21.git ```bash
+git clone https://github.com/Marketplace-development/uneven-marketplace-da2024-group21.git 
 
 
 ### 2. Ga naar je project map
+
 ```bash
 cd uneven-marketplace-da2024-group21
-```bash
 
-### 3. Installeer een virtuele omgeving: 
+### 3. Installeer een virtuele omgeving:
+
 ```bash
 python -m venv venv
 source venv/bin/activate  # Voor Mac/Linux
 venv\Scripts\activate     # Voor Windows
 
 ### 4. Installeer de vereisten:
+
 ```bash
 pip install flask flask-sqlalchemy flask-migrate sqlalchemy python-ics
 
-### 5. Start de applicatie
+### 5. Start de applicatie:
+
 ```bash
 flask run
 
 ### 6.Indien foutmelding ("Port in use")
+
 ```bash
 Start de applicatie op een andere poort:
 

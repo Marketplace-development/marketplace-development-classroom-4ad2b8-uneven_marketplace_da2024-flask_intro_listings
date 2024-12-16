@@ -45,8 +45,8 @@ Start de applicatie op een andere poort:
 
 flask run --port=5001
 
-##Links
-###Figma
+## Links
+### Figma
 Bekijk hier onze [Figma](https://www.figma.com/design/h13wQmiQYUlBzGYlLRwLwC/Flux---Figma-Build-Tutorial-(Starter)-(Community)?node-id=0-1&p=f) om ons conceptuele design te zien.
 
 

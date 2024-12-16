@@ -51,21 +51,28 @@
 </section>
 
     <!-- Reviews -->
-    <section class="recipe-reviews">
-        <h3>Reviews on {{ recipe.author }}'s dish</h3>
-        <div class="reviews-container">
-            {% if recipe.reviews %}
-                {% for review in recipe.reviews %}
-                    <div class="review-card">
-                        <h4>{{ review.title }}</h4>
-                        <p>"{{ review.comment }}"</p>
-                        <span>{{ review.author }} - {{ review.date }}</span>
-                    </div>
+    <section class="reviews-section">
+        <h3>Reviews on {{ recipe.title }}'s dish</h3>
+        {% if reviews %}
+            <ul class="reviews-list">
+                {% for review in reviews %}
+                    <li>
+                        <strong>{{ review.customer.username }}:</strong>
+                        <div class="star-rating">
+                            {% for _ in range(review.rating) %}
+                                <span>★</span>
+                            {% endfor %}
+                            {% for _ in range(5 - review.rating) %}
+                                <span class="empty">★</span>
+                            {% endfor %}
+                        </div>
+                        <p>{{ review.review }}</p>
+                    </li>
                 {% endfor %}
-            {% else %}
-                <p>No reviews yet. Be the first to review this dish!</p>
-            {% endif %}
-        </div>
+            </ul>
+        {% else %}
+            <p>No reviews yet. Be the first to review this dish!</p>
+        {% endif %}
     </section>
 </div>
 {% endblock %}

@@ -24,26 +24,32 @@ Instructies
 Clone de repository
 Clone de repository vanuit GitHub naar je lokale machine:
 
+## Instructies
+
+### 1. Clone de repository
+Clone de repository vanuit GitHub naar je lokale machine:
+
+```bash
 git clone https://github.com/Marketplace-development/uneven-marketplace-da2024-group21.git
-Ga naar de projectmap
+
 
 cd uneven-marketplace-da2024-group21
-Maak een virtuele omgeving aan (optioneel)
 
 python -m venv venv
 source venv/bin/activate  # Voor Mac/Linux
 venv\Scripts\activate     # Voor Windows
-Installeer de vereisten
-Installeer de benodigde Python-pakketten:
 
+installeer de vereisten:
 pip install flask flask-sqlalchemy flask-migrate sqlalchemy python-ics
-Start de applicatie
 
+Start de applicatie
 flask run
+
 Indien foutmelding ("Port in use")
 Start de applicatie op een andere poort:
 
 flask run --port=5001
+---
 
 ## Links
 ### Figma

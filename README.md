@@ -48,7 +48,8 @@ venv\Scripts\activate     # Voor Windows
 ### 4. Installeer de vereisten:
 
 ```
-pip install flask flask-sqlalchemy flask-migrate sqlalchemy python-ics
+pip install -r requirements.txt
+
 ```
 ### 5. Start de applicatie:
 

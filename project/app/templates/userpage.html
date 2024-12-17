@@ -88,6 +88,22 @@
     {% include 'navbar.html' %}
 
     <main class="content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div>
+                {% for category, message in messages %}
+                    <div style="
+                        font-size: 16px;
+                        font-weight: bold;
+                        color: #155724;
+                        text-align: center;
+                    ">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
         <!-- Container 1: Profielgegevens -->
         <div class="section">
             <h1>Profielgegevens</h1>
@@ -123,7 +139,7 @@
                     <label for="nationality">Nationaliteit:</label>
                     <input type="text" id="nationality" name="nationality" value="{{ user.nationality or '' }}">
                 </div>
-    
+
                 <div class="form-row">
                     <button type="submit" class="save-button">Wijzigingen opslaan</button>
                 </div>

@@ -324,9 +324,6 @@ def userpage():
         user.country = request.form.get('country')
         user.nationality = request.form.get('nationality')
 
-        
-        print(f"Aanwezig in request.files: {list(request.files.keys())}")
-
         profpic_file = request.files.get('profilePicture')
         if profpic_file:
             if profpic_file.filename != '':
@@ -355,13 +352,20 @@ def userpage():
         else:
             print("Geen bestand ontvangen in 'profilePicture'.")
 
-        # Sla wijzigingen op in de database
+
         try:
+            # Controleer of email al in gebruik is
+            existing_user = Users.query.filter(Users.email == user.email, Users.userid != user.userid).first()
+            if existing_user:
+                flash("Dit e-mailadres is al in gebruik door een andere gebruiker.", "error")
+                return redirect(url_for('main.userpage'))
+            
             db.session.commit()
             print("Profiel succesvol opgeslagen.")
         except Exception as e:
-            print(f"Fout bij opslaan in database: {e}")
-            flash("Fout bij het opslaan van wijzigingen.", "error")
+            db.session.rollback()
+            flash("Dit e-mailadres is al in gebruik door een andere gebruiker", "error")
+            return redirect(url_for('main.userpage'))
 
         # Sla wijzigingen op in de database
         db.session.commit()

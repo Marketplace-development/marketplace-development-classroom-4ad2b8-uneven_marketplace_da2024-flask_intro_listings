@@ -68,6 +68,23 @@
 <body>
     {% include 'header.html' %}
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div>
+                {% for category, message in messages %}
+                    <div style="
+                        font-size: 16px;
+                        font-weight: bold;
+                        color: #155724;
+                        text-align: center;
+                    ">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <div class="content">
         <h1>Vul je saldo aan</h1>
         <form action="{{ url_for('main.vul_saldo_aan') }}" method="POST">

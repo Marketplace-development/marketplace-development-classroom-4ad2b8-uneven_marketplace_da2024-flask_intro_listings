@@ -40,8 +40,12 @@ Purchased Recipes
                         </div>
                         <div class="recipe-image">
                             <img src="{{ url_for('static', filename=recipe.image_url) }}" alt="{{ recipe.title }}">
+                            <div class="recipe-actions">
+                                <a href="{{ url_for('routes.add_review', recipe_id=recipe.recipe_id) }}" class="btn btn-primary">
+                                    Leave a Review
+                                </a>
+                            </div>
                         </div>
-                    </div>
                     {% else %}
                     <p>No recipes purchased yet.</p>
                     {% endfor %}

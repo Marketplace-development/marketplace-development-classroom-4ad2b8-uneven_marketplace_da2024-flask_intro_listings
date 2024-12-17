@@ -1268,6 +1268,7 @@
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
 }
 
+
 /* Recipe Text Section */
 .recipe-content {
     flex: 2;
@@ -2008,9 +2009,9 @@ p:first-of-type {
 /* Sterren reviews */
 .star-rating {
     display: flex;
-    align-items: center; /* Horizontaal centreren */
-    justify-content: center; /* Verticaal centreren */
-    margin: 10px 0; /* Ruimte boven en onder de sterren */
+    flex-direction: row; /* Verandert de richting naar links-naar-rechts */
+    justify-content: center;
+    margin: 10px 0;
 }
 
 .star-rating input {
@@ -2097,3 +2098,107 @@ p:first-of-type {
     width: 100%; /* Volledige breedte van de container */
     margin-top: 20px; /* Ruimte boven de knop */
 }
+
+/* Purchased Recipes - Leave a review */
+.recipe-box {
+    display: flex;
+    justify-content: space-between; /* Ruimte tussen content en afbeelding */
+    align-items: flex-start; /* Zorg dat alles bovenaan uitlijnt */
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #fff;
+}
+
+.recipe-image {
+    display: flex;
+    flex-direction: column; /* Stapel inhoud verticaal */
+    align-items: center; /* Centreer afbeelding en knop horizontaal */
+    margin-left: 20px; /* Ruimte tussen content en afbeelding */
+}
+
+.recipe-image img {
+    display: block;
+    max-width: 150px; /* Behoud de grootte van de afbeelding */
+    height: auto;
+    margin-bottom: 10px; /* Ruimte tussen afbeelding en knop */
+}
+
+.recipe-actions {
+    margin-top: auto; /* Zorgt ervoor dat de knop naar beneden zakt */
+}
+
+.recipe-actions .btn {
+    background-color: #f39c12;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.recipe-actions .btn:hover {
+    background-color: #e67e22;
+}
+
+/* Recipe page - Review Section */
+.reviews-section {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.reviews-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.reviews-list {
+    list-style: none;
+    padding: 0;
+}
+
+.reviews-list li {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.reviews-list strong {
+    font-weight: bold;
+    color: #333;
+}
+
+.reviews-list span {
+    font-size: 0.9rem;
+    color: #888;
+    margin-left: 5px;
+}
+
+.reviews-list p {
+    margin: 5px 0 0;
+    color: #555;
+}
+
+.star-rating {
+    display: flex;
+    justify-content: flex-start; /* Links uitlijnen */
+    font-size: 20px; /* Pas grootte aan naar wens */
+    margin: 0; /* Verwijder overbodige marges */
+    padding: 0; /* Verwijder overbodige padding */
+}
+
+.star-rating .filled {
+    color: gold; /* Goud voor de gevulde sterren */
+}
+
+.star-rating .empty {
+    color: lightgrey;
+}
+

@@ -521,7 +521,7 @@ def recipe_page(recipe_id):
         .join(Customer, Rating.customer_id == Customer.customer_id)
         .filter(Rating.recipe_id == recipe_id)
         .all()
-        )
+    )
 
     # Check favorite status for logged-in user
     user = None
@@ -530,13 +530,19 @@ def recipe_page(recipe_id):
         user = Customer.query.get(session['user_id'])
         is_favorite = bool(Favorite.query.filter_by(user_id=user.customer_id, recipe_id=recipe_id).first())
 
+    # Construct the image path
+    image_url = recipe.image_url
+    if image_url and not image_url.startswith("http"):
+        image_url = url_for('static', filename=f'uploads/{image_url}')
+
     return render_template(
         'recipe_page.html',
         recipe=recipe,
         creator=creator,
         reviews=reviews,
         is_favorite=is_favorite,
-        user=user  # Pass user object to the template
+        user=user,
+        image_url=image_url  # Pass image_url dynamically
     )
 
 @bp.route('/recipe/<int:recipe_id>/add-review', methods=['GET', 'POST'])

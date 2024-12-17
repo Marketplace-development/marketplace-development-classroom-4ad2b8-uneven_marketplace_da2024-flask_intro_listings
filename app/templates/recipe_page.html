@@ -42,10 +42,10 @@
     </div>
 
     <!-- Recipe Image (Right Side) -->
-    <div class="recipe-image">
+    <div class="recipe-page-image">
         <img id="recipe-img" 
-             src="{{ recipe.image_url or url_for('static', filename='images/default-recipe.png') }}" 
-             alt="Image of {{ recipe.title }}">
+         src="{{ image_url or url_for('static', filename='images/default-recipe.png') }}" 
+         alt="Image of {{ recipe.title }}">
     </div>
 </section>
 

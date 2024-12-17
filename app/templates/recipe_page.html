@@ -7,16 +7,45 @@
 {% block content %}
 <!-- Recipe Body Section -->
 <section class="recipe-body">
-    <div class="recipe-image">
-        <!-- Recipe Image -->
-        <img id="recipe-img" src="{{ recipe.image_url or url_for('static', filename='images/default-recipe.png') }}" alt="Image of {{ recipe.title }}">
-    </div>
+    <!-- Recipe Details (Left Side) -->
     <div class="recipe-details">
-        <!-- Recipe Title, Creator, Price, and Description -->
         <h1 id="recipe-title">{{ recipe.title }}</h1>
-        <p class="recipe-creator">Created by: <span id="creator-name">{{ creator.username }}</span></p>
+        <p class="recipe-creator">
+            <span class="highlight">Created by:</span> {{ creator.username }}
+        </p>
         <p class="recipe-description">{{ recipe.description }}</p>
-        <p class="recipe-price">Price: $<span id="recipe-price">{{ recipe.price or 'N/A' }}</span></p>
+        <p class="recipe-region">
+            <span class="highlight">Region:</span> {{ recipe.region or 'Unknown' }}
+        </p>
+        <p class="recipe-duration">
+            <span class="highlight">Duration:</span> {{ recipe.duration or 'N/A' }} minutes
+        </p>
+        <p class="recipe-price">
+            <span class="highlight">Price:</span> ${{ recipe.price or 'N/A' }}
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="recipe-buttons">
+            <button id="favorite-button"
+                    class="btn-favorite {{ 'favorited' if is_favorite else '' }}"
+                    data-recipe-id="{{ recipe.recipe_id }}"
+                    onclick="toggleFavorite(this)">
+                {{ "❤️ Remove from Favorites" if is_favorite else "🤍 Add to Favorites" }}
+            </button>
+            <button id="cart-button"
+                    class="btn-cart"
+                    data-recipe-id="{{ recipe.recipe_id }}"
+                    onclick="addToCart(this)">
+                🛒 Add to Cart
+            </button>
+        </div>
+    </div>
+
+    <!-- Recipe Image (Right Side) -->
+    <div class="recipe-image">
+        <img id="recipe-img" 
+             src="{{ recipe.image_url or url_for('static', filename='images/default-recipe.png') }}" 
+             alt="Image of {{ recipe.title }}">
     </div>
 </section>
 
@@ -26,7 +55,7 @@
         <h3>Ingredients</h3>
         <ul id="ingredients-list">
             {% if recipe.ingredients %}
-                {% for ingredient in recipe.ingredients.split(',') %}
+                {% for ingredient in recipe.ingredients.splitlines() %}
                     <li>{{ ingredient.strip() }}</li>
                 {% endfor %}
             {% else %}
@@ -38,7 +67,7 @@
         <h3>Instructions</h3>
         <ol id="instructions-list">
             {% if recipe.steps %}
-                {% for step in recipe.steps.split('.') %}
+                {% for step in recipe.steps.splitlines() %}
                     {% if step.strip() %}
                         <li>{{ step.strip() }}</li>
                     {% endif %}
@@ -50,22 +79,25 @@
     </div>
 </section>
 
-    <!-- Reviews -->
-    <section class="recipe-reviews">
-        <h3>Reviews on {{ recipe.author }}'s dish</h3>
-        <div class="reviews-container">
-            {% if recipe.reviews %}
-                {% for review in recipe.reviews %}
-                    <div class="review-card">
-                        <h4>{{ review.title }}</h4>
-                        <p>"{{ review.comment }}"</p>
-                        <span>{{ review.author }} - {{ review.date }}</span>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p>No reviews yet. Be the first to review this dish!</p>
-            {% endif %}
-        </div>
-    </section>
-</div>
+<!-- Reviews -->
+<section class="recipe-reviews">
+    <h3>Reviews on {{ recipe.author }}'s dish</h3>
+    <div class="reviews-container">
+        {% if recipe.reviews %}
+            {% for review in recipe.reviews %}
+                <div class="review-card">
+                    <h4>{{ review.title }}</h4>
+                    <p>"{{ review.comment }}"</p>
+                    <span>{{ review.author }} - {{ review.date }}</span>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No reviews yet. Be the first to review this dish!</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='javascript/recipe_page.js') }}"></script>
 {% endblock %}

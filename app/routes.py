@@ -512,9 +512,6 @@ def recipe_page(recipe_id):
     # Query the database for the recipe
     recipe = Recipe.query.get_or_404(recipe_id)
 
-    if not recipe:
-        return render_template('404.html', message="Recipe not found"), 404
-
     # Fetch the creator of the recipe
     creator = Customer.query.get(recipe.user_id)
 
@@ -533,7 +530,8 @@ def recipe_page(recipe_id):
         recipe=recipe,
         creator=creator,
         reviews=reviews,
-        is_favorite=is_favorite
+        is_favorite=is_favorite,
+        user=user  # Pass user object to the template
     )
 
 @bp.route('/recipe/<int:recipe_id>/add-review', methods=['GET', 'POST'])

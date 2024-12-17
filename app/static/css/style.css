@@ -1354,64 +1354,114 @@
 }
 
 /* Recipe Page */
-.recipe-page .recipe-header {
-    text-align: center;
-    margin-bottom: 1em;
-}
-
-.recipe-page .recipe-header h1 {
-    font-size: 2rem;
-    color: #264653;
-}
-
-.recipe-header p {
-    font-size: 1.1rem;
-    color: #777;
-}
-
-/* Recipe Body */
+/* Recipe Body - Align with Ingredients and Steps */
 .recipe-body {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    max-width: 1200px;
-    margin: 0 auto;
+    align-items: stretch;
+    max-width: 1160px; /* Aligns width with ingredients and steps */
+    margin: 40px auto 30px; /* Add space above (40px) and below (30px) */
     gap: 20px;
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 105%; /* Increase the width by 5% */
 }
 
+/* Recipe Details - Move text higher */
+.recipe-details {
+    margin-top: -20px; /* Move content higher slightly */
+}
+
+/* Recipe Title - Align Left */
 .recipe-details h1 {
-    font-size: 2.2rem; /* Slightly larger title */
-    margin: 0;
-    margin-left: -10px; /* Shift title slightly to the left */
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    text-align: left; /* Ensure title aligns to the left */
 }
 
+/* Recipe Price */
 .recipe-details p.recipe-price {
-    order: 1; /* Change order of price */
+    order: 1;
     font-size: 1.2rem;
     font-weight: bold;
     color: #ff8c00;
 }
 
+/* Recipe Description */
 .recipe-details p.recipe-description {
-    order: 2; /* Move description after price */
+    order: 2;
     font-size: 1rem;
     color: #555;
 }
 
-/* Recipe Image */
+/* Highlighted details */
+.recipe-details .highlight {
+    font-weight: bold;
+    color: #333;
+}
+
+/* General Button Styling */
+.recipe-buttons button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    margin: 5px 10px 0 0; /* Adds space between buttons */
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+/* Add to Favorites Button */
+.btn-favorite {
+    background-color: #ff4d4d;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-favorite:hover {
+    background-color: #e04343;
+}
+
+/* Add to Cart Button */
+.btn-cart {
+    background-color: #4CAF50;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-cart:hover {
+    background-color: #45a049;
+}
+
+/* Disabled Button */
+button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+}
+
 .recipe-image {
     flex: 1;
-    max-width: 50%;
+    max-width: 300px; /* Fixed width for image container */
+    height: 270px; /* Fixed height for image container */
+    display: flex; /* Ensures the image fills the container properly */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Crop any overflowing parts of the image */
+    background-color: #f9f9f9; /* Optional background color */
 }
 
 .recipe-image img {
-    width: 100%;
-    border-radius: 10px;
+    width: 100%; /* Take full width of the container */
+    height: 100%; /* Take full height of the container */
+    object-fit: cover; /* Scale and crop to cover the area */
+    border-radius: 10px; /* Optional rounded corners */
 }
 
 /* Ingredients and Steps Layout */
@@ -1419,11 +1469,11 @@
     display: flex;
     justify-content: space-between;
     gap: 20px;
-    margin-top: 20px;
+    margin: 0 auto; /* Center-align and add spacing */
     max-width: 1200px; /* Align width with recipe body */
-    margin: 0 auto;
 }
 
+/* Ingredients and Steps Containers */
 .recipe-ingredients,
 .recipe-steps {
     flex: 1;
@@ -1431,21 +1481,26 @@
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box; /* Respect padding for width alignment */
-    width: calc(50% - 10px); /* Equal width for both sections */
+    box-sizing: border-box;
+    margin-top: 0; /* Reset margin */
+    height: auto; /* Keep height dynamic */
 }
 
+/* Adjust Titles in Ingredients and Steps */
 .recipe-ingredients h3,
 .recipe-steps h3 {
+    margin-top: 0; /* Align titles higher */
     margin-bottom: 10px;
     font-size: 1.5rem;
     color: #333;
-    text-align: center;
+    text-align: center; /* Align titles to the left */
 }
 
+/* Ingredients and Steps List */
 .recipe-ingredients ul,
 .recipe-steps ol {
     margin: 0;
+    white-space: pre-line;
     padding-left: 20px;
 }
 
@@ -1456,29 +1511,9 @@
     color: #555;
 }
 
-/* Reviews Section */
-.reviews {
-    margin-top: 30px;
-    max-width: 1200px; /* Align with recipe-body */
-    margin: 0 auto;
-}
-
-.reviews h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.review {
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.review p {
-    margin: 5px 0;
+/* Add whitespace below recipe-contents */
+.recipe-contents {
+    margin-bottom: 40px;
 }
 
 /* Form CSS */

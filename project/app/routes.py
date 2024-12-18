@@ -825,7 +825,7 @@ def bevestig_koop(goodid):
     totaal_prijs = Decimal(nieuwe_reis.price) + administratieve_kost
 
     if beschikbaar_saldo < totaal_prijs:
-        flash('Saldo ontoereikend. Je kunt deze reis niet aankopen.', 'error')
+        #flash('Saldo ontoereikend. Je kunt deze reis niet aankopen.', 'error')
         return redirect(url_for('main.saldo_ontoereikend'))  # Verwijs naar een pagina met foutmelding
 
     # Voeg de aankoop toe aan de database

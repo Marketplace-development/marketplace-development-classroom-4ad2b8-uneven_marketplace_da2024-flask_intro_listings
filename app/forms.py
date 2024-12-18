@@ -18,7 +18,7 @@ class StepsForm(FlaskForm):
 
 class PriceForm(FlaskForm):
     price = DecimalField(
-        'Enter the price for your recipe (in EUR):',
+        'Enter the price for your recipe (in USD):',
         validators=[DataRequired(), NumberRange(min=0)],
         places=2
     )

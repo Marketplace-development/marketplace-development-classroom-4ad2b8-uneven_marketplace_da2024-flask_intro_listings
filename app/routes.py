@@ -205,7 +205,7 @@ def about():
 
 @bp.route('/recipes', methods=['GET'])
 def list_recipes():
-        # Ensure the user is logged in
+    # Ensure the user is logged in
     if 'user_id' not in session:
         return redirect(url_for('routes.login'))
 
@@ -215,6 +215,7 @@ def list_recipes():
     user = db.session.query(Customer).filter_by(customer_id=user_id).first()
     if not user:
         return "User not found", 404
+
     # Handle search and region filters
     search_term = request.args.get('search', '').lower()
     selected_region = request.args.get('region', '').lower()
@@ -241,13 +242,19 @@ def list_recipes():
     recipe_data = []
     for recipe in recipes:
         creator = Customer.query.get(recipe.user_id)
-        image_url = recipe.image_url or url_for('static', filename='images/default-recipe.png')
+        
+        # Construct proper image URL
+        if recipe.image_url and not recipe.image_url.startswith('http'):
+            image_url = url_for('static', filename=f'uploads/{recipe.image_url}')
+        else:
+            image_url = recipe.image_url or url_for('static', filename='images/default-recipe.png')
 
         # Check favorite status
         is_favorite = False
         if user_id:
             is_favorite = Favorite.query.filter_by(user_id=user_id, recipe_id=recipe.recipe_id).first() is not None
 
+        # Append recipe data
         recipe_data.append({
             "recipe": recipe,
             "creator": creator.username if creator else "Unknown",
@@ -255,6 +262,7 @@ def list_recipes():
             "is_favorite": is_favorite
         })
 
+    # Render the template
     return render_template(
         'recipes.html',
         recipes=recipe_data,

@@ -1299,25 +1299,6 @@
     margin-top: auto;
 }
 
-/* Recipe Image */
-.recipe-image {
-    flex: 0 0 200px;
-    height: 150px;
-    background-color: #f8f8f8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid #ddd;
-}
-
-.recipe-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures the image fits and maintains aspect ratio */
-}
-
 /* Heart Button */
 .recipe-actions {
     margin-top: auto; /* Push to the bottom of the container */
@@ -2114,19 +2095,6 @@ p:first-of-type {
     background-color: #fff;
 }
 
-.recipe-image {
-    display: flex;
-    flex-direction: column; /* Stapel inhoud verticaal */
-    align-items: center; /* Centreer afbeelding en knop horizontaal */
-    margin-left: 20px; /* Ruimte tussen content en afbeelding */
-}
-
-.recipe-image img {
-    display: block;
-    max-width: 150px; /* Behoud de grootte van de afbeelding */
-    height: auto;
-    margin-bottom: 10px; /* Ruimte tussen afbeelding en knop */
-}
 
 .recipe-actions {
     margin-top: auto; /* Zorgt ervoor dat de knop naar beneden zakt */
@@ -2231,4 +2199,14 @@ p:first-of-type {
     width: 100%;
     height: 180px;              /* Set a consistent height for images */
     object-fit: cover;          /* Ensure the image fits well */
+}
+
+.recipe-card-link {
+    text-decoration: none;
+    color: inherit; /* Keep text color unchanged */
+}
+
+.recipe-card-link:hover .recipe-card {
+    transform: scale(1.02); /* Optional: Add hover effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

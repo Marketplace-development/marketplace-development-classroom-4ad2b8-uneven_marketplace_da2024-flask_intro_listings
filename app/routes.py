@@ -297,13 +297,19 @@ def submitted_recipes():
     if selected_region:
         query = query.filter(func.lower(Recipe.region) == selected_region)  # Case-insensitive region filter
 
-    # Fetch recipes with favorite status
+    # Fetch recipes with favorite status and ensure image URL
     recipes = query.all()
     favorite_recipe_ids = {fav.recipe_id for fav in db.session.query(Favorite).filter_by(user_id=user_id).all()}
 
-    # Ensure image_url is included for each recipe and mark favorite status
     for recipe in recipes:
+        # Mark favorite status
         recipe.is_favorite = recipe.recipe_id in favorite_recipe_ids
+
+        # Construct proper image URL
+        if recipe.image_url and not recipe.image_url.startswith('http'):
+            recipe.image_url = url_for('static', filename=f'uploads/{recipe.image_url}')
+        else:
+            recipe.image_url = recipe.image_url or url_for('static', filename='images/default-recipe.png')
 
     # Fetch unique regions for the filter dropdown
     unique_regions = [row[0] for row in db.session.query(func.distinct(func.lower(Recipe.region))).all()]
@@ -311,7 +317,7 @@ def submitted_recipes():
     return render_template(
         'submitted_recipes.html',
         user=user,
-        recipes=recipes,  # Ensure `image_url` is part of recipes
+        recipes=recipes,
         unique_regions=unique_regions
     )
 
@@ -574,6 +580,12 @@ def recipe_page(recipe_id):
     # Query the database for the recipe
     recipe = Recipe.query.get_or_404(recipe_id)
 
+    # Construct proper image URL
+    if recipe.image_url and not recipe.image_url.startswith('http'):
+        recipe.image_url = url_for('static', filename=f'uploads/{recipe.image_url}')
+    else:
+        recipe.image_url = recipe.image_url or url_for('static', filename='images/default-recipe.png')
+
     # Fetch the creator of the recipe
     creator = Customer.query.get(recipe.user_id)
 
@@ -583,7 +595,7 @@ def recipe_page(recipe_id):
         .join(Customer, Rating.customer_id == Customer.customer_id)
         .filter(Rating.recipe_id == recipe_id)
         .all()
-        )
+    )
 
     # Check favorite status for logged-in user
     user = None
@@ -681,6 +693,14 @@ def view_cart():
         .filter(ShoppingCart.user_id == user_id)
         .all()
     )
+
+    # Add proper image URL for each recipe
+    for recipe in cart_items:
+        if recipe.image_url and not recipe.image_url.startswith('http'):
+            recipe.image_url = url_for('static', filename=f'uploads/{recipe.image_url}')
+        else:
+            recipe.image_url = recipe.image_url or url_for('static', filename='images/default-recipe.png')
+
     return render_template('cart.html', cart_items=cart_items)
 
 @bp.route('/remove-from-cart', methods=['POST'])
@@ -764,6 +784,13 @@ def purchased_recipes():
         .filter(PurchasedRecipe.user_id == user_id)
         .all()
     )
+
+    # Add proper image URL for each recipe
+    for recipe in purchased_items:
+        if recipe.image_url and not recipe.image_url.startswith('http'):
+            recipe.image_url = url_for('static', filename=f'uploads/{recipe.image_url}')
+        else:
+            recipe.image_url = recipe.image_url or url_for('static', filename='images/default-recipe.png')
 
     # Fetch user details for the sidebar
     user = db.session.query(Customer).filter_by(customer_id=user_id).first()

@@ -10,7 +10,7 @@ All Recipes
     <h1>All Recipes</h1>
 
     <!-- Search and Filter Section -->
-    <form method="GET" action="{{ url_for('routes.list_recipes') }}" class="filter-form">
+    <form id="filter-form" method="GET" action="{{ url_for('routes.list_recipes') }}" class="filter-form">
         <!-- Search Bar -->
         <input
             type="text"
@@ -19,9 +19,9 @@ All Recipes
             placeholder="Search recipes..."
             value="{{ request.args.get('search', '') }}"
         />
-
+    
         <!-- Region Filter -->
-        <select id="filter-region" name="region">
+        <select id="region-filter" name="region">
             <option value="">All Regions</option>
             {% for region in unique_regions %}
             <option
@@ -32,27 +32,33 @@ All Recipes
             </option>
             {% endfor %}
         </select>
-
+    
         <!-- Reset Filters Button -->
-        <button type="button" class="btn-reset-filters" onclick="resetFilters()">Reset</button>
-
-        <!-- Submit Button -->
-        <button type="submit" class="btn-apply-filters">Apply</button>
+        <button type="button" id="reset-button" class="btn-reset-filters">Reset</button>
     </form>
 
     <!-- Recipe Cards -->
-    <div class="recipe-cards-container">
+    <div class="recipe-cards-container" id="recipes-container">
         {% for entry in recipes %}
-        <div class="recipe-card">
-            <!-- Recipe Image -->
+        <div class="recipe-card recipe-box" 
+             data-title="{{ entry.recipe.title }}" 
+             data-region="{{ entry.recipe.region or '' }}">
+            <!-- Recipe Image (Clickable) -->
             <div class="recipe-card-image">
-                <img src="{{ entry.image_url or url_for('static', filename='images/default-recipe.png') }}" 
-                     alt="Image of {{ entry.recipe.title }}">
+                <a href="{{ url_for('routes.recipe_page', recipe_id=entry.recipe.recipe_id) }}">
+                    <img src="{{ entry.image_url or url_for('static', filename='images/default-recipe.png') }}" 
+                         alt="Image of {{ entry.recipe.title }}">
+                </a>
             </div>
 
             <!-- Recipe Details -->
             <div class="recipe-details">
-                <h2>{{ entry.recipe.title }}</h2>
+                <!-- Recipe Title (Clickable) -->
+                <h2>
+                    <a href="{{ url_for('routes.recipe_page', recipe_id=entry.recipe.recipe_id) }}">
+                        {{ entry.recipe.title }}
+                    </a>
+                </h2>
                 <p>
                     <span class="highlight">Created by:</span> {{ entry.creator }}
                 </p>
@@ -87,7 +93,7 @@ All Recipes
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='javascript/recipes_page.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/recipes.js') }}"></script>
 <script src="{{ url_for('static', filename='javascript/favorites-filters.js') }}"></script>
 {% endblock %}
 

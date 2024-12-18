@@ -3,6 +3,7 @@ from flask import Blueprint, request, redirect, url_for, render_template, sessio
 from app.models import Customer, Recipe, Favorite, Ingredient, Rating, ShoppingCart, PurchasedRecipe
 from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm, PriceForm, RecipeRegionForm, RecipeDurationForm, RatingForm
 from .models import db, Customer
+from sqlalchemy import func  # Import SQLAlchemy's func
 
 main = Blueprint('main', __name__)
 
@@ -202,12 +203,65 @@ def contact():
 def about():
     return render_template('about.html')
 
-@bp.route('/recipes')
+@bp.route('/recipes', methods=['GET'])
 def list_recipes():
-    recipes = Recipe.query.all()  # Fetch all recipes from the database
-    return render_template('recipes.html', recipes=recipes)
+        # Ensure the user is logged in
+    if 'user_id' not in session:
+        return redirect(url_for('routes.login'))
 
-from sqlalchemy import func  # Import SQLAlchemy's func
+    user_id = session['user_id']
+
+    # Fetch the logged-in user
+    user = db.session.query(Customer).filter_by(customer_id=user_id).first()
+    if not user:
+        return "User not found", 404
+    # Handle search and region filters
+    search_term = request.args.get('search', '').lower()
+    selected_region = request.args.get('region', '').lower()
+
+    # Base query: fetch all recipes
+    query = db.session.query(Recipe)
+
+    # Apply search filter (case-insensitive)
+    if search_term:
+        query = query.filter(func.lower(Recipe.title).contains(search_term))
+
+    # Apply region filter (case-insensitive)
+    if selected_region:
+        query = query.filter(func.lower(Recipe.region) == selected_region)
+
+    # Fetch filtered recipes
+    recipes = query.all()
+
+    # Get unique regions for the dropdown filter
+    unique_regions = db.session.query(Recipe.region).distinct().all()
+    unique_regions = [region[0] for region in unique_regions if region[0]]
+
+    # Prepare recipe data for the template
+    recipe_data = []
+    for recipe in recipes:
+        creator = Customer.query.get(recipe.user_id)
+        image_url = recipe.image_url or url_for('static', filename='images/default-recipe.png')
+
+        # Check favorite status
+        is_favorite = False
+        if user_id:
+            is_favorite = Favorite.query.filter_by(user_id=user_id, recipe_id=recipe.recipe_id).first() is not None
+
+        recipe_data.append({
+            "recipe": recipe,
+            "creator": creator.username if creator else "Unknown",
+            "image_url": image_url,
+            "is_favorite": is_favorite
+        })
+
+    return render_template(
+        'recipes.html',
+        recipes=recipe_data,
+        unique_regions=unique_regions,
+        search_term=search_term,
+        selected_region=selected_region
+    )
 
 @bp.route('/submitted-recipes')
 def submitted_recipes():
@@ -521,7 +575,7 @@ def recipe_page(recipe_id):
         .join(Customer, Rating.customer_id == Customer.customer_id)
         .filter(Rating.recipe_id == recipe_id)
         .all()
-    )
+        )
 
     # Check favorite status for logged-in user
     user = None
@@ -530,19 +584,13 @@ def recipe_page(recipe_id):
         user = Customer.query.get(session['user_id'])
         is_favorite = bool(Favorite.query.filter_by(user_id=user.customer_id, recipe_id=recipe_id).first())
 
-    # Construct the image path
-    image_url = recipe.image_url
-    if image_url and not image_url.startswith("http"):
-        image_url = url_for('static', filename=f'uploads/{image_url}')
-
     return render_template(
         'recipe_page.html',
         recipe=recipe,
         creator=creator,
         reviews=reviews,
         is_favorite=is_favorite,
-        user=user,
-        image_url=image_url  # Pass image_url dynamically
+        user=user  # Pass user object to the template
     )
 
 @bp.route('/recipe/<int:recipe_id>/add-review', methods=['GET', 'POST'])

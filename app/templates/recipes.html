@@ -1,49 +1,93 @@
 {% extends "base.html" %}
+
 {% block title %}
-Recipes
+All Recipes
 {% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="hero image">
-    <div class="hero-content">
-        <h1>Share Your Culinary Heritage</h1>
-        <p>Post your favorite recipes and discover new ones</p>
-        <div class="header-buttons">
-            <a href="{{ url_for('routes.add_recipe_title') }}" class="btn-primary">Add Recipes</a>
-            <a href="{{ url_for('routes.list_recipes') }}" class="btn-secondary">Discover</a>
+<!-- Recipes Listing Section -->
+<section class="recipes-list">
+    <h1>All Recipes</h1>
+
+    <!-- Search and Filter Section -->
+    <form method="GET" action="{{ url_for('routes.list_recipes') }}" class="filter-form">
+        <!-- Search Bar -->
+        <input
+            type="text"
+            id="search-bar"
+            name="search"
+            placeholder="Search recipes..."
+            value="{{ request.args.get('search', '') }}"
+        />
+
+        <!-- Region Filter -->
+        <select id="filter-region" name="region">
+            <option value="">All Regions</option>
+            {% for region in unique_regions %}
+            <option
+                value="{{ region }}"
+                {% if request.args.get('region') == region %}selected{% endif %}
+            >
+                {{ region.capitalize() }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <!-- Reset Filters Button -->
+        <button type="button" class="btn-reset-filters" onclick="resetFilters()">Reset</button>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-apply-filters">Apply</button>
+    </form>
+
+    <!-- Recipe Cards -->
+    <div class="recipe-cards-container">
+        {% for entry in recipes %}
+        <div class="recipe-card">
+            <!-- Recipe Image -->
+            <div class="recipe-card-image">
+                <img src="{{ entry.image_url or url_for('static', filename='images/default-recipe.png') }}" 
+                     alt="Image of {{ entry.recipe.title }}">
+            </div>
+
+            <!-- Recipe Details -->
+            <div class="recipe-details">
+                <h2>{{ entry.recipe.title }}</h2>
+                <p>
+                    <span class="highlight">Created by:</span> {{ entry.creator }}
+                </p>
+                <p class="recipe-description">
+                    {{ entry.recipe.description or 'No description available.' }}
+                </p>
+                <p>
+                    <span class="highlight">Region:</span> {{ entry.recipe.region or 'Unknown' }}
+                </p>
+                <p>
+                    <span class="highlight">Price:</span> ${{ entry.recipe.price or 'N/A' }}
+                </p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="recipe-buttons">
+                <button class="btn-favorite"
+                        data-recipe-id="{{ entry.recipe.recipe_id }}"
+                        onclick="toggleFavorite(this)">
+                    {{ "❤️ Remove from Favorites" if entry.is_favorite else "🤍 Add to Favorites" }}
+                </button>
+                <button class="btn-cart"
+                        data-recipe-id="{{ entry.recipe.recipe_id }}"
+                        onclick="addToCart(this)">
+                    🛒 Add to Cart
+                </button>
+            </div>
         </div>
+        {% endfor %}
     </div>
 </section>
-
-
-<div class="recipe-container">
-    <h1>All Recipes</h1>
-    <ul>
-    {% for recipe in recipes %}
-        <li>
-            <h2>
-                <a href="{{ url_for('routes.recipe_page', recipe_id=recipe.recipe_id) }}">
-                    {{ recipe.title }}
-                </a>
-            </h2>
-            <p>{{ recipe.description }}</p>
-            <p>Ingredients: {{ recipe.ingredients }}</p>
-            <p>Price: ${{ recipe.price }}</p>
-            
-            <!-- Add to Cart Button -->
-            <button 
-                class="btn-add-to-cart" 
-                data-recipe-id="{{ recipe.recipe_id }}"
-                onclick="addToCart(this)">
-                🛒 Add to Cart
-            </button>
-        </li>
-    {% endfor %}
-    </ul>
-</div>
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='javascript/recipes_cart.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/recipes_page.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/favorites-filters.js') }}"></script>
 {% endblock %}
+

@@ -1,24 +1,27 @@
 ### Marketplace Ideation
 
-Platform name: 
+Platform name: Travel Tales
 
-Short description: 
+Short description: TravelTales is een website voor het uploaden en zoeken van reizen. Het is bedoeld als een alternatief voor dure reisbureaus,
+ waarbij je bij TravelTales een heel groot aanbod hebt van verschillende soorten reizen over bijna alle landen van de wereld voor een zeer betaalbare prijs. 
+Door eenvoudigweg een pdf te uploaden waarin al je tips en tricks staan van je reisbestemming, kan je mensen over de hele werd inspireren. 
+“Share your journey, inspire others” 
 
 # Taxonomy: Business Model
 
-User Type: Person | Organization
-Listing Kind: Good Transfer |Service
-Listing Type: Physical Good | Digital Good | Offline Serviced | Online Serviced
-Frequency: One-Time | Recurring
-Quantity: One | Many
-Price Discovery: Set by Provider | Set by Customer | Set by Market
-Price Calculation: By Quantity | By Feature | Auction | Quote
+User Type: Person 
+Listing Kind: Good Transfer 
+Listing Type: Digital Good 
+Frequency: One-Time 
+Quantity:  Many
+Price Discovery: Set by Provider 
+Price Calculation:  By Feature 
 Conversation System: Listing Conversation | Transaction Conversation
-Review by: By Customer | By Provider
-Review of: Of Listing | Of Provider
+Review by: By Customer 
+Review of: Of Listing 
 Trust and Safety: ID Verification | Badges | In-app reporting
-Revenue Stream: Subscription | Commission | Fixed Fee | Listing Fee
-Revenue Source: Customer | Provider
+Revenue Stream: Commission
+Revenue Source: Customer and Provider(boosten)
 
 # Ontology model
 
@@ -28,17 +31,15 @@ Revenue Source: Customer | Provider
 
 # User stories
 
-As a [], I want to [], so that []. Prio
-As a [Customer], I want to [buy a product], so that [I can use it]. 2
-As a [provider], I want to [sell a product], so that [I earn money]. 1
+see marketplace-ideation pdf
 
 # UI Prototype
 
-https://www.figma.com/
+(https://www.figma.com/design/h13wQmiQYUlBzGYlLRwLwC/Flux---Figma-Build-Tutorial-(Starter)-(Community)?node-id=0-1&p=f)
 
 # Database Design
 
-https://supabase.com/
+https://supabase.com/dashboard/project/pukfiejqjaztcjjekaty
 
 # Software Development
 

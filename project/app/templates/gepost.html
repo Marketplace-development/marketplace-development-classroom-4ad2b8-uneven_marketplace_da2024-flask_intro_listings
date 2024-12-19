@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mijn Berichten</title>
+    <title>Mijn geüploade reizen</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}">
     <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
@@ -493,7 +493,7 @@
 
 
     <main class="content">
-        <h1>Mijn Geüploade Reizen</h1>
+        <h1>Mijn geüploade reizen</h1>
         {% if geposte_reizen %}
         {% for reis in geposte_reizen %}
         <div class="travel-item">

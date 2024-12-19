@@ -1,6 +1,6 @@
 # app/routes.py
 from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify, flash, current_app
-from app.models import Customer, Recipe, Favorite, Ingredient, Rating, ShoppingCart, PurchasedRecipe
+from app.models import Customer, Recipe, Favorite, Rating, ShoppingCart, PurchasedRecipe, ContactFormSubmission
 from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm, PriceForm, RecipeRegionForm, RecipeDurationForm, RatingForm
 from .models import db, Customer
 from sqlalchemy import func  # Import SQLAlchemy's func
@@ -195,8 +195,34 @@ def subscribe():
         print(f"New subscriber: {email}")
     return redirect("/")  # Redirect back to the homepage
 
-@bp.route('/contact')
+@bp.route('/contact', methods=['GET', 'POST'])
 def contact():
+    if request.method == 'POST':
+        # Extract form data
+        name = request.form.get('name')
+        surname = request.form.get('surname')
+        email = request.form.get('email')
+        message = request.form.get('message')
+
+        # Validate inputs
+        if not all([name, surname, email, message]):
+            flash("All fields are required!", "danger")
+            return redirect(url_for('routes.contact'))
+
+        # Save the data to the database
+        new_submission = ContactFormSubmission(
+            name=name,
+            surname=surname,
+            email=email,
+            message=message
+        )
+        db.session.add(new_submission)
+        db.session.commit()
+
+        # Flash a success message and redirect
+        flash("Your message has been sent successfully!", "success")
+        return redirect(url_for('routes.contact'))
+
     return render_template('contactpage.html')
 
 @bp.route('/about')
@@ -442,6 +468,9 @@ from werkzeug.utils import secure_filename
 
 @bp.route('/add-recipe/title', methods=['GET', 'POST'])
 def add_recipe_title():
+    if 'user_id' not in session:
+        return redirect(url_for('routes.login'))
+    
     form = TitleForm()
     if form.validate_on_submit():
         session['title'] = form.title.data

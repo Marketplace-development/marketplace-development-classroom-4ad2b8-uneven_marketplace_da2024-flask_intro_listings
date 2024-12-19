@@ -39,7 +39,8 @@ def register():
 
         # Controleer of de gebruiker al bestaat op basis van email of username
         if Users.query.filter((Users.email == email)).first():
-            return "Email or Username already registered", 400
+            flash('Dit e-mailadres is al geregistreerd.', 'error') #check
+            return redirect(url_for('main.register'))
 
         # Verwerk en upload profielfoto
         profile_picture_url = None

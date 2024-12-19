@@ -46,54 +46,28 @@ Homepage
     </div>
 </section>
 
-<!-- Testimonials Section -->
-<section class="testimonials">
+<section class="user-reviews">
     <h2>What Our Users Say</h2>
-    <div class="testimonials-carousel">
-        <!-- Testimonial 1 -->
-        <div class="testimonial-card">
-            <img src="{{ url_for('static', filename='images/user1.jpg') }}" alt="User 1">
-            <h3>Sonia Sadiq Gandhi</h3>
-            <p>"Incredible service and recipes! I've saved so much time and money with their guidance."</p>
-            <div class="stars">★★★★★</div>
+    <div class="reviews-container">
+        {% for review in recent_reviews %}
+        <div class="review-box">
+            <div class="review-header">
+                <!-- Toon de naam van de gebruiker -->
+                <h3>{{ review.customer.username }}</h3>
+            </div>
+            <!-- Toon de reviewtekst -->
+            <p>"{{ review.review }}"</p>
+            <!-- Toon de sterren -->
+            <div class="star-rating">
+                {% for i in range(1, 6) %}
+                <span class="star {% if i <= review.rating %}filled{% endif %}">★</span>
+                {% endfor %}
+            </div>
         </div>
-        <!-- Testimonial 2 -->
-        <div class="testimonial-card">
-            <img src="{{ url_for('static', filename='images/user2.jpg') }}" alt="User 2">
-            <h3>Mira Le Mare</h3>
-            <p>"The recipes are amazing, and the step-by-step guidance makes cooking effortless."</p>
-            <div class="stars">★★★★★</div>
-        </div>
-        <!-- Testimonial 3 -->
-        <div class="testimonial-card">
-            <img src="{{ url_for('static', filename='images/user3.jpg') }}" alt="User 3">
-            <h3>Adam Yeats</h3>
-            <p>"The ingredient delivery is spot on. Fresh, high-quality produce every single time."</p>
-            <div class="stars">★★★★★</div>
-        </div>
-        <!-- Testimonial 4 -->
-        <div class="testimonial-card">
-            <img src="{{ url_for('static', filename='images/user4.jpg') }}" alt="User 4">
-            <h3>Emma Stone</h3>
-            <p>"Culinary Heritage brought my family closer together during mealtimes. A life-changer!"</p>
-            <div class="stars">★★★★★</div>
-        </div>
-        <!-- Testimonial 5 -->
-        <div class="testimonial-card">
-            <img src="{{ url_for('static', filename='images/user5.jpg') }}" alt="User 5">
-            <h3>Chris Hemsworth</h3>
-            <p>"I love the variety of recipes available. The convenience is unmatched!"</p>
-            <div class="stars">★★★★★</div>
-        </div>
-        <!-- Testimonial 6 -->
-        <div class="testimonial-card">
-            <img src="{{ url_for('static', filename='images/user6.jpg') }}" alt="User 6">
-            <h3>Olivia Wilde</h3>
-            <p>"The quality of ingredients and simplicity of the recipes is just perfect for my busy life."</p>
-            <div class="stars">★★★★★</div>
-        </div>
+        {% endfor %}
     </div>
 </section>
+
 <!-- Featured Recipes Section -->
 <section class="featured-recipes">
     <h2>Most Popular Recipes</h2>

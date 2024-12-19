@@ -12,11 +12,12 @@ Add Recipe Description
             {{ form.hidden_tag() }}
             <p>
                 {{ form.description.label }}
-                {{ form.description(rows=5, cols=50) }}
+                {{ form.description(rows=5, cols=50, maxlength=140) }}
                 {% for error in form.description.errors %}
                     <span class="form-error">{{ error }}</span>
                 {% endfor %}
             </p>
+            <small class="form-helper">Maximum 140 characters allowed.</small>
             <div class="form-navigation">
                 <a href="{{ url_for('routes.add_recipe_title') }}" class="btn btn-secondary">Previous</a>
                 <button type="submit" class="btn btn-primary">Next</button>
@@ -24,5 +25,17 @@ Add Recipe Description
         </form>
     </section>
 </main>
+<script>
+    const descriptionField = document.querySelector('textarea[name="description"]');
+    const charCounter = document.createElement('small');
+    charCounter.textContent = `140 characters remaining.`;
+    descriptionField.parentNode.appendChild(charCounter);
+
+    descriptionField.addEventListener('input', () => {
+        const remaining = 140 - descriptionField.value.length;
+        charCounter.textContent = `${remaining} characters remaining.`;
+        charCounter.style.color = remaining < 0 ? 'red' : 'inherit';
+    });
+</script>
 {% endblock %}
 

@@ -8,7 +8,13 @@ class TitleForm(FlaskForm):
     photo = FileField('Upload an Image (optional)')
 
 class DescriptionForm(FlaskForm):
-    description = TextAreaField('Give a brief description of your recipe', validators=[DataRequired()])
+    description = TextAreaField(
+        'Give a brief description of your recipe',
+        validators=[
+            DataRequired(),
+            Length(max=500, message="The description must be 140 characters or fewer.")
+        ]
+    )
 
 class IngredientsForm(FlaskForm):
     ingredients = TextAreaField('List Ingredients here...', validators=[DataRequired()])

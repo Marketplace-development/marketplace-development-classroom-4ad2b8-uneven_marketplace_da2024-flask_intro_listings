@@ -56,7 +56,11 @@ Favorites
                     {% for recipe in favorites %}
                     <div class="recipe-box" data-title="{{ recipe.title }}" data-region="{{ recipe.region.lower() }}">
                         <div class="recipe-content">
-                            <h2 class="recipe-title">{{ recipe.title }}</h2>
+                            <h2 class="recipe-title">
+                                <a href="{{ url_for('routes.recipe_page', recipe_id=recipe.recipe_id) }}">
+                                    {{ recipe.title }}
+                                </a>
+                            </h2>
                             <p class="recipe-description">{{ recipe.description }}</p>
                             <p class="recipe-price">Price: ${{ recipe.price or 'N/A' }}</p>
                             <p class="recipe-region">Region: {{ recipe.region or 'Unknown' }}</p>

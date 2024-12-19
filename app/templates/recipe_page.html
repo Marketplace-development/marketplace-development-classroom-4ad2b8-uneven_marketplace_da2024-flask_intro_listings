@@ -44,8 +44,8 @@
     <!-- Recipe Image (Right Side) -->
     <div class="recipe-page-image">
         <img id="recipe-img" 
-         src="{{ image_url or url_for('static', filename='images/default-recipe.png') }}" 
-         alt="Image of {{ recipe.title }}">
+             src="{{ recipe.image_url }}" 
+             alt="Image of {{ recipe.title }}">
     </div>
 </section>
 

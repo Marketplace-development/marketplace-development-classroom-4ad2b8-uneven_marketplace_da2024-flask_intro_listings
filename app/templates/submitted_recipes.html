@@ -54,10 +54,13 @@ Submitted Recipes
             <section class="submitted-recipes">
                 <div id="submitted-recipes-container" class="submitted-recipes-container">
                     {% for recipe in recipes %}
-                    <a href="{{ url_for('routes.recipe_page', recipe_id=recipe.recipe_id) }}" class="recipe-link">
                         <div class="recipe-box" data-title="{{ recipe.title }}" data-region="{{ recipe.region.lower() }}">
                             <div class="recipe-content">
-                                <h2 class="recipe-title">{{ recipe.title }}</h2>
+                                <h2 class="recipe-title">
+                                    <a href="{{ url_for('routes.recipe_page', recipe_id=recipe.recipe_id) }}">
+                                        {{ recipe.title }}
+                                    </a>
+                                </h2>
                                 <p class="recipe-description">{{ recipe.description }}</p>
                                 <p class="recipe-price">Price: ${{ recipe.price or 'N/A' }}</p>
                                 <p class="recipe-region">Region: {{ recipe.region or 'Unknown' }}</p>
@@ -84,5 +87,4 @@ Submitted Recipes
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='javascript/submitted_recipes.js') }}"></script>
-<script src="{{ url_for('static', filename='javascript/favorites.js') }}"></script>
 {% endblock %}

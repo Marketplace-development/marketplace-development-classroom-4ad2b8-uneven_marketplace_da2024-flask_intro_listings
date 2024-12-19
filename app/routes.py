@@ -371,14 +371,13 @@ def toggle_favorite():
 
     user_id = session['user_id']
     try:
-        # Ensure JSON payload exists
         data = request.get_json()
         if not data or 'recipe_id' not in data:
             return jsonify({"success": False, "message": "Invalid data provided"}), 400
 
         recipe_id = data.get('recipe_id')
 
-        # Check if the recipe exists (optional sanity check)
+        # Check if recipe exists
         recipe = Recipe.query.get(recipe_id)
         if not recipe:
             return jsonify({"success": False, "message": "Recipe not found"}), 404
@@ -391,8 +390,8 @@ def toggle_favorite():
             db.session.delete(favorite)
             db.session.commit()
             return jsonify({
-                "success": True, 
-                "message": "Removed from favorites", 
+                "success": True,
+                "message": "Removed from favorites",
                 "is_favorite": False
             }), 200
         else:
@@ -401,13 +400,14 @@ def toggle_favorite():
             db.session.add(new_favorite)
             db.session.commit()
             return jsonify({
-                "success": True, 
-                "message": "Added to favorites", 
+                "success": True,
+                "message": "Added to favorites",
                 "is_favorite": True
             }), 201
 
     except Exception as e:
         print(f"Error in toggle_favorite: {e}")
+        print(f"Request data: {request.get_json()}")
         return jsonify({"success": False, "message": "An unexpected error occurred"}), 500
 
 @bp.route('/edit-profile', methods=['GET', 'POST'])
@@ -610,7 +610,8 @@ def recipe_page(recipe_id):
         creator=creator,
         reviews=reviews,
         is_favorite=is_favorite,
-        user=user  # Pass user object to the template
+        user=user,
+        image_url=recipe.image_url  # Pass the image URL explicitly
     )
 
 @bp.route('/recipe/<int:recipe_id>/add-review', methods=['GET', 'POST'])

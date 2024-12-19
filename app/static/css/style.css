@@ -1,3 +1,11 @@
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
 /* General Navbar Styling */
 .navbar {
     display: flex;
@@ -385,7 +393,10 @@
     padding-bottom: 30px; /* Added padding to the bottom */
     width: 400px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: left; /* Align the container content to the left */
+    text-align: center; /* Align the container content to the left */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Zorg dat alles in de container gecentreerd is */
 }
 
 .auth-container h2 {
@@ -398,26 +409,36 @@
 
 .form-group {
     margin-bottom: 15px;
-    text-align: left; /* Align labels to the left */
+    text-align: left; /* Zorg dat tekst (zoals labels) links wordt uitgelijnd */
+    display: flex;
+    flex-direction: column; /* Plaats label en input onder elkaar */
+    align-items: flex-start; /* Centreer de inhoud horizontaal */
 }
-
 .form-group label {
     display: block;
     font-size: 0.9rem; /* Smaller, clean font size for labels */
     color: #666;
     margin-bottom: 5px; /* Add space between label and input field */
+    text-align: left; /* Specifiek links uitlijnen */
+}
+
+.form-control {
+    width: 100%; /* Laat de input zich aanpassen aan de breedte van de container */
+    padding: 10px; /* Maak het invulveld wat gebruiksvriendelijker */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box; /* Houd rekening met padding bij de breedte */
 }
 
 .form-group input {
-    width: 90%; /* Reduce the width to add padding to the right */
+    width: 100%; /* Reduce the width to add padding to the right */
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1rem;
-    text-align: left;
     box-sizing: border-box; /* Ensure padding doesn't exceed the container */
-    margin-left: auto; /* Centers the input field horizontally */
-    margin-right: auto; /* Centers the input field horizontally */
+    margin: 0; /* Centers the input field horizontally */
 }
 
 .btn-primary {
@@ -866,6 +887,7 @@
 }
 
 .contact-form {
+    width:100%;
     max-width: 500px;
     margin: 0 auto;
     display: flex;
@@ -877,20 +899,31 @@
     text-align: left;
 }
 
-.contact-form input,
-.contact-form textarea {
-    margin-bottom: 15px;
+.form-control {
+    width: 100%;
+    max-width: 500px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
-    width: 100%;
-    box-sizing: border-box;
+}
+
+.contact-form input.form-control,
+.contact-form textarea.form-control {
+    width: 100%; /* Breedte aanpassen aan de container */
+    max-width: 500px; /* Zorg voor consistentie */
+    height: auto; /* Laat `textarea` zich aanpassen op basis van de rijen */
+    padding: 10px; /* Consistente padding */
+    border: 1px solid #ccc; /* Zelfde rand als input */
+    border-radius: 5px; /* Zelfde hoeken als input */
+    font-size: 1em; /* Zelfde tekstgrootte als input */
+    box-sizing: border-box; /* Zorg dat padding en border inbegrepen zijn */
 }
 
 .contact-form textarea {
-    width: 100%;
-    box-sizing: border-box; /* Zorgt ervoor dat padding en border bij de breedte inbegrepen zijn */
+    height: 100px; /* Bepaalt een consistente hoogte voor de textarea */
+    resize: vertical; /* Zorg ervoor dat gebruikers de hoogte kunnen aanpassen, maar niet de breedte */
+    max-width: 500px; /* Zorgt dat beide velden dezelfde maximale breedte hebben */
 }
 
 .contact-form .submit-btn {
@@ -904,6 +937,14 @@
 
 .contact-form .submit-btn:hover {
     background: #555;
+}
+
+@media screen and (max-width: 768px) {
+    .contact-form input,
+    .contact-form textarea {
+        font-size: 0.9em;
+        padding: 8px;
+    }
 }
 
 .about {
@@ -2209,4 +2250,55 @@ p:first-of-type {
 .recipe-card-link:hover .recipe-card {
     transform: scale(1.02); /* Optional: Add hover effect */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* homepage - What our Users Say */
+/* Section voor gebruikersreviews */
+.user-reviews {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.reviews-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.review-box {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.review-header h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.review-box p {
+    font-style: italic;
+    margin: 10px 0;
+    color: #555;
+}
+
+.star-rating {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.star {
+    font-size: 20px;
+    color: lightgray;
+    margin: 0 2px;
+}
+
+.star.filled {
+    color: gold;
 }

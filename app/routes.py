@@ -51,7 +51,17 @@ bp = Blueprint("routes", __name__, template_folder='templates')
 
 @bp.route("/")
 def home():
-    return render_template("home_page.html")
+    # Haal de 3 meest recente reviews op, gesorteerd op `created_at`
+    recent_reviews = (
+        db.session.query(Rating)
+        .join(Customer, Rating.customer_id == Customer.customer_id)
+        .join(Recipe, Rating.recipe_id == Recipe.recipe_id)
+        .order_by(Rating.created_at.desc())  # Sorteren op datum (recentste eerst)
+        .limit(3)  # Beperk tot 3 reviews
+        .all()
+    )
+    
+    return render_template("home_page.html", recent_reviews=recent_reviews)
 
 # Simulated database
 users = []

@@ -5,33 +5,39 @@ Contact Us
 {% endblock %}
 
 {% block content %}
-<main>
-    <section class="contact">
-        <h1>Contact Us</h1>
-        <p>Need help? Our team is ready to assist you.</p>
-        <form class="contact-form" method="POST" action="/submit-contact">
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" class="form-control" required>
-            </div>
+<section class="contact-form">
+    <h1>Contact Us</h1>
+    <p>Need help? Our team is ready to assist you.</p>
 
-            <div class="form-group">
-                <label for="surname">Surname:</label>
-                <input type="text" id="surname" name="surname" class="form-control" required>
-            </div>
+    <!-- Display Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" class="form-control" required>
-            </div>
-
-            <div class="form-group">
-                <label for="message">Message:</label>
-                <input type="message" id="message" name="message" class="form-control" required>
-            </div>
-
-            <button type="submit" class="submit-btn">Submit</button>
-        </form>
-    </section>
-</main>
+    <form method="POST" action="{{ url_for('routes.contact') }}">
+        <div class="form-group">
+            <label for="name">First Name:</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="surname">Last Name:</label>
+            <input type="text" id="surname" name="surname" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="message">Your Message:</label>
+            <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+    </form>
+</section>
 {% endblock %}

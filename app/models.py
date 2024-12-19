@@ -73,3 +73,13 @@ class PurchasedRecipe(db.Model):
 
     # Relationship to access the Recipe details easily
     recipe = db.relationship('Recipe', backref='purchases')
+
+class ContactFormSubmission(db.Model):
+    __tablename__ = 'contact_form_submissions'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(100), nullable=False)
+    surname = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(150), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    submitted_at = db.Column(db.DateTime, default=db.func.now())

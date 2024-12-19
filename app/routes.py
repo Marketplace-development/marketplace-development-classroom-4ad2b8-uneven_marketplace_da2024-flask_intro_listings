@@ -1,6 +1,6 @@
 # app/routes.py
 from flask import Blueprint, request, redirect, url_for, render_template, session, jsonify, flash, current_app
-from app.models import Customer, Recipe, Favorite, Ingredient, Rating, ShoppingCart, PurchasedRecipe
+from app.models import Customer, Recipe, Favorite, Rating, ShoppingCart, PurchasedRecipe, ContactFormSubmission
 from .forms import TitleForm, DescriptionForm, IngredientsForm, StepsForm, PriceForm, RecipeRegionForm, RecipeDurationForm, RatingForm
 from .models import db, Customer
 from sqlalchemy import func  # Import SQLAlchemy's func
@@ -205,8 +205,34 @@ def subscribe():
         print(f"New subscriber: {email}")
     return redirect("/")  # Redirect back to the homepage
 
-@bp.route('/contact')
+@bp.route('/contact', methods=['GET', 'POST'])
 def contact():
+    if request.method == 'POST':
+        # Extract form data
+        name = request.form.get('name')
+        surname = request.form.get('surname')
+        email = request.form.get('email')
+        message = request.form.get('message')
+
+        # Validate inputs
+        if not all([name, surname, email, message]):
+            flash("All fields are required!", "danger")
+            return redirect(url_for('routes.contact'))
+
+        # Save the data to the database
+        new_submission = ContactFormSubmission(
+            name=name,
+            surname=surname,
+            email=email,
+            message=message
+        )
+        db.session.add(new_submission)
+        db.session.commit()
+
+        # Flash a success message and redirect
+        flash("Your message has been sent successfully!", "success")
+        return redirect(url_for('routes.contact'))
+
     return render_template('contactpage.html')
 
 @bp.route('/about')
@@ -381,14 +407,13 @@ def toggle_favorite():
 
     user_id = session['user_id']
     try:
-        # Ensure JSON payload exists
         data = request.get_json()
         if not data or 'recipe_id' not in data:
             return jsonify({"success": False, "message": "Invalid data provided"}), 400
 
         recipe_id = data.get('recipe_id')
 
-        # Check if the recipe exists (optional sanity check)
+        # Check if recipe exists
         recipe = Recipe.query.get(recipe_id)
         if not recipe:
             return jsonify({"success": False, "message": "Recipe not found"}), 404
@@ -401,8 +426,8 @@ def toggle_favorite():
             db.session.delete(favorite)
             db.session.commit()
             return jsonify({
-                "success": True, 
-                "message": "Removed from favorites", 
+                "success": True,
+                "message": "Removed from favorites",
                 "is_favorite": False
             }), 200
         else:
@@ -411,13 +436,14 @@ def toggle_favorite():
             db.session.add(new_favorite)
             db.session.commit()
             return jsonify({
-                "success": True, 
-                "message": "Added to favorites", 
+                "success": True,
+                "message": "Added to favorites",
                 "is_favorite": True
             }), 201
 
     except Exception as e:
         print(f"Error in toggle_favorite: {e}")
+        print(f"Request data: {request.get_json()}")
         return jsonify({"success": False, "message": "An unexpected error occurred"}), 500
 
 @bp.route('/edit-profile', methods=['GET', 'POST'])
@@ -452,6 +478,9 @@ from werkzeug.utils import secure_filename
 
 @bp.route('/add-recipe/title', methods=['GET', 'POST'])
 def add_recipe_title():
+    if 'user_id' not in session:
+        return redirect(url_for('routes.login'))
+    
     form = TitleForm()
     if form.validate_on_submit():
         session['title'] = form.title.data
@@ -620,7 +649,8 @@ def recipe_page(recipe_id):
         creator=creator,
         reviews=reviews,
         is_favorite=is_favorite,
-        user=user  # Pass user object to the template
+        user=user,
+        image_url=recipe.image_url  # Pass the image URL explicitly
     )
 
 @bp.route('/recipe/<int:recipe_id>/add-review', methods=['GET', 'POST'])

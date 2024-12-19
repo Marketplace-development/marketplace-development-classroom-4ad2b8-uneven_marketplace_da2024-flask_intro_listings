@@ -39,6 +39,7 @@ class Rating(db.Model):
 
     # Relationship to Customer
     customer = db.relationship('Customer', backref='ratings')
+    recipe = db.relationship('Recipe', backref='ratings')
 
 class Ingredient(db.Model):
     __tablename__ = 'ingredients'

@@ -44,7 +44,7 @@ Purchased Recipes
                             <p class="recipe-region">Region: {{ recipe.region or 'Unknown' }}</p>
 
                             <!-- Leave a Review Button under Region -->
-                            <div class="recipe-actions" style="margin-top: 10px; text-align: left">
+                            <div class="recipe-button" style="margin-top: 10px">
                                 <a href="{{ url_for('routes.add_review', recipe_id=recipe.recipe_id) }}" class="btn btn-primary">
                                     Leave a Review
                                 </a>

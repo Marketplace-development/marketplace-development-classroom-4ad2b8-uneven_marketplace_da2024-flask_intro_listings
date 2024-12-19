@@ -41,12 +41,6 @@ class Rating(db.Model):
     customer = db.relationship('Customer', backref='ratings')
     recipe = db.relationship('Recipe', backref='ratings')
 
-class Ingredient(db.Model):
-    __tablename__ = 'ingredients'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    quantity = db.Column(db.String(50), nullable=False)
-    user_recipe_id = db.Column(db.Integer, db.ForeignKey('user_recipes.id'), nullable=False)
 
 class Favorite(db.Model):
     __tablename__ = 'favorites'

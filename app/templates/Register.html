@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeftoverLove - Sign Up</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Extra CSS -->
+  <style>
+    body {
+      background-color: #d4f7d5; /* Pastel green background */
+    }
+    .card {
+      border-radius: 20px; /* Rounded corners */
+    }
+    .btn-primary {
+      background-color: #28a745; /* Green button */
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #218838; /* Darker green on hover */
+    }
+    h1 {
+      font-weight: bold;
+      color: #28a745;
+    }
+    h2 {
+      color: #ffa500; /* Orange subtitle */
+    }
+    .already-have-account {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container d-flex flex-column justify-content-center align-items-center min-vh-100">
+    
+    <!-- Flash Message -->
+    {% with messages = get_flashed_messages(with_categories=True) %}
+      {% if messages %}
+        <div class="alert alert-danger alert-dismissible fade show w-100" role="alert">
+          {% for category, message in messages %}
+            <strong>{{ message }}</strong>
+          {% endfor %}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endif %}
+    {% endwith %}
+    
+    <!-- Signup Container -->
+    <div class="card shadow-lg p-5" style="max-width: 500px; width: 100%;">
+      <!-- Logo -->
+      <div class="text-center mb-4">
+        <img src="static/pictures/logo.png" alt="Logo" class="img-fluid mb-3" style="max-width: 100px;">
+        <h1>LeftoverLove</h1>
+        <h2>Waste Less, Love More</h2>
+      </div>
+      
+      <!-- Signup Form -->
+      <form method="POST">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username:</label>
+          <input type="text" id="username" name="username" class="form-control" placeholder="Enter your username" required>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">E-mail:</label>
+          <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+        </div>
+        <div class="mb-3">
+          <label for="street" class="form-label">Street:</label>
+          <input type="text" id="street" name="street" class="form-control" placeholder="Enter your street" required>
+        </div>
+        <div class="mb-3">
+          <label for="number" class="form-label">House Number:</label>
+          <input type="text" id="number" name="number" class="form-control" placeholder="Enter your number" required>
+        </div>
+        <div class="mb-3">
+          <label for="zip" class="form-label">Zip Code:</label>
+          <input type="text" id="zip" name="zip" class="form-control" placeholder="Enter your zip" required>
+        </div>
+        <div class="mb-3">
+          <label for="city" class="form-label">City:</label>
+          <input type="text" id="city" name="city" class="form-control" placeholder="Enter your city" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Register</button>
+      </form>
+      
+      <!-- Login Link -->
+      <div class="already-have-account">
+        <p>Already have an account? <a href="{{ url_for('main.login') }}">Login</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

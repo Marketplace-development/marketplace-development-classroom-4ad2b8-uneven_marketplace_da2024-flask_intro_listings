@@ -1,0 +1,344 @@
+/* General Section Styling */
+.listing-content {
+    margin-top: 20px; /* Space for the fixed navbar */
+    max-width: 100%; /* Max width for the entire content */
+    margin-left: auto;
+    margin-right: auto;
+    background-color: var(--whitish-color); /* Matches the body background */
+    border-radius: 8px;
+    box-shadow: var(--shadow-light)
+}
+
+/* Listing Section Styling */
+.listing-section {
+    padding: 20px;
+    margin: 10px auto;
+    width: 100%;
+    background-color: var(--whitish-color);
+    border-radius: 5px;
+    box-shadow: var(--shadow-light);
+    display: flex; /* Ensure the sections are side by side */
+    justify-content: space-between; /* Distribute space between items */
+    gap: 20px; /* Adds spacing between sections */
+    align-items: flex-start; /* Align items at the top */
+}
+
+/* Listing Image Styling */
+.listing-pic {
+    width: 100%;
+    max-width: 300px; /* Limit max width */
+    height: 200px; /* Fixed height for consistent layout */
+    border-radius: 15px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 15px;
+}
+
+/* Title and Details Styling */
+.listing-title {
+    font-size: 2em;
+    font-weight: bold;
+    margin: 30px 0 10px;
+}
+
+.listing-price, .listing-specie, .listing-light, .listing-water, .listing-address {
+    font-size: 1.1em;
+    margin: 8px 0;
+}
+
+/* Availability Section */
+.availability-section {
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: var(--shadow-light);
+    width: 50%; /* Adjust width of the availability section */
+    text-align: center;
+    margin-left: auto;
+    margin-top: 0;
+}
+
+/* Calendar Styling */
+#calendar {
+    max-width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: var(--shadow-light);
+}
+
+/* Button Group Styling */
+.button-group {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 25px;
+}
+
+.button-group a {
+    flex-grow: 1;
+    margin: 5px;
+    padding: 15px;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.button-group a:hover {
+    background-color: var(--darker-color);
+    transform: translateY(-2px);
+}
+
+.button-group a:active {
+    background-color: var(--primary-color);
+}
+
+/* Action Button Styling */
+.btn-primary {
+    background-color: var(--darker-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+    margin-left: auto; /* Aligns it to the right */
+    margin-right: auto; /* Aligns it to the center */
+    display: block; /* Make sure it's a block-level element to center */
+    text-align: center;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-color);
+}
+
+/* Listing Leaver Link Styling */
+.listing-leaver a {
+    padding: 8px 12px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.listing-leaver a:hover {
+    background-color: var(--darker-color);
+    transform: translateY(-2px);
+}
+
+/* Similar Listings Section */
+.similar-listings-section {
+    padding: 40px 0;
+    background-color: var(--whitish-color);
+    border-top: 1px solid #ddd;
+    margin-top: 30px;
+    text-align: center;
+    width: 100%;
+}
+
+/* Title of Similar Listings Section */
+.similar-listings h2 {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* Grid Layout for Similar Listings */
+.similar-listings {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+/* Styling for each individual listing in Similar Listings */
+.similar-listing-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: calc(33% - 20px);
+    padding: 15px;
+    box-sizing: border-box;
+    box-shadow: var(--shadow-light);
+    transition: transform 0.3s;
+    overflow: hidden;
+}
+
+/* Hover effect for listings */
+.similar-listing-item:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-medium);;
+}
+
+/* Listing Image in Similar Listings */
+.similar-listing-pic {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid var(--whitish-color);
+}
+
+/* Title of Similar Listings */
+.similar-listing-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 15px 0;
+    color: #333;
+}
+
+/* Price of Similar Listings */
+.similar-listing-price {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+/* View More Link */
+.view-more {
+    background-color: var(--primary-color); /* Button background color */
+    color: white; /* Button text color */
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+/* Responsive Design */
+
+/* For screens 1280px and below */
+@media (max-width: 1280px) {
+    .listing-section {
+        flex-direction: row; /* Ensure sections stay side by side */
+        justify-content: space-between; /* Space between sections */
+    }
+
+    /* Adjust the widths of the listing and availability sections */
+    .listing-section > .listing-details {
+        width: 60%; /* Take up 60% of the width */
+    }
+
+    .availability-section {
+        width: 35%; /* Take up 35% of the width */
+    }
+
+    #calendar {
+        max-width: 100%;
+    }
+}
+
+/* For screens 1024px and below (tablets and small laptops) */
+@media (max-width: 1024px) {
+    .listing-section {
+        flex-direction: column; /* Stack sections vertically */
+        align-items: center;
+    }
+
+    .listing-title {
+        margin-top: 40px;
+    }
+
+    .listing-pic {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+    }
+
+    .button-group {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .button-group a {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .availability-section {
+        width: 100%;
+        margin: 20px 0;
+    }
+
+    #calendar {
+        width: 100%;
+        padding: 10px;
+    }
+}
+
+/* For screens 600px and below (mobile) */
+@media (max-width: 600px) {
+    .listing-section {
+        width: 100%;
+    }
+
+    .listing-title {
+        font-size: 1.6em;
+    }
+
+    .listing-price, .listing-specie, .listing-light, .listing-water, .listing-address {
+        font-size: 0.95em;
+    }
+
+    .listing-pic {
+        width: 100%;
+        height: 200px;
+    }
+
+    .button-group {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .button-group a {
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .btn-primary, .listing-leaver a {
+         font-size: 1em;  /* Adjust font size */
+        display: block;  /* Block-level element for better control */
+        text-overflow: ellipsis; /* Truncate if text overflows */
+        overflow: hidden;  /* Hide overflow text */
+        white-space: nowrap;  /* Prevent wrapping */
+    }
+
+    .availability-section {
+        width: 100%;
+        margin: 15px 0;
+    }
+
+    #calendar {
+        width: 100%;
+        padding: 5px;
+    }
+
+    /* Stack Similar Listings vertically on mobile */
+    .similar-listings {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Make each listing take full width on mobile */
+    .similar-listing-item {
+        width: 100%;
+    }
+}

@@ -1,0 +1,159 @@
+/* ================================
+   General Section Styling
+================================ */
+.favorites-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ================================
+   Grid Styling for Listings
+================================ */
+.listing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three items per row */
+    grid-gap: 20px;
+    justify-items: center;
+    align-items: start;
+    padding: 20px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .listing-grid {
+        grid-template-columns: repeat(2, 1fr); /* Two items per row */
+    }
+}
+
+@media (max-width: 480px) {
+    .listing-grid {
+        grid-template-columns: 1fr; /* One item per row */
+    }
+}
+
+/* ================================
+   Individual Listing Item
+================================ */
+.listing-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 250px; /* Item width */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: var(--shadow-light);
+    padding: 15px;
+    transition: transform 0.3s;
+}
+
+.listing-item:hover {
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+/* ================================
+   Plant Image Container
+================================ */
+.listing-plant-picture {
+    width: 100%; /* Full width of parent */
+    height: 200px; /* Fixed height */
+    border: 1px solid #ddd; /* Light border for separation */
+    border-radius: 8px; /* Rounded corners */
+    overflow: hidden; /* Prevent overflow */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9; /* Subtle background for empty states */
+}
+
+.listing-plant-img {
+    width: 100%; /* Stretch to container */
+    height: 100%; /* Fill height */
+    object-fit: cover; /* Maintain aspect ratio */
+    border-radius: 8px; /* Match container's border radius */
+}
+
+/* ================================
+   Listing Text Content
+================================ */
+/* Title */
+.listing-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+/* Description */
+.listing-description {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limit lines */
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+/* Price */
+.listing-price {
+    font-size: 16px;
+    color: var(--primary-color); /* Green for price */
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* ================================
+   Buttons
+================================ */
+
+/* Shared Button Styles */
+button,
+a.view-more {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    text-decoration: none; /* Removes underline for links */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effects */
+}
+
+/* Add spacing between buttons */
+button.remove-favorite-btn,
+a.view-more {
+    margin: 5px 0; /* Vertical space between the buttons */
+}
+
+/* View More Button */
+a.view-more {
+    background-color: var(--primary-color); /* Green color */
+}
+
+a.view-more:hover {
+    background-color: var(--darker-color); /* Darker green on hover */
+    transform: scale(1.05); /* Slight zoom */
+}
+
+/* Remove Favorite Button */
+button.remove-favorite-btn {
+    background-color: #ff4d4f; /* Red color */
+}
+
+button.remove-favorite-btn:hover {
+    background-color: #c43c3c; /* Darker red on hover */
+    transform: scale(1.05); /* Slight zoom */
+}
+
+/* ================================
+   End of CSS
+================================ */

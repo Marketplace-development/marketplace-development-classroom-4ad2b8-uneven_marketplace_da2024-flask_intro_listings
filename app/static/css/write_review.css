@@ -1,0 +1,135 @@
+/* ------------- Full-Screen Centering for Review Container ------------- */
+body {
+    margin: 0;
+    display: flex; /* Center horizontally and vertically */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--whitish-color);
+}
+
+.review-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: var(--whitish-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-light);
+}
+
+/* ------------- Centered Headings and Info ------------- */
+.review-container h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.booking-info {
+    text-align: center;
+    color: #555;
+    font-size: 1em;
+    margin-bottom: 20px;
+}
+
+/* ------------- Form Styling ------------- */
+form {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: var(--shadow-light);
+}
+
+form div {
+    margin-bottom: 15px;
+}
+
+form label {
+    font-weight: 600;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1em;
+}
+
+form input[type="number"],
+form textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: inherit;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+form textarea {
+    resize: vertical;
+    height: 120px;
+}
+
+form input[type="number"]:focus,
+form textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: var(--shadow-medium);
+}
+
+/* ------------- Error Message ------------- */
+.error-message {
+    color: #f44336;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/* ------------- Submit Button Styling ------------- */
+.btn-submit,
+form input[type="submit"],
+form button {
+    appearance: none;
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: block;
+    width: 100%;
+}
+
+.btn-submit:hover,
+form input[type="submit"]:hover,
+form button:hover {
+    background-color: var(--darker-color);
+    transform: translateY(-2px);
+}
+
+/* ------------- Responsive Adjustments ------------- */
+@media (max-width: 768px) {
+    form {
+        padding: 15px;
+    }
+
+    .review-container {
+        padding: 15px;
+    }
+
+    .review-container h2 {
+        font-size: 1.5rem;
+    }
+
+    form input[type="submit"],
+    form button {
+        font-size: 0.9em;
+        padding: 10px;
+    }
+}

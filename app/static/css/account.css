@@ -1,0 +1,332 @@
+/* Main Container for Sections */
+.listings-history-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1200px;
+    align-items: stretch;
+    padding: 0;
+}
+
+/* General Containers */
+.my-listings, .plant-history, .account-badges {
+    padding: 10px 20px;
+    background: var(--whitish-color);
+    border-radius: 5px;
+    box-shadow: var(--shadow-light);
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: fit-content;
+}
+
+/* Profile Layout */
+.account-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 20px auto;
+    max-width: 1200px;
+    width: 100%;
+}
+
+/* Adjust Section Widths */
+.my-listings { flex: 2; }
+.plant-history { flex: 3; }
+.account-badges { flex: 1; }
+
+/* Titles */
+.box-title, .section-title {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.box-title {
+    font-size: 1.8em;
+    margin: 0 0 10px;
+}
+
+.section-title {
+    font-size: 1.5em;
+    margin: 10px 0;
+    border-bottom: 2px solid var(--light-green);
+    padding-bottom: 5px;
+}
+
+/* Listings and Tasks */
+.listing-box, .ongoing-tasks, .completed-tasks {
+    background: var(--light-green);
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    box-shadow: var(--shadow-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.listing-plant-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.listing-price {
+    font-size: 1.1em;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* Paragraph Styling */
+.plant-history p, .ongoing-tasks p, .completed-tasks p {
+    font-size: 1em;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* Listing Titles */
+.listing-title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.listing-title {
+    font-size: 1.4em;
+    margin: 0;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+}
+
+.listing-title a, .listing-title-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.listing-title a:hover, .listing-title-link:hover {
+    text-decoration: none;
+}
+
+/* Buttons */
+.add-listing-btn, .delete-listing-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    background-color: #e0e0e0;
+    color: #4a4a4a;
+    font-size: 1.5em;
+    font-weight: bold;
+    box-shadow: var(--shadow-light);
+    position: absolute;
+}
+
+.add-listing-btn:hover, .delete-listing-btn:hover {
+    background: #d6d6d6;
+}
+
+.add-listing-btn:active, .delete-listing-btn:active {
+    background: #bfbfbf;
+    transform: scale(1);
+}
+
+.add-listing-btn { top: 10px; right: 10px; }
+.delete-listing-btn { top: 30px; right: 10px}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: var(--shadow-light);
+    max-width: 400px;
+    width: 90%;
+}
+
+.modal-content h2 {
+    color: var(--primary-color);
+    font-size: 1.8em;
+    margin-bottom: 10px;
+}
+
+.modal-content p {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.modal-buttons .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.modal-buttons .confirm-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.modal-buttons .cancel-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+/* Profile Badges */
+.account-badges {
+    padding: 20px;
+    background-color: var(--whitish-color);
+    border-radius: 10px;
+    box-shadow: var(--shadow-light)
+}
+
+.account-badges h2 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.account-badges .badge-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.account-badges .badge-item {
+    background-color: var(--light-green);
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: var(--shadow-light);
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.account-badges .badge-item:hover {
+    background-color: var(--darker-color);
+    cursor: default;
+}
+
+/* Reviews Button */
+.view-reviews-btn {
+    display: block;
+    width: 100%; /* Ensures the button spans the full width */
+    padding: 8px 15px;
+    margin-top: 10px;
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    line-height: 1.5;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.view-reviews-btn:hover {
+    background-color: var(--darker-color);
+    transform: scale(1.05);
+}
+
+/* Space Between Nav and Containers */
+body { margin-top: 60px; }
+
+/* Navbar Styling */
+.navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: #ffffff;
+    z-index: 100;
+    box-shadow: var(--shadow-light);
+    padding: 10px 0;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+}
+
+/* Media Queries */
+@media (max-width: 1024px) {
+    .listings-history-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .my-listings, .plant-history, .account-badges {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .box-title { font-size: 1.5em; }
+    .section-title { font-size: 1.3em; }
+
+    /* Badge container height adjustment */
+    .account-badges {
+        padding: 10px;
+        height: fit-content;
+    }
+
+    .badge-item {
+        flex: 1 0 100%; /* Single badge spans full width */
+    }
+}
+
+@media (max-width: 768px) {
+    .account-container {
+        padding: 0 15px;
+    }
+
+    .view-reviews-btn {
+        margin-top: 0;
+        font-size: 1em;
+        padding: 6px 10px;
+    }
+}

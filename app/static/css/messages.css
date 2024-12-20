@@ -1,0 +1,149 @@
+/* General container styling */
+.messages-container {
+    width: 100%;               /* Full width */
+    max-width: 1200px;         /* Optional max-width */
+    margin: 100px auto;        /* Margin top and bottom */
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: var(--shadow-light);
+    box-sizing: border-box;
+}
+
+/* Bottom margin for extra spacing */
+.messages-container {
+    margin-bottom: 50px;
+}
+
+/* Title styling */
+.messages-title {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Styling for the message list */
+.message-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Individual message item styling */
+.message-item {
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+/* Hover effect for message items */
+.message-item:hover {
+    box-shadow: var(--shadow-light)
+}
+
+.message-header {
+    display: flex;
+    flex-direction: column; /* Stacks items vertically */
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+}
+
+.message-header div {
+    margin-bottom: 5px; /* Space between the lines */
+}
+
+/* Message content styling */
+.message-content p {
+    font-size: 18px;
+    color: #333;
+    margin: 0 0 10px 0;
+    font-family: cursive;
+}
+
+/* Timestamp styling */
+.message-timestamp {
+    font-size: 12px;
+    color: #888;
+}
+
+/* Reply button styling */
+.reply-button {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: var(--primary-color);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for reply button */
+.reply-button:hover {
+    background-color: var(--darker-color);
+}
+
+/* Styling for 'No messages' text */
+.no-messages {
+    text-align: center;
+    font-size: 16px;
+    color: #777;
+}
+
+/* Responsive design for smaller screens */
+@media screen and (max-width: 768px) {
+    .messages-container {
+        margin: 50px 15px; /* Reduce margin and padding on mobile */
+        padding: 15px;
+    }
+
+    .messages-title {
+        font-size: 20px;  /* Smaller title size */
+    }
+
+    .message-item {
+        padding: 12px;   /* Smaller padding for message items */
+    }
+
+    .message-header {
+        font-size: 14px;  /* Slightly smaller header font */
+    }
+
+    .message-content p {
+        font-size: 16px;  /* Smaller message text */
+    }
+
+    .message-timestamp {
+        font-size: 10px;   /* Smaller timestamp text */
+    }
+
+    .reply-button {
+        padding: 6px 10px;  /* Smaller button size */
+        font-size: 12px;     /* Adjusted button font size */
+    }
+
+    /* Adjusting for very small screens (portrait mode or small phones) */
+    @media screen and (max-width: 480px) {
+        .messages-title {
+            font-size: 18px;  /* Even smaller title font */
+        }
+
+        .message-item {
+            padding: 10px;   /* More compact message items */
+        }
+
+        .message-header {
+            font-size: 12px;  /* Further reduced font size for header */
+        }
+
+        .reply-button {
+            padding: 5px 8px;  /* More compact button */
+            font-size: 10px;    /* Even smaller button font size */
+        }
+    }
+}

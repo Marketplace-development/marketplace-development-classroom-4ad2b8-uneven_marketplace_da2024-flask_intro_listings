@@ -1,0 +1,72 @@
+/* General form styling */
+.edit-listing-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: var(--shadow-light);
+}
+
+.edit-listing-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.edit-listing-container input[type="text"],
+.edit-listing-container input[type="number"],
+.edit-listing-container select,
+.edit-listing-container input[type="file"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.edit-listing-container button[type="submit"] {
+    display: inline-block;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.edit-listing-container button[type="submit"]:hover {
+    background-color: var(--darker-color);
+}
+
+/* Styling specifically for the Category dropdown */
+.edit-listing-container select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+/* Optional: Style for the file input */
+.edit-listing-container input[type="file"] {
+    padding: 5px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Optional: Style for error messages */
+.edit-listing-container .error-message {
+    color: #dc3545;
+    font-size: 0.875em;
+    font-weight: bold;
+    margin-top: 10px;
+}

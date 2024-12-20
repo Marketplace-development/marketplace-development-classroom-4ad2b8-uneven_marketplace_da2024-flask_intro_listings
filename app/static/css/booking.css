@@ -1,0 +1,247 @@
+/* General Reset and Box Model */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--light-green); /* Light green for the entire background */
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Container for the Booking Box */
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: var(--shadow-light);
+    overflow: hidden;
+}
+
+/* Heading Styling */
+h2 {
+    text-align: center;
+    font-size: 2em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Plant Image Styling */
+.listing-pic {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 20px auto;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* Plant Information Styling */
+.listing-price, p {
+    font-size: 1.2em;
+    color: #34495e;
+    margin-bottom: 15px;
+}
+
+/* Flash Messages Styling */
+.flashes {
+    margin-bottom: 20px;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.alert-success {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.alert-danger,
+.alert-warning {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.alert-warning {
+    background-color: #f1c40f;
+    color: #2c3e50;
+}
+
+/* Form and Input Styling for Booking/Login/Register */
+.box {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+    max-width: 400px;
+    margin: 40px auto;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+h1 {
+    font-size: 2.5em;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.text {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+/* Input Fields Styling */
+.input-field {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    color: #333;
+}
+
+/* General Button Styling */
+.btn {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: var(--darker-color);
+}
+
+/* Link Styling */
+.link {
+    margin-top: 20px;
+    font-size: 1em;
+}
+
+.link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.link a:hover {
+    color: var(--darker-color);
+}
+
+.hamburger-menu {
+    font-size: 2em;
+    cursor: pointer;
+    color: var(--primary-color);
+    display: none; /* Hidden on desktop */
+}
+
+@media (max-width: 768px) {
+    .hamburger-menu {
+        display: block;
+    }
+    .nav-right {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: var(--shadow-light)
+    }
+    .nav-right.show {
+        display: flex;
+    }
+}
+
+/* Utility Classes for Better Layout Management */
+.mt-4 {
+    margin-top: 40px;
+}
+.mt-3 {
+    margin-top: 30px;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-secondary {
+    background-color: #f1c40f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #d4ac0d;
+}
+/* Flash messages  */
+.flash-messages {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+    opacity: 1;
+    transition: opacity 1s ease-out; /* Smooth fading effect */
+}
+
+/* Flash message fade-out effect */
+.flash-messages.fade-out {
+    opacity: 0;  /* Maakt de flash message onzichtbaar */
+}
+
+.flash {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 1em;
+    color: #fff;
+    box-shadow: var(--shadow-light)
+}
+
+.flash.success {
+    background-color: hsl(122, 39%, 50%); /* Groene kleur voor success-meldingen */
+}
+
+.flash.error {
+    background-color: #f44336; /* Rode kleur voor error-meldingen */
+}
+
+.flash.info {
+    background-color: #2196F3; /* Blauwe kleur voor info-meldingen */
+}
+
+.flash.warning {
+    background-color: #FFC107; /* Gele kleur voor waarschuwingen */
+}

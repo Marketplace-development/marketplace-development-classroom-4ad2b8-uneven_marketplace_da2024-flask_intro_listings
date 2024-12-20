@@ -1,0 +1,100 @@
+/* Algemene container voor de pagina */
+.add-listing-container {
+    padding: 30px;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: var(--shadow-light);
+    margin-top: 70px;
+}
+
+.form-title {
+    font-size: 2em;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Algemeen voor alle formuliervelden */
+.listing-form .form-group {
+    margin-bottom: 20px;
+}
+
+.listing-form label {
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.listing-form input,
+.listing-form select,
+.listing-form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+    margin-top: 5px;
+}
+
+/* Verkeerde invoerberichten */
+.text-danger {
+    color: red;
+    font-size: 0.9em;
+}
+
+/* Success button */
+.btn-success {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 1.2em;
+    padding: 12px;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: var(--darker-color);
+}
+
+.btn-success:active {
+    background-color: var(--darker-color);
+}
+
+/* Custom styles for the select dropdown */
+.add-listing-container select.form-control {
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+}
+
+/* Responsief ontwerp: Formulier op kleinere schermen */
+@media (max-width: 768px) {
+    .add-listing-container {
+        padding: 15px;
+    }
+
+    .form-title {
+        font-size: 1.8em;
+    }
+
+    .listing-form input,
+    .listing-form select,
+    .listing-form textarea {
+        font-size: 1em;
+        padding: 8px;
+    }
+
+    .btn-success {
+        font-size: 1.1em;
+        padding: 10px;
+    }
+}

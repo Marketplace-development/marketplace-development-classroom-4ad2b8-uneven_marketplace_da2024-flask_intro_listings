@@ -1,0 +1,314 @@
+/* General Navbar Styling */
+.navbar {
+    background-color: var(--primary-color);
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 60px;
+    width: 100%;
+    box-shadow: var(--shadow-light);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
+a:link {
+  text-decoration: none;
+} 
+
+/* Navbar Layout */
+.nav-left,
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-left {
+    flex-grow: 1;
+    min-width: 20%;
+}
+
+.nav-right {
+    flex-shrink: 1;
+    margin-right: 20px;
+    justify-content: center; /* Ensure center alignment for search */
+}
+
+/* Logo Styling */
+.nav-logo-box {
+    display: flex;
+    align-items: center;
+    background-color: var(--primary-color);
+    border: 1.5px solid #fff;
+    border-radius: 5px;
+    padding: 3px;
+    height: 45px;
+}
+
+.nav-logo {
+    height: 40px;
+    width: auto;
+    text-decoration: none;
+}
+
+.nav-appname {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+    margin-right: 5px;
+    line-height: 1;
+}
+
+/* Search Styling */
+.nav-search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    height: 100%;
+}
+
+.nav-search {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 0;
+}
+
+.search-input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    width: 200px;
+    height: 45px;
+    flex-grow: 1;
+    margin: 0;
+    border-left: none;
+    border-right: none;
+}
+
+.search-type,
+.search-button {
+    padding: 6px 12px;
+    background-color: #fff;
+    color: var(--primary-color);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    height: 45px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.search-type {
+    border-radius: 4px 0 0 4px;
+}
+
+.search-type:after {
+    content: "▼";
+    font-size: 12px;
+    color: var(--primary-color);
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.search-button {
+    border-radius: 0 4px 4px 0;
+}
+
+.search-type:hover,
+.search-button:hover {
+    background-color: var(--light-green);
+    border-color: var(--primary-color);
+}
+
+/* Account Button */
+.nav-account {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+    height: 45px;
+    margin-right: 10px;
+    min-width: 130px;
+}
+
+.nav-account:hover {
+    background-color: var(--darker-color);
+}
+
+/* Notification & Message Buttons */
+.notification-button,
+.message-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 10px;
+    height: 100%;
+    text-decoration: none;
+}
+
+.bell-icon,
+.envelope-icon {
+    font-size: 20px;
+    color: #fff;
+    line-height: 1;
+}
+
+.notification-badge,
+.message-badge {
+    background-color: #ff0000;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 6px;
+    position: absolute;
+    top: 8px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.notification-badge {
+    right: -5px;
+}
+
+.message-badge {
+    right: -8px;
+}
+
+.notification-button:hover .bell-icon,
+.message-button:hover .envelope-icon {
+    color: var(--light-green);
+}
+
+/* Responsive Styling */
+
+/* Tablet and Mobile Layout */
+@media screen and (max-width: 1024px) {
+    .nav-appname {
+        display: none;
+    }
+
+    /* Hamburger Menu */
+    .hamburger-menu {
+        display: block;
+        font-size: 24px;
+        color: #fff;
+        cursor: pointer;
+        background: none;
+        border: none;
+        margin: 0 auto;
+        order: -1;
+    }
+
+    /* Navigation Links */
+    .nav-right {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        background-color: var(--primary-color);
+        width: 100%;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        padding: 10px 0;
+        z-index: 999;
+    }
+
+    /* Show menu when toggled */
+    .nav-right.show {
+        display: flex;
+    }
+
+    .nav-logo-box {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Stack message & notification buttons vertically */
+    .message-button,
+    .notification-button {
+        margin-right: 0;
+        margin-bottom: 10px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .message-button:last-child,
+    .notification-button:last-child {
+        margin-bottom: 0;
+    }
+
+    .notification-button {
+        right: 10px;
+    }
+
+    .message-button {
+        right: 50px;
+    }
+}
+
+/* Laptop and Larger Screens Layout */
+@media screen and (min-width: 1024px) {
+    .hamburger-menu {
+        display: none;
+    }
+
+    .nav-right {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 15px;
+    }
+
+    /* Bell and message icons to the right of other buttons */
+    .notification-button,
+    .message-button {
+        position: relative; /* Reset positioning */
+        top: auto;
+        right: auto;
+        transform: none;
+        margin-left: auto; /* Push them to the far right */
+    }
+
+    .nav-search-container {
+        justify-content: flex-end;
+    }
+
+    .nav-logo-box {
+        position: relative;
+        left: auto;
+    }
+
+    .nav-left {
+        flex-grow: 1;
+    }
+
+    .nav-appname {
+        display: block;
+    }
+
+    .nav-logo {
+        display: block;
+    }
+}

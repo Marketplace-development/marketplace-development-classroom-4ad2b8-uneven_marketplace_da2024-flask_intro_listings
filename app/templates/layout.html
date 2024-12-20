@@ -1,0 +1,52 @@
+<!DOCTYPE html>                                         <!--handige algemene layout, verzekerd ook dat flash messages altijd goed verschijnen-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Sitting</title>
+    <!-- Voeg Font Awesome toe -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    {% block css_connected %}
+        <!-- CSS files to be connected with certain page are inserted here to avoid overlap -->
+    {% endblock %}
+</head>
+<body>
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div id="flash-messages" class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}" style="background-color: #fff; color: #4CAF50">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Navbar -->
+    <div class="navbar">
+        {% block navbar %}
+        {% endblock %}
+    </div>
+
+    {% block content %}
+        <!-- Page-specific content goes here -->
+    {% endblock %}
+
+    <!-- Flash message timer and fadeout -->
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const flashMessagesContainer = document.getElementById('flash-messages');
+            if (flashMessagesContainer) {
+                setTimeout(function() {
+                    flashMessagesContainer.classList.add('fade-out');  // Voeg de fade-out class toe
+                    setTimeout(function() {
+                        flashMessagesContainer.style.display = 'none';  // Verberg de flash message na het vervagen
+                    }, 1000); // Wacht 1 seconde voor het volledig verdwijnen
+                }, 3000); // Laat de flash message 3 seconden zien
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+</head>
+<body style="justify-content: center; align-content: center;">
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div id="flash-messages" class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Invullen van login of register content -->
+    {% block content %}{% endblock %}
+
+    <!-- Flash message timer and fadeout -->
+    <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const flashMessagesContainer = document.getElementById('flash-messages');
+            if (flashMessagesContainer) {
+                setTimeout(function() {
+                    flashMessagesContainer.classList.add('fade-out');  // Voeg de fade-out class toe
+                    setTimeout(function() {
+                        flashMessagesContainer.style.display = 'none';  // Verberg de flash message na het vervagen
+                    }, 1000); // Wacht 1 seconde voor het volledig verdwijnen
+                }, 3000); // Laat de flash message 3 seconden zien
+            }
+        });
+    </script>
+</body>
+</html>

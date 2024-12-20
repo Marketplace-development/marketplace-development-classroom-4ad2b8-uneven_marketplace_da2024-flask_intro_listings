@@ -2,3 +2,9 @@ Flask
 Flask-SQLAlchemy
 Flask-Migrate
 psycopg2-binary
+Flask-wtf
+flask-login
+email-validator
+requests
+geopy
+

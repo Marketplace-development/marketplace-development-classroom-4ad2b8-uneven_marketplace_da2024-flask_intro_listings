@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block css_connected %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}">
+{% endblock %}
+{% block navbar %}
+    <div class="nav-left">
+        <a href="{{ url_for('main.home') }}" class="nav-logo-box">
+            <img src="{{ url_for('static', filename='Logo.png') }}" alt="Logo" class="nav-logo">
+            <span class="nav-appname">Plant Sitting</span>
+        </a>
+    </div>
+    <div class="nav-right">
+        <a href="{{ url_for('main.home') }}" class="nav-account">Home</a>
+        <a href="{{ url_for('main.account') }}" class="nav-account">Account</a>
+    </div>
+{% endblock navbar %}
+
+{% block content %}
+<div class="leaderboard">
+    <h1>🏆 Plant Sitter Leaderboard</h1>
+    <p>Celebrate the top contributors in our community! 🌱</p>
+
+    {% set filtered_leaderboard = leaderboard|selectattr("total_reviews", "gt", 0)|list %}
+    {% if filtered_leaderboard %}
+    <table class="leaderboard-table">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Total Reviews</th>
+                <th>Average Rating</th>
+                <th>Badges</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sitter in filtered_leaderboard %}
+            <tr>
+                <td class="highlight">{{ loop.index }}</td>
+                <td>{{ sitter.username }}</td>
+                <td>{{ sitter.total_reviews }}</td>
+                <td>{{ sitter.average_rating }}</td>
+                <td>
+                    <div class="leaderboard-badges">
+                        {% for badge in sitter.badges %}
+                        <div class="tooltip badge">
+                            {{ badge }}
+                            <span class="tooltip-text">Earned for outstanding performance!</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No sitters to display on the leaderboard yet. Be the first to join!</p>
+    {% endif %}
+</div>
+{% endblock %}

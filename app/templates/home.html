@@ -1,0 +1,204 @@
+{% extends "layout.html" %}
+
+{% block css_connected %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+{% endblock %}
+
+{% block navbar %}
+<div class="navbar">
+    <!-- Left Section -->
+    <div class="nav-left">
+        <a href="{{ url_for('main.home') }}" class="nav-logo-box">
+            <img src="{{ url_for('static', filename='Logo.png') }}" alt="Logo" class="nav-logo">
+            <span class="nav-appname">Plant Sitting</span>
+        </a>
+    </div>
+
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu" onclick="toggleMenu()">&#9776;</div>
+
+
+    <!-- Right Section -->
+    <div class="nav-right" id="menu">
+        <form action="{{ url_for('main.search') }}" method="GET" class="nav-search">
+            <select name="type" class="search-type">
+                <option value="users" {% if search_type == 'users' %}selected{% endif %}>Users</option>
+                <option value="plants" {% if search_type == 'plants' %}selected{% endif %}>Plants</option>
+            </select>
+            <input type="text" name="query" placeholder="Search..." value="{{ query }}" class="search-input">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+
+        <a href="{{ url_for('main.create_listing') }}" class="nav-account">Add Listing</a>
+        <a href="{{ url_for('main.about') }}" class="nav-account">About Us</a>
+        <a href="{{ url_for('main.account') }}" class="nav-account">Account</a>
+    </div>
+
+    <!-- Notification Bell and Message (Always outside the menu) -->
+    <a href="{{ url_for('main.notifications') }}" class="notification-button">
+        <i class="fas fa-bell bell-icon"></i>
+        {% if unread_notifications > 0 %}
+            <span class="notification-badge">{{ unread_notifications }}</span>
+        {% endif %}
+    </a>
+    <a href="{{ url_for('main.messages') }}" class="message-button">
+        <i class="fas fa-envelope envelope-icon"></i>
+        {% if unread_messages_count > 0 %}
+            <span class="message-badge">{{ unread_messages_count }}</span>
+        {% endif %}
+    </a>
+
+</div>
+<script src="{{ url_for('static', filename='menu.js') }}"></script>
+{% endblock navbar %}
+
+
+
+
+{% block content %}
+    <div class="content">
+        <!-- Container for the image and overlaying text -->
+        <div class="home-banner">
+            <img src="{{ url_for('static', filename='banner.jpg') }}" alt="Atmospheric Banner" class="atmospheric-banner">
+            <h1 class="page-title">Home Page</h1>
+            <a href="{{ url_for('main.leaderboard') }}" class="overlay-button">View Leaderboard</a>
+        </div>
+
+        <!-- Map Container -->
+        <div id="map" style="height: 500px; width: 100%;"></div>
+
+        <!-- Sorting Dropdowns -->
+        <div class="sorting-dropdown-container">
+            <!-- Sorting Dropdown -->
+            <form method="GET" action="{{ url_for('main.home') }}" class="dropdown-form">
+                <div class="sorting-dropdown">
+                    <label for="sort-options" class="dropdown-label">Sort by:</label>
+                    <select id="sort-options" name="sort" class="dropdown-select" onchange="this.form.submit()">
+                        <option value="">Sort by price or date</option>
+                        <option value="price_asc" {% if request.args.get('sort') == 'price_asc' %}selected{% endif %}>Price: Cheap to Expensive</option>
+                        <option value="price_desc" {% if request.args.get('sort') == 'price_desc' %}selected{% endif %}>Price: Expensive to Cheap</option>
+                        <option value="start_date_asc" {% if request.args.get('sort') == 'start_date_asc' %}selected{% endif %}>Start Date: Earliest First</option>
+                        <option value="start_date_desc" {% if request.args.get('sort') == 'start_date_desc' %}selected{% endif %}>Start Date: Latest First</option>
+                    </select>
+                </div>
+
+                <!-- Category Dropdown -->
+                <div class="sorting-dropdown">
+                    <label for="category-options" class="dropdown-label">Filter by Category:</label>
+                    <select id="category-options" name="category" class="dropdown-select" onchange="this.form.submit()">
+                        <option value="all" {% if not request.args.get('category') or request.args.get('category') == 'all' %}selected{% endif %}>All Categories</option>
+                        <option value="Low-light" {% if request.args.get('category') == 'Low-light' %}selected{% endif %}>Low-light</option>
+                        <option value="Air-purifying" {% if request.args.get('category') == 'Air-purifying' %}selected{% endif %}>Air-purifying</option>
+                        <option value="Tropical" {% if request.args.get('category') == 'Tropical' %}selected{% endif %}>Tropical</option>
+                        <option value="Succulent" {% if request.args.get('category') == 'Succulent' %}selected{% endif %}>Succulent</option>
+                        <option value="Flowering" {% if request.args.get('category') == 'Flowering' %}selected{% endif %}>Flowering</option>
+                        <option value="Climbing" {% if request.args.get('category') == 'Climbing' %}selected{% endif %}>Climbing</option>
+                        <option value="Foliage-focused" {% if request.args.get('category') == 'Foliage-focused' %}selected{% endif %}>Foliage-focused</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+
+        <!-- Listings Grid -->
+        <section>
+            <div class="listing-grid">
+                {% if listings %}
+                    {% for listing in listings %}
+                        <div class="listing-item">
+                            <form action="{{ url_for('main.add_favorite', listing_id=listing.id) }}" method="post">
+                                <button type="submit" class="favorite-button">
+                                    &#9733; <!-- Filled star -->
+                                </button>
+                            </form>
+                            <img src="{{ url_for('static', filename='uploads/' + (listing.picture or 'default.png')) }}" alt="{{ listing.title }}" class="listing-pic">
+                            <h3 class="listing-title">{{ listing.title }}</h3>
+                            <p class="listing-specie">{{ listing.specie }}</p>
+                            <p class="listing-price">&euro;{{ "%.2f" | format(listing.base_price) }}</p>
+                            <a href="{{ url_for('main.view_listing', listing_id=listing.id) }}" class="view-more">View More</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-listings-message">No available listings at the moment.</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Contact box -->
+        <div class="contact-box">
+            <h2>Contact Us</h2>
+            <ul>
+                <li>Email: support@plantsitting.com</li>
+                <li>Phone: +32 468 26 00 98</li>
+                <li>Address: Tweekerkenstraat 2, 9000 Gent, België</li>
+                <li>Social Media:
+                    <a href="https://facebook.com/plantexchange">Facebook</a> |
+                    <a href="https://instagram.com/plantexchange">Instagram</a> |
+                    <a href="https://twitter.com/plantexchange">Twitter</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Chat Widget -->
+    <div id="chat-widget" class="chat-widget">
+        <div class="chat-header">
+            <span>Chat with Us!</span>
+            <button id="chat-close" class="chat-close">X</button>
+        </div>
+        <div class="chat-body">
+            <div id="chat-messages" class="chat-messages">
+                <!-- Messages will appear here -->
+            </div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chat-input" class="chat-input" placeholder="Type your message here...">
+            <button id="chat-send" class="chat-send">Send</button>
+        </div>
+    </div>
+    <button id="chat-toggle" class="chat-toggle">Chat with Us</button>
+
+    <script src="{{ url_for('static', filename='chat.js') }}"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" crossorigin=""></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Initialiseer de kaart
+            var map = L.map('map').setView([51.053, 3.730], 8);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Haal listings op van de API
+            fetch('/api/listings')
+                .then(response => response.json())
+                .then(data => {
+                    // Voor elke listing, voeg een marker toe aan de kaart
+                    data.forEach(listing => {
+                        if (listing.latitude && listing.longitude) {
+                            var marker = L.marker([listing.latitude, listing.longitude]).addTo(map)
+                                .bindPopup(
+                                    '<b>' + listing.title + '</b><br>' +
+                                    listing.specie + '<br>' +
+                                    'Price: €' + Number(listing.base_price).toFixed(2) + '<br>' +
+                                    '<a href="' + listing.view_url + '" target="_blank">View Listing</a>'
+                                );
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching listings:', error);
+                });
+        });
+    </script>
+
+
+{% endblock content %}

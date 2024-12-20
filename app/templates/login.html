@@ -1,13 +1,24 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
-    <h1>Login</h1>
-    <form method="post">
-        Username: <input type="text" name="username" required>
-        <input type="submit" value="Login">
-    </form>
-</body>
-</html>
+{% extends "auth_layout.html" %}
+{% block content %}
+    <div class="container">
+        <div class="box">
+            <h1>Welcome To Plant Sitting!</h1>
+            <p class="text">Enter your name to get started:</p>
+            <form method="POST" action="{{ url_for('main.login') }}">
+                {{ form.hidden_tag() }}
+                <div>
+                    {{ form.username(class="input-field", placeholder="Enter your name") }}
+                </div>
+                <div class="checkbox">
+                        {{ form.remember }} Remember Me
+                </div>
+                <div>
+                    {{ form.submit(class="btn") }}
+                </div>
+            </form>
+            <p class="link">
+                <a href="{{ url_for('main.register') }}">I don't have an account yet</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}

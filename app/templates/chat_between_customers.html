@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block css_connected %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat_between_customers.css') }}">
+{% endblock %}
+
+{% block navbar %}
+<div class="nav-left">
+            <a href="{{ url_for('main.home') }}" class="nav-logo-box">
+                <img src="{{ url_for('static', filename='Logo.png') }}" alt="Logo" class="nav-logo">
+                <span class="nav-appname">Plant Sitting</span>
+            </a>
+</div>
+<div class="nav-right">
+    <a href="{{ url_for('main.home') }}" class="nav-account">Home</a>
+    <a href="{{ url_for('main.about') }}" class="nav-account">About</a>
+    <a href="{{ url_for('main.account') }}" class="nav-account logout">Account</a>
+</div>
+{% endblock navbar %}
+
+{% block content %}
+<div class="chat-section">
+    <h1 class="chat-title">Chat about: {{ listing.title }}</h1>
+
+    <!-- Chat Messages -->
+    <div class="chat-messages">
+        {% for message in messages %}
+        <div class="message {% if message.sender_id == current_user.id %}sent{% else %}received{% endif %}">
+            <p>
+                <strong>{{ message.sender.username }}:</strong> {{ message.content }}
+            </p>
+            <small>{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Send Message Form -->
+    {% if current_user.id != listing.leaver_id or messages|length > 0 %}
+    <form method="POST" class="chat-form">
+        <textarea name="message" placeholder="Write your message..." required></textarea>
+        <button type="submit" class="send-button">Send</button>
+    </form>
+    {% else %}
+    <div class="chat-restriction">
+        <p>You cannot start a conversation about your own listing. Please wait for someone to contact you.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

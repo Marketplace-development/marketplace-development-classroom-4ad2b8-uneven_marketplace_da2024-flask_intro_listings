@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <title>Chat with Us</title>
+</head>
+<body>
+    <div id="chat-widget" class="chat-widget">
+        <div class="chat-header">
+            <span>Chat with Us!</span>
+            <button id="chat-close" class="chat-close">X</button>
+        </div>
+        <div class="chat-body">
+            <div id="chat-messages" class="chat-messages">
+                <!-- Messages will appear here -->
+            </div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chat-input" class="chat-input" placeholder="Type your message here...">
+            <button id="chat-send" class="chat-send">Send</button>
+        </div>
+    </div>
+    <button id="chat-toggle" class="chat-toggle">Chat with Us</button>
+
+    <script src="{{ url_for('static', filename='chat.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatToggle = document.getElementById('chat-toggle');
+            const chatWidget = document.getElementById('chat-widget');
+            const chatClose = document.getElementById('chat-close');
+
+            if (chatToggle && chatWidget && chatClose) {
+                chatToggle.addEventListener('click', function() {
+                    chatWidget.style.display = 'block';
+                });
+
+                chatClose.addEventListener('click', function() {
+                    chatWidget.style.display = 'none';
+                });
+            } else {
+                console.error('Chat widget elements not found.');
+            }
+        });
+    </script>
+</body>
+</html>

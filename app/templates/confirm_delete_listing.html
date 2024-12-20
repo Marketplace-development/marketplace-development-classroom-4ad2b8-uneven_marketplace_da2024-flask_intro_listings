@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="confirm-delete">
+        <h2>Are you sure you want to delete the listing?</h2>
+        <p><strong>{{ listing.title }}</strong></p>
+        <form method="POST">
+            <button type="submit" class="btn btn-danger">Yes, delete it</button>
+            <a href="{{ url_for('main.my_listings') }}" class="btn btn-secondary">No, go back</a>
+        </form>
+    </div>
+{% endblock content %}

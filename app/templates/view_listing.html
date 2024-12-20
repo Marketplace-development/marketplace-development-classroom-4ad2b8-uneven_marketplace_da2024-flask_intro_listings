@@ -1,0 +1,151 @@
+{% extends "layout.html" %}
+
+{% block css_connected %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/view_listing.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fullcalendar/fullcalendar.min.css') }}">
+{% endblock %}
+
+{% block navbar %}
+    <div class="nav-left">
+        <a href="{{ url_for('main.home') }}" class="nav-logo-box">
+            <img src="{{ url_for('static', filename='Logo.png') }}" alt="Logo" class="nav-logo">
+            <span class="nav-appname">Plant Sitting</span>
+        </a>
+    </div>
+    <div class="nav-right">
+        <a href="{{ url_for('main.home') }}" class="nav-account">Home</a>
+        <a href="{{ url_for('main.about') }}" class="nav-account">About</a>
+        <a href="{{ url_for('main.account') }}" class="nav-account logout">Account</a>
+    </div>
+{% endblock navbar %}
+
+{% block content %}
+<div class="listing-content">
+    <div class="listing-section">
+        <div class="listing-details">
+            <h1 class="listing-title">{{ listing.title }}</h1>
+
+            <!-- Plant Image -->
+            <img src="{{ url_for('static', filename='uploads/' + listing.picture if listing.picture else 'uploads/default.png') }}"
+                 alt="{{ listing.title }}" class="listing-pic">
+
+            <p class="listing-price">Price: €{{ '{:.2f}'.format(listing.base_price) }}</p>
+            <p class="listing-specie">Plant Category: {{ listing.specie }}</p>
+            <p class="listing-light">Daily Light: {{ listing.light }} hours</p>
+            <p class="listing-water">Weekly Water: {{ listing.water }} l/week</p>
+            <p class="listing-address">Address: {{ listing.address }}</p>
+            <p class="listing-leaver">
+                Listed by:
+                <a href="{{ url_for('main.profile', user_id=listing.leaver.id) }}">
+                    {{ listing.leaver.username }}
+                </a>
+            </p>
+
+            <!-- Coordinates Section -->
+            <div class="coordinates-info">
+                <h3>Coordinates</h3>
+                <p><strong>Latitude:</strong> {{ listing.latitude }}</p>
+                <p><strong>Longitude:</strong> {{ listing.longitude }}</p>
+            </div>
+
+            {% if current_user.is_authenticated and current_user.id == listing.leaver.id %}
+            <!-- Edit Button -->
+            <a href="{{ url_for('main.edit_listing', listing_id=listing.id) }}" class="btn btn-primary">Edit Listing</a>
+            {% endif %}
+
+            {% if current_user.is_authenticated and current_user.id != listing.leaver.id %}
+            <div class="button-group">
+                <a href="{{ url_for('main.booking', listing_id=listing.id) }}" class="care-button">
+                    I want to take care of this plant
+                </a>
+                <a href="{{ url_for('main.chat_between_customers', listing_id=listing.id) }}" class="care-button">
+                    Chat
+                </a>
+            </div>
+
+            {% if price_proposal and price_proposal.status == 'Accepted' %}
+            <div class="button-group">
+                <form method="POST" action="{{ url_for('main.approve_price', listing_id=listing.id) }}">
+                    <button type="submit" class="btn btn-primary">Approve current price</button>
+                </form>
+                <form method="POST" action="{{ url_for('main.propose_price', listing_id=listing.id) }}">
+                    <button type="submit" class="btn btn-primary">Propose a new price</button>
+                </form>
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+
+        <!-- Availability Section -->
+        <div class="availability-section">
+            <h2>Availability</h2>
+            <div id="calendar">
+                <!-- Calendar Header for Month Name and Buttons -->
+                <div class="calendar-header">
+                    <div class="month-name">January</div>
+                </div>
+
+                <!-- Calendar Navigation Buttons -->
+                <div class="button-group">
+                    <a href="#" class="btn-prev">Prev</a>
+                    <a href="#" class="btn-next">Next</a>
+                </div>
+
+                <!-- FullCalendar Body -->
+                <div class="calendar-body"></div>
+            </div>
+        </div>
+
+        <!-- Include FullCalendar JavaScript -->
+        <script src="{{ url_for('static', filename='fullcalendar/index.global.min.js') }}"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var calendarEl = document.getElementById('calendar');
+
+                // Replace with your Flask data
+                var startDate = new Date('{{ listing.start_date.strftime("%Y-%m-%d") }}');
+                var endDate = new Date('{{ listing.end_date.strftime("%Y-%m-%d") }}');
+
+                // Generate all dates between startDate and endDate
+                var events = [];
+                var currentDate = new Date(startDate);
+                while (currentDate <= endDate) {
+                    events.push({
+                        title: 'Available',
+                        start: currentDate.toISOString().split('T')[0],
+                        allDay: true,
+                        color: '#4caf50' // Highlight color
+                    });
+                    currentDate.setDate(currentDate.getDate() + 1); // Increment by 1 day
+                }
+
+                // Initialize the calendar
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    events: events
+                });
+
+                calendar.render();
+            });
+        </script>
+    </div>
+
+    <!-- Similar Listings Section -->
+    <div class="similar-listings-section">
+        <h2>Similar listings you might like...</h2>
+        <div class="similar-listings">
+            {% for similar in similar_listings %}
+                <div class="similar-listing-item">
+                    <img src="{{ url_for('static', filename='uploads/' + (similar.picture or 'default.png')) }}" alt="{{ similar.title }}" class="similar-listing-pic">
+                    <h3 class="similar-listing-title">{{ similar.title }}</h3>
+                    <p class="similar-listing-price">&euro;{{ '{:.2f}'.format(similar.base_price) }}</p>
+                    <a href="{{ url_for('main.view_listing', listing_id=similar.id) }}" class="view-more">View Listing</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

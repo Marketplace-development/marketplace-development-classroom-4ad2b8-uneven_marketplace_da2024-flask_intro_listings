@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+{% block css_connected %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search_results.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+{% endblock %}
+{% block navbar %}
+    <div class="nav-left">
+        <a href="{{ url_for('main.home') }}" class="nav-logo-box">
+            <img src="{{ url_for('static', filename='Logo.png') }}" alt="Logo" class="nav-logo">
+            <span class="nav-appname">Plant Sitting</span>
+        </a>
+    </div>
+
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu" onclick="toggleMenu()">&#9776;</div>
+
+    <div class="nav-right">
+    <form action="{{ url_for('main.search') }}" method="GET" class="nav-search">
+                <select name="type" class="search-type">
+                    <option value="users" {% if search_type == 'users' %}selected{% endif %}>Users</option>
+                    <option value="plants" {% if search_type == 'plants' %}selected{% endif %}>Plants</option>
+                </select>
+                <input
+                    type="text"
+                    name="query"
+                    placeholder="Search..."
+                    value="{{ query }}"
+                    class="search-input">
+                <button type="submit" class="search-button">Search</button>
+    </form>
+    <a href="{{ url_for('main.home') }}" class="nav-account">Home</a>
+    <a href="{{ url_for('main.about') }}" class="nav-account">About</a>
+    <a href="{{ url_for('main.account') }}" class="nav-account">Account</a>
+</div>
+<script src="{{ url_for('static', filename='hamburgermenu_account.js') }}"></script>
+{% endblock navbar %}
+
+{% block content %}
+<div class="content">
+    {% if user_results %}
+        <h2>Users</h2>
+        <div class="results-list">
+            {% for user in user_results %}
+                <div class="result-card">
+                    <div class="result-details">
+                        <h2>
+                            <a href="{{ url_for('main.profile', user_id=user.id) }}">
+                                {{ user.username }}
+                            </a>
+                            <span class="user-rating">
+                                User rating: ({{ user.user_rating or 'No rating yet' }})
+                            </span>
+                        </h2>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% elif search_type == 'users' %}
+        <p>No users found matching your search.</p>
+    {% endif %}
+
+    {% if plant_results %}
+        <h2>Plants</h2>
+        <div class="results-list">
+            {% for plant in plant_results %}
+                <div class="result-card">
+                    <div class="result-details">
+                        <h2>{{ plant.title }}</h2>
+                        <p>Species: {{ plant.specie }}</p>
+                        <p>Price: €{{ '{:.2f}'.format(plant.base_price) }}</p>
+                        <a href="{{ url_for('main.view_listing', listing_id=plant.id) }}">View Listing</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% elif search_type == 'plants' %}
+        <p>No plants found matching your search.</p>
+    {% endif %}
+</div>
+{% endblock %}
+

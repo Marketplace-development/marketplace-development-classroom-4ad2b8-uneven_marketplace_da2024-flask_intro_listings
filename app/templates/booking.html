@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block css_connected %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/booking.css') }}">
+{% endblock %}
+
+{% block navbar %}
+    <div class="nav-left">
+            <a href="{{ url_for('main.home') }}" class="nav-logo-box">
+                <img src="{{ url_for('static', filename='Logo.png') }}" alt="Logo" class="nav-logo">
+                <span class="nav-appname">Plant Sitting</span>
+            </a>
+    </div>
+    <div class="nav-right">
+        <a href="{{ url_for('main.home') }}" class="nav-account">Home</a>
+        <a href="{{ url_for('main.about') }}" class="nav-account">About</a>
+        <a href="{{ url_for('main.account') }}" class="nav-account logout">Account</a>
+    </div>
+{% endblock navbar %}
+
+{% block content %}
+  <div class="container mt-4">
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-message-container">
+                {% for message in messages %}
+                    <div class="flash-message {{ category }}">
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <h2>Booking for Listing: {{ listing.title }}</h2>
+    <img src="{{ url_for('static', filename='uploads/' + listing.picture) }}" alt="{{ listing.title }}" class="listing-pic">
+    <p class="listing-price">Price: €{{ '{:.2f}'.format(listing.base_price) }}</p>
+    <p>Plant Specie: {{ listing.specie }}</p>
+    <p>Light Requirement: {{ listing.light }} hours/day</p>
+    <p>Water Requirement: {{ listing.water }} ml/week</p>
+
+    <!-- Booking Buttons -->
+    {% if listing.sitter_id is none %}
+      <form method="POST" action="{{ url_for('main.propose_price', listing_id=listing.id) }}">
+        <label for="new_price">Propose a New Price (€):</label>
+        <input
+                type="text"
+                id="new_price"
+                name="new_price"
+                placeholder="For example: 9.00"
+                required pattern="^\d+(\.\d{2})?$"
+                title="Enter a valid amount with two decimal places (e.g. 9.00)"
+                class="input-field"
+                oninvalid="this.setCustomValidity('Please enter a valid amount in the format 9.00')"
+                oninput="this.setCustomValidity('')">
+        <button type="submit" class="btn" style="background-color: #c8f7c5">Submit New Price</button>
+      </form>
+
+      <!-- Button to Approve the Original Price -->
+      <form method="POST" action="{{ url_for('main.approve_price', listing_id=listing.id) }}">
+        <button type="submit" class="btn btn-approve">Approve Price</button>
+      </form>
+    {% else %}
+      <div class="alert alert-warning mt-3">This plant has already been booked by another user.</div>
+    {% endif %}
+  </div>
+{% endblock %}

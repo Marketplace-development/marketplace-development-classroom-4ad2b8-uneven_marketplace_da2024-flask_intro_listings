@@ -1,0 +1,203 @@
+{% extends "layout.html" %}
+
+{% block css_connected %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+
+{% endblock %}
+
+{% block navbar %}
+    <div class="nav-left">
+        <a href="{{ url_for('main.home') }}" class="nav-logo-box">
+            <img src="{{ url_for('static', filename='Logo.png') }}" alt="Logo" class="nav-logo">
+            <span class="nav-appname">Plant Sitting</span>
+        </a>
+    </div>
+
+    <span class="hamburger-menu" onclick="toggleMenu()">&#9776;</span>
+
+    <div class="nav-right">
+        <a href="{{ url_for('main.home') }}" class="nav-account">Home</a>
+        <a href="{{ url_for('main.favorites') }}" class="nav-account">My Favorites</a>
+        <a href="{{ url_for('main.logout') }}" class="nav-account logout">Logout</a>
+    </div>
+    <script src="{{ url_for('static', filename='hamburgermenu_account.js') }}"></script>
+{% endblock navbar %}
+
+{% block content %}
+<div class="account-container">
+    <h2>Account Details</h2>
+
+    <!-- Create a wrapper for My Listings, Plant History, and Account Badges -->
+    <div class="listings-history-container">
+        <!-- My Listings Section -->
+        <div class="my-listings">
+            <div class="my-listings-header">
+                <h1 class="box-title">My Listings</h1>
+                <a href="{{ url_for('main.create_listing') }}" class="add-listing-btn" title="Add a new listing">
+                    <span>+</span>
+                </a>
+            </div>
+            {% if my_listings %}
+                {% for listing in my_listings %}
+                    <div class="listing-box">
+                        <!-- Listing Title and Delete Button -->
+                        <div class="listing-title-container">
+                            <a href="{{ url_for('main.view_listing', listing_id=listing.id) }}" class="listing-title-link">
+                                <h2 class="listing-title">{{ listing.title }}</h2>
+                            </a>
+                            <a href="{{ url_for('main.confirm_delete_listing', listing_id=listing.id) }}"
+                               class="delete-listing-btn"
+                               title="Delete listing">
+                                <span>-</span>
+                            </a>
+                        </div>
+
+                        <!-- Plant Image -->
+                        <div class="listing-plant-picture">
+                            <img src="{{ url_for('static', filename='uploads/' + listing.picture) }}" alt="{{ listing.title }}" class="listing-plant-img">
+                        </div>
+
+                        <p class="listing-price">Price: €{{ '{:.2f}'.format(listing.base_price) }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No active listings at the moment.</p>
+            {% endif %}
+        </div>
+
+        <!-- Plant History Section -->
+        <div class="plant-history">
+            <h1 class="box-title">Plant History</h1>
+
+            <!-- Ongoing Bookings -->
+            <div class="ongoing-tasks">
+                <h3>Ongoing Bookings</h3>
+                {% if ongoing_bookings %}
+                    {% for booking in ongoing_bookings %}
+                        <div class="listing-box">
+                            <h4>{{ booking.listing.title }}</h4>
+                            <p>From: {{ booking.listing.start_date.strftime('%Y-%m-%d') }} To: {{ booking.listing.end_date.strftime('%Y-%m-%d') }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No ongoing bookings at the moment.</p>
+                {% endif %}
+            </div>
+
+            <!-- Completed Bookings -->
+            <div class="completed-tasks">
+                <h3>Completed Bookings</h3>
+                {% if completed_bookings %}
+                    {% for booking in completed_bookings %}
+                        <div class="listing-box">
+                            <h4>{{ booking.listing.title }}</h4>
+                            <p>Completed On: {{ booking.listing.end_date.strftime('%Y-%m-%d') }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No completed bookings yet.</p>
+                {% endif %}
+            </div>
+
+            <!-- Never Booked Listings -->
+            <div class="never-booked-tasks">
+                <h3>Never Booked Listings</h3>
+                {% if never_booked_listings %}
+                    {% for listing in never_booked_listings %}
+                        <div class="listing-box">
+                            <h4>{{ listing.title }}</h4>
+                            <p>Start Date: {{ listing.start_date.strftime('%Y-%m-%d') }}</p>
+                            <p>End Date: {{ listing.end_date.strftime('%Y-%m-%d') }}</p>
+                            <p>Status: Never Booked</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>All listings have either been booked or are still active.</p>
+                {% endif %}
+            </div>
+
+            <!-- My Booked Listings -->
+            <div class="my-booked-listings">
+                <h3>My Booked Listings</h3>
+                {% if my_booked_listings %}
+                    {% for listing in my_booked_listings %}
+                        <div class="listing-box">
+                            <h4>{{ listing.title }}</h4>
+                            <p>Booked By: {{ listing.sitter.username }}</p>
+                            <p>Start Date: {{ listing.start_date.strftime('%Y-%m-%d') }}</p>
+                            <p>End Date: {{ listing.end_date.strftime('%Y-%m-%d') }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No listings have been booked by others yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Account Badges Section -->
+        <div class="account-badges">
+            <h2>Your Badges</h2>
+            {% if badges %}
+                <ul class="badge-list">
+                    {% for badge in badges %}
+                        <li class="badge-item">{{ badge }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>You haven't earned any badges yet. Start completing bookings to earn some!</p>
+            {% endif %}
+        </div>
+    </div> <!-- End of listings-history-container -->
+
+    <!-- Button to view user reviews (Full-width) -->
+    <a href="{{ url_for('main.user_reviews', user_id=current_user.id) }}" class="view-reviews-btn">
+        View My Reviews
+    </a>
+</div> <!-- End of account-container -->
+<div id="delete-modal" class="modal">
+    <div class="modal-content">
+        <h2>Are you sure?</h2>
+        <p>Do you really want to delete this listing? This action cannot be undone.</p>
+        <div class="modal-buttons">
+            <button id="confirm-delete-btn" class="btn confirm-btn">Yes</button>
+            <button id="cancel-delete-btn" class="btn cancel-btn">No</button>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("delete-modal");
+        const confirmBtn = document.getElementById("confirm-delete-btn");
+        const cancelBtn = document.getElementById("cancel-delete-btn");
+        let deleteUrl = "";
+
+        // Koppel "delete" knoppen aan de modal
+        document.querySelectorAll(".delete-listing-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                deleteUrl = btn.getAttribute("href"); // URL van de knop opslaan
+                modal.style.display = "flex"; // Modal tonen
+            });
+        });
+
+        // Bevestig verwijdering
+        confirmBtn.addEventListener("click", () => {
+            window.location.href = deleteUrl; // Navigeer naar de verwijderroute
+        });
+
+        // Annuleer verwijdering
+        cancelBtn.addEventListener("click", () => {
+            modal.style.display = "none"; // Modal verbergen
+        });
+
+        // Sluit modal bij klikken buiten de content
+        window.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    });
+</script>
+{% endblock content %}

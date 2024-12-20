@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+{% block css_connected %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="notifications-container">
+    <a href="{{ url_for('main.home') }}" class="back-home-button">← Back to Home</a>
+
+    <h1 class="page-title">Notifications</h1>
+
+    {% if notifications %}
+        <ul class="notification-list">
+            {% for notification in notifications %}
+                <li class="notification-item {% if not notification.is_read %}unread{% endif %}">
+                    <div class="notification-content">
+                        <p class="notification-message">{{ notification.message|safe }}</p>
+                        <span class="notification-timestamp">{{ notification.timestamp.strftime('%B %d, %Y - %H:%M') }}</span>
+                    </div>
+
+                    {% if 'proposed a new price' in notification.message %}
+                        <!-- "Answer" button only for price proposal notifications -->
+                        <form action="{{ url_for('main.answer_notification', notification_id=notification.id) }}" method="POST" class="answer-button-form">
+                            <button type="submit" class="answer-button">Answer</button>
+                        </form>
+                    {% endif %}
+
+                    {% if not notification.is_read %}
+                        <form action="{{ url_for('main.mark_notification_read', notification_id=notification.id) }}" method="post" class="mark-read-form">
+                            <button type="submit" class="mark-read-button">Mark as read</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-notifications">You have no notifications at this time.</p>
+    {% endif %}
+</div>
+{% endblock %}

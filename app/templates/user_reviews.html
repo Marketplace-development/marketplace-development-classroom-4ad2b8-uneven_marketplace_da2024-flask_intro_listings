@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block css_connected %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_reviews.css') }}">
+{% endblock %}
+{% block navbar %}
+    <div class="nav-left">
+        <a href="{{ url_for('main.home') }}" class="nav-logo-box">
+            <img src="{{ url_for('static', filename='Logo.png') }}" alt="Logo" class="nav-logo">
+            <span class="nav-appname">Plant Sitting</span>
+        </a>
+    </div>
+    <div class="nav-right">
+        <a href="{{ url_for('main.home') }}" class="nav-account">Home</a>
+        <a href="{{ url_for('main.account') }}" class="nav-account">Account</a>
+    </div>
+{% endblock navbar %}
+
+{% block content %}
+<div class="block-content">
+    <h1>Reviews for {{ user.username }}</h1>
+    <p>Total Reviews: {{ reviews|length }}</p>
+
+    {% if reviews and reviews|length > 0 %}
+    <ul>
+        {% for review in reviews %}
+        <li>
+            <strong>Rating:</strong> {{ review.rating }}/5 <br>
+            <strong>Feedback:</strong> {{ review.feedback }} <br>
+            <small>Reviewed by User ID: {{ review.reviewer_id }} on {{ review.created_at.strftime('%B %d, %Y') }}</small>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No reviews have been written for {{ user.username }} yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

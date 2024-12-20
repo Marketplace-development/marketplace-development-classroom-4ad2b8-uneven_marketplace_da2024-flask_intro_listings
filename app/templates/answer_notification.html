@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+<html lang="en">
+{% block css_connected %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/answer_notification.css') }}">
+
+{% endblock %}
+
+{% block navbar %}
+    <div class="nav-left">
+        <a href="{{ url_for('main.home') }}" class="nav-logo-box">
+            <img src="{{ url_for('static', filename='Logo.png') }}" alt="Logo" class="nav-logo">
+            <span class="nav-appname">Plant Sitting</span>
+        </a>
+    </div>
+    <div class="nav-right">
+        <a href="{{ url_for('main.home') }}" class="nav-account">Home</a>
+        <a href="{{ url_for('main.about') }}" class="nav-account">About</a>
+        <a href="{{ url_for('main.account') }}" class="nav-account logout">Account</a>
+    </div>
+{% endblock navbar %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash-message-container">
+            {% for message in messages %}
+                <div class="flash-message">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+
+{% block content %}
+    <div class="container mt-4">
+  <h2>Respond to Notification for Listing: {{ listing.title }}</h2>
+  <img src="{{ url_for('static', filename='uploads/' + listing.picture) }}" alt="{{ listing.title }}" class="listing-pic">
+
+  <p>Proposed Price: €{{ '{:.2f}'.format(price_proposal.new_price) }}</p>
+
+  <!-- Approve or Reject the proposed price -->
+  <form method="POST" action="{{ url_for('main.approve_price', listing_id=listing.id) }}">
+      <input type="hidden" name="proposed_price" value="{{ price_proposal.new_price }}">
+      <button type="submit" class="btn btn-approve">Approve Proposed Price</button>
+  </form>
+
+  <form method="POST" action="{{ url_for('main.reject_price', listing_id=listing.id) }}">
+      <input type="hidden" name="proposed_price" value="{{ price_proposal.new_price }}">
+      <button type="submit" class="btn btn-reject">Reject Proposed Price</button>
+  </form>
+</div>
+{% endblock %}

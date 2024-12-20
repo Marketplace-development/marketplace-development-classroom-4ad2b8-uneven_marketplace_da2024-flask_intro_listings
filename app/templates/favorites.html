@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block css_connected %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/favorites.css') }}">
+{% endblock %}
+
+{% block navbar %}
+    <div class="nav-left">
+        <a href="{{ url_for('main.home') }}" class="nav-logo-box">
+            <img src="{{ url_for('static', filename='Logo.png') }}" alt="Logo" class="nav-logo">
+            <span class="nav-appname">Plant Sitting</span>
+        </a>
+    </div>
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu" onclick="toggleMenu()">&#9776;</div>
+
+    <div class="nav-right">
+        <a href="{{ url_for('main.home') }}" class="nav-account">Home</a>
+        <a href="{{ url_for('main.account') }}" class="nav-account">Account</a>
+    </div>
+<script src="{{ url_for('static', filename='hamburgermenu_account.js') }}"></script>
+{% endblock navbar %}
+
+{% block content %}
+<div class="content">
+    <h1>My Favorites</h1>
+    {% if favorite_listings %}
+        <div class="listing-grid">
+            {% for listing in favorite_listings %}
+                <div class="listing-item">
+                    <!-- Plant Image -->
+                    <div class="listing-plant-picture">
+                        <img src="{{ url_for('static', filename='uploads/' + listing.picture if listing.picture else 'uploads/default.png') }}"
+                             alt="{{ listing.title }}" class="listing-plant-img">
+                    </div>
+                    <h3 class="listing-title">{{ listing.title }}</h3>
+                    <p class="listing-description">{{ listing.description }}</p>
+                    <p class="listing-price">€{{ '{:.2f}'.format(listing.base_price) }}</p>
+                    <a href="{{ url_for('main.view_listing', listing_id=listing.id) }}" class="view-more">View More</a>
+                    <!-- Remove from Favorites Button -->
+                    <form action="{{ url_for('main.remove_favorite', listing_id=listing.id) }}" method="post">
+                        <button type="submit" class="remove-favorite-btn">Remove from Favorites</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You have no favorites yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
